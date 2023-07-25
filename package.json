@@ -1,0 +1,24 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "build-scripts": "ts-node --esm src/buildScripts.ts",
+    "deploy-scripts": "ts-node --esm src/deployScripts.ts"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "dotenv": "^16.3.1",
+    "lucid-cardano": "./lucid-cardano-0.10.6.tgz",
+    "price-discovery-offchain": "file:price-discovery-offchain-0.0.3.tgz",
+    "ts-node": "^10.9.1"
+  }
+}
