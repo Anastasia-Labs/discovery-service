@@ -7,7 +7,8 @@
   "scripts": {
     "build": "tsc",
     "build-scripts": "ts-node --esm src/buildScripts.ts",
-    "deploy-scripts": "ts-node --esm src/deployScripts.ts"
+    "deploy-scripts": "ts-node --esm src/deployScripts.ts",
+    "init-discovery": "ts-node --esm src/initializeDiscovery.ts"
   },
   "author": "",
   "license": "ISC",

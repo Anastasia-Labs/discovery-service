@@ -28,10 +28,10 @@ const run = async () => {
   );
   //NOTE: STEP 1 Fund both wallets with 500 ADA each before proceding
   //
-  const treasuryAddress = await lucid
+  const beneficiaryAddress = await lucid
     .selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!)
     .wallet.address();
-  const [treasuryUTxO] = await lucid
+  const [beneficiaryUTxO] = await lucid
     .selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!)
     .wallet.getUtxos();
   const [project1UTxO] = await lucid
@@ -41,14 +41,14 @@ const run = async () => {
 
   const scripts = buildScripts(lucid, {
     discoveryPolicy: {
-      initUTXO: treasuryUTxO,
+      initUTXO: beneficiaryUTxO,
       deadline: deadline,
-      penaltyAddress: treasuryAddress,
+      penaltyAddress: beneficiaryAddress,
     },
     rewardValidator: {
       projectCS: process.env.PROJECT_CS!,
       projectTN: process.env.PROJECT_TN!,
-      projectAddr: treasuryAddress,
+      projectAddr: beneficiaryAddress,
     },
     projectTokenHolder: {
       initUTXO: project1UTxO,
@@ -68,20 +68,42 @@ const run = async () => {
 
   if (scripts.type == "error") return;
 
-  const currenTime = Date.now()
+  const currenTime = Date.now();
+
+  const parameters = {
+    discoveryPolicy: {
+      initOutRef: {
+        txHash: beneficiaryUTxO.txHash,
+        outputIndex: beneficiaryUTxO.outputIndex,
+      },
+      deadline: deadline,
+      penaltyAddress: beneficiaryAddress,
+    },
+    rewardValidator: {
+      projectCS: process.env.PROJECT_CS!,
+      projectTN: process.env.PROJECT_TN!,
+      projectAddr: beneficiaryAddress,
+    },
+    projectTokenHolder: {
+      initOutRef: {
+        txHash: project1UTxO.txHash,
+        outputIndex: project1UTxO.outputIndex,
+      },
+    },
+  };
 
   writeFile(
     `./applied-scripts-${currenTime}.json`,
-    JSON.stringify({...scripts.data,...{version: currenTime }}, undefined, 2),
+    JSON.stringify(
+      { ...{scripts : scripts.data}, ...{ version: currenTime }, ...parameters },
+      undefined,
+      2
+    ),
     (error) => {
       error
         ? console.log(error)
         : console.log(
-            `Scripts have been saved \n
-          penaltyAddress: ${treasuryAddress} \n
-          projectCS: ${process.env.PROJECT_CS} \n
-          projectTN: ${process.env.PROJECT_TN}
-          `
+            `Scripts have been saved , version ${currenTime}\n`
           );
     }
   );
