@@ -37,6 +37,7 @@ const run = async () => {
   console.log("submitted TxHash: ", registerStakeHash);
 
   //NOTE: INIT PROJECT TOKEN HOLDER
+  //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!
   const initTokenHolderConfig: InitTokenHolderConfig = {
     initUTXO: (
       await lucid.utxosByOutRef([applied.projectTokenHolder.initOutRef])
