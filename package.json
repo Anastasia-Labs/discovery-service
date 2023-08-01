@@ -8,7 +8,11 @@
     "build": "tsc",
     "build-scripts": "ts-node --esm src/buildScripts.ts",
     "deploy-scripts": "ts-node --esm src/deployScripts.ts",
-    "init-discovery": "ts-node --esm src/initializeDiscovery.ts"
+    "init-discovery": "ts-node --esm src/initializeDiscovery.ts",
+    "init-fold": "ts-node --esm src/initFoldService.ts",
+    "fold-nodes": "ts-node --esm src/foldNodesService.ts",
+    "init-reward": "ts-node --esm src/initRewardService.ts",
+    "reward-fold": "ts-node --esm src/rewardFoldService.ts"
   },
   "author": "",
   "license": "ISC",
@@ -19,7 +23,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "lucid-cardano": "./lucid-cardano-0.10.6.tgz",
-    "price-discovery-offchain": "file:price-discovery-offchain-0.0.3.tgz",
+    "price-discovery-offchain": "file:price-discovery-offchain-0.0.5.tgz",
     "ts-node": "^10.9.1"
   }
 }
