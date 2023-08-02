@@ -23,7 +23,7 @@
   "dependencies": {
     "dotenv": "^16.3.1",
     "lucid-cardano": "./lucid-cardano-0.10.6.tgz",
-    "price-discovery-offchain": "file:price-discovery-offchain-0.0.5.tgz",
+    "price-discovery-offchain": "file:price-discovery-offchain-0.0.6.tgz",
     "ts-node": "^10.9.1"
   }
 }
