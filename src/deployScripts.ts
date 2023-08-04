@@ -1,3 +1,4 @@
+import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
 dotenv.config();
 import { writeFile } from "node:fs";
@@ -11,11 +12,12 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 
-import applied from "../applied-scripts-1690385346726.json" assert { type: "json" };
+import applied from "../applied-scripts.json" assert { type: "json" };
 import alwaysFailValidator from "./compiled/alwaysFails.json" assert { type: "json" };
 
 const run = async () => {
-  const timeOut = 10_000
+  //WARNING: Make sure WALLET_PROJECT_2 has enough ADA ideally more than 500 ADA, deployment is expensive
+
   //NOTE: DEPLOY
   const lucid = await Lucid.new(
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
@@ -24,6 +26,7 @@ const run = async () => {
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
   console.log("WALLET_PROJECT_2 Address ", await lucid.wallet.address())
 
+  //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
 
   const deploy1 = await deployRefScripts(lucid, {
@@ -38,7 +41,9 @@ const run = async () => {
   }
   const deploy1Hash = await (await deploy1.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy1Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy1Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy1Hash) 
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy2 = await deployRefScripts(lucid, {
     script: applied.scripts.discoveryValidator,
@@ -52,7 +57,9 @@ const run = async () => {
   }
   const deploy2Hash = await (await deploy2.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy2Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy2Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy2Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy3 = await deployRefScripts(lucid, {
     script: applied.scripts.foldPolicy,
@@ -66,7 +73,9 @@ const run = async () => {
   }
   const deploy3Hash = await (await deploy3.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy3Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy3Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy3Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy4 = await deployRefScripts(lucid, {
     script: applied.scripts.foldValidator,
@@ -80,7 +89,9 @@ const run = async () => {
   }
   const deploy4Hash = await (await deploy4.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy4Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy4Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy4Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy5 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardPolicy,
@@ -94,7 +105,9 @@ const run = async () => {
   }
   const deploy5Hash = await (await deploy5.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy5Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy5Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy5Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy6 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardValidator,
@@ -108,7 +121,9 @@ const run = async () => {
   }
   const deploy6Hash = await (await deploy6.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy6Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy6Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy6Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy7 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,
@@ -122,7 +137,9 @@ const run = async () => {
   }
   const deploy7Hash = await (await deploy7.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy7Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy7Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy7Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy8 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderValidator,
@@ -136,7 +153,9 @@ const run = async () => {
   }
   const deploy8Hash = await (await deploy8.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy8Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy8Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy8Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy9 = await deployRefScripts(lucid, {
     script: applied.scripts.discoveryStake,
@@ -150,7 +169,9 @@ const run = async () => {
   }
   const deploy9Hash = await (await deploy9.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy9Hash);
-  setTimeout(() => console.log("submitted TxHash: ", deploy9Hash), timeOut); // offset wallet & blockchain sync
+  console.log("submitted TxHash: ", deploy9Hash)
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;
@@ -183,99 +204,8 @@ const run = async () => {
     };
   }
 
-  // const scriptsRef = Validators.reduce(async (result, name) => {
-  //   const [validatorUTxO] = await lucid.utxosAtWithUnit(
-  //     lucid.utils.validatorToAddress({
-  //       type: "PlutusV2",
-  //       script: alwaysFailValidator.cborHex,
-  //     }),
-  //     toUnit(deployPolicyId, fromText(name))
-  //   );
-  //   return {
-  //     ...result,
-  //     ...{
-  //       [name]: {
-  //         txHash: validatorUTxO.txHash,
-  //         outputIndex: validatorUTxO.outputIndex,
-  //       },
-  //     },
-  //   };
-  // }, {});
-
-  // const [nodeValidatorUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("DiscoveryValidator"))
-  // );
-  //
-  // const [nodePolicyUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("DiscoveryPolicy"))
-  // );
-  //
-  // const [foldPolicyUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("FoldPolicy"))
-  // );
-  //
-  // const [foldValidatorUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("FoldValidator"))
-  // );
-  //
-  // const [rewardPolicyUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("RewardFoldPolicy"))
-  // );
-  //
-  // const [rewardValidatorUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("RewardFoldValidator"))
-  // );
-  //
-  // const [tokenHolderPolicyUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("TokenHolderPolicy"))
-  // );
-  //
-  // const [tokenHolderValidatorUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("TokenHolderValidator"))
-  // );
-  //
-  // const [discoveryStakeValidatorUTxO] = await lucid.utxosAtWithUnit(
-  //   lucid.utils.validatorToAddress({
-  //     type: "PlutusV2",
-  //     script: alwaysFailValidator.cborHex,
-  //   }),
-  //   toUnit(deployPolicyId, fromText("DiscoveryStakeValidator"))
-  // );
-
   writeFile(
-    `./deploy-policy-${applied.version}.json`,
+    `./deploy-policy.json`,
     JSON.stringify(
       {
         policy: deploy9.data.deployPolicyId,

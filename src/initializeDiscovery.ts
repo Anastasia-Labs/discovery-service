@@ -10,8 +10,8 @@ import {
   Network,
 } from "price-discovery-offchain";
 
-import applied from "../applied-scripts-1690385346726.json" assert { type: "json" };
-import refScripts from "../deploy-policy-1690385346726.json" assert { type: "json" };
+import applied from "../applied-scripts.json" assert { type: "json" };
+import refScripts from "../deploy-policy.json" assert { type: "json" };
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -44,7 +44,7 @@ const run = async () => {
     )[0],
     projectCS: applied.rewardValidator.projectCS,
     projectTN: applied.rewardValidator.projectTN,
-    projectAmount: 100_000_000_000, // 100_000 without decimals
+    projectAmount: Number(process.env.PROJECT_AMNT), // 100_000 without decimals
     scripts: {
       tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
       tokenHolderValidator: applied.scripts.tokenHolderValidator,

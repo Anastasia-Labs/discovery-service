@@ -6,8 +6,10 @@ import { fileURLToPath } from "url";
 import {
   Blockfrost,
   buildScripts,
+  fromText,
   Lucid,
   Network,
+  toUnit,
   TWENTY_FOUR_HOURS_MS,
 } from "price-discovery-offchain";
 import discoveryValidator from "./compiled/discoveryValidator.json" assert { type: "json" };
@@ -26,7 +28,8 @@ const run = async () => {
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
     process.env.NETWORK as Network
   );
-  //NOTE: STEP 1 Fund both wallets with 500 ADA each before proceding
+
+  //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
   const beneficiaryAddress = await lucid
     .selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!)
@@ -37,7 +40,25 @@ const run = async () => {
   const [project1UTxO] = await lucid
     .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
     .wallet.getUtxos();
-  const deadline = Date.now() + TWENTY_FOUR_HOURS_MS * 5; // 5 days
+
+  const checkProjectToken = (
+    await lucid
+      .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
+      .wallet.getUtxos()
+  ).find((utxo) => {
+    return (
+      utxo.assets[toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!))] ==
+      BigInt(Number(process.env.PROJECT_AMNT!))
+    );
+  });
+
+  if (!checkProjectToken) {
+    console.log("WALLET_PROJECT_1 project token missing");
+    return;
+  }
+
+  // const deadline = Date.now() + TWENTY_FOUR_HOURS_MS * 5; // 5 days
+  const deadline = Number(process.env.DEADLINE);
 
   const scripts = buildScripts(lucid, {
     discoveryPolicy: {
@@ -93,18 +114,21 @@ const run = async () => {
   };
 
   writeFile(
-    `./applied-scripts-${currenTime}.json`,
+    `./applied-scripts.json`,
     JSON.stringify(
-      { ...{scripts : scripts.data}, ...{ version: currenTime }, ...parameters },
+      {
+        ...{ scripts: scripts.data },
+        ...{ version: currenTime },
+        ...{ projectAmount: Number(process.env.PROJECT_AMNT)},
+        ...parameters,
+      },
       undefined,
       2
     ),
     (error) => {
       error
         ? console.log(error)
-        : console.log(
-            `Scripts have been saved , version ${currenTime}\n`
-          );
+        : console.log(`Scripts have been saved , version ${currenTime}\n`);
     }
   );
 };

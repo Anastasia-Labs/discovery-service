@@ -8,7 +8,7 @@ import {
   Network,
 } from "price-discovery-offchain";
 
-import applied from "../applied-scripts-1690385346726.json" assert { type: "json" };
+import applied from "../applied-scripts.json" assert { type: "json" };
 
 const run = async () => {
   const lucid = await Lucid.new(
