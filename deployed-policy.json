@@ -1,0 +1,41 @@
+{
+  "policy": "8a28b52516e425682bd023f8dcc04fb0614ffae06a59a2684fb260b8",
+  "scriptsRef": {
+    "DiscoveryPolicy": {
+      "txHash": "716957a0aa68fe1ade2f079a562ea60265b7f21c50c713dd2bd3a41f16c6c705",
+      "outputIndex": 0
+    },
+    "DiscoveryValidator": {
+      "txHash": "2d8c813db988eae433f8c3751bb19b3d8f90d857357ee25af17ac0fdb0fb156d",
+      "outputIndex": 0
+    },
+    "FoldPolicy": {
+      "txHash": "1255aae18309b6ffe31a732574b4fc4f07da7de4b9add64968f42be08378547f",
+      "outputIndex": 0
+    },
+    "FoldValidator": {
+      "txHash": "b0c5128d8c9487fd5eae3bbe154971b008b4d1dc3eb5c716c2612c67b8d6759b",
+      "outputIndex": 0
+    },
+    "RewardFoldPolicy": {
+      "txHash": "f3d15be1fc5954bd69e9abbf97461ae81c4ed8567e9b5b913cef36ddcdf18a72",
+      "outputIndex": 0
+    },
+    "RewardFoldValidator": {
+      "txHash": "44813725e14d9da75bf1206733f04a3e8c74d6661005748de3a0dccf3f5f2c7d",
+      "outputIndex": 0
+    },
+    "TokenHolderPolicy": {
+      "txHash": "b031fb398321f03df375344d11d9c03f6910ab41046d546e5c4f5fa3b1f7fea3",
+      "outputIndex": 0
+    },
+    "TokenHolderValidator": {
+      "txHash": "12d3cfc46aa05fe00fd8bc6974124294ba8dea60d2ef134fb54cdd2e4a8c010a",
+      "outputIndex": 0
+    },
+    "DiscoveryStakeValidator": {
+      "txHash": "bae3918b562798005d746bc16757f09848085b742fc30230dca949cdd6b171e0",
+      "outputIndex": 0
+    }
+  }
+}

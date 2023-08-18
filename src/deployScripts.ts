@@ -205,7 +205,7 @@ const run = async () => {
   }
 
   writeFile(
-    `./deploy-policy.json`,
+    `./deployed-policy.json`,
     JSON.stringify(
       {
         policy: deploy9.data.deployPolicyId,
