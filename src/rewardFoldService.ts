@@ -28,8 +28,11 @@ const run = async () => {
     lucid,
     applied.scripts.discoveryValidator
   );
+  console.log("nodes at discoveryValidator: ", nodeUTxOs.length)
+  console.log("time to process (seconds): ", nodeUTxOs.length * 20)
 
   let rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);
+
 
   while (rewardUTxOs.length == 1) {
     const rewardFoldConfig: RewardFoldConfig = {
