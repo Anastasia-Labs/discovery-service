@@ -47,18 +47,28 @@ const run = async () => {
       .wallet.getUtxos()
   ).find((utxo) => {
     return (
-      utxo.assets[toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!))] ==
-      BigInt(Number(process.env.PROJECT_AMNT!))
+      utxo.assets[
+        toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!))
+      ] == BigInt(Number(process.env.PROJECT_AMNT!))
     );
   });
 
   if (!checkProjectToken) {
     console.log("WALLET_PROJECT_1 project token missing");
+    console.log(
+      `Send project ${
+        Number(process.env.PROJECT_AMNT!) / 1_000_000
+      } token to: `,
+      await lucid
+        .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
+        .wallet.address()
+    );
     return;
   }
 
   // const deadline = Date.now() + TWENTY_FOUR_HOURS_MS * 5; // 5 days
   const deadline = Number(process.env.DEADLINE);
+  console.log("Deadline UTC", new Date(deadline).toUTCString());
 
   const scripts = buildScripts(lucid, {
     discoveryPolicy: {
@@ -119,7 +129,7 @@ const run = async () => {
       {
         ...{ scripts: scripts.data },
         ...{ version: currenTime },
-        ...{ projectAmount: Number(process.env.PROJECT_AMNT)},
+        ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
         ...parameters,
       },
       undefined,
