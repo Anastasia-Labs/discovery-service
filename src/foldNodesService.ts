@@ -9,6 +9,9 @@ import {
   parseUTxOsAtScript,
   sortByOutRefWithIndex,
 } from "price-discovery-offchain";
+import log4js from "log4js";
+log4js.configure("log4js.json");
+const logger = log4js.getLogger("app");
 
 import applied from "../applied-scripts.json" assert { type: "json" };
 
@@ -35,6 +38,8 @@ const run = async () => {
     },
   };
 
+  logger.info("running multiFold")
+
   lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
   const multiFoldUnsigned = await multiFold(lucid, multiFoldConfig);
 
@@ -47,7 +52,8 @@ const run = async () => {
   const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
   const multiFoldHash = await multiFoldSigned.submit();
   await lucid.awaitTx(multiFoldHash);
-  console.log("submitted TxHash: ", multiFoldHash);
+  logger.info("multiFold submitted TxHash: ", multiFoldHash)
+  console.log("multiFold submitted TxHash: ", multiFoldHash);
 };
 
 await run();

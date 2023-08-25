@@ -7,6 +7,9 @@ import {
   Lucid,
   Network,
 } from "price-discovery-offchain";
+import log4js from "log4js";
+log4js.configure("log4js.json");
+const logger = log4js.getLogger("app");
 
 import applied from "../applied-scripts.json" assert { type: "json" };
 import refScripts from "../deployed-policy.json" assert { type: "json" };
@@ -57,6 +60,7 @@ const run = async () => {
       )[0],
     },
   };
+  logger.info("running initRewardFold")
 
   lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
   const initRewardFoldUnsigned = await initRewardFold(
@@ -74,7 +78,8 @@ const run = async () => {
     .complete();
   const initRewardFoldHash = await initRewardFoldSigned.submit();
   await lucid.awaitTx(initRewardFoldHash);
-  console.log("submitted TxHash: ", initRewardFoldHash);
+  logger.info("initRewardFold submitted TxHash: ", initRewardFoldHash)
+  console.log("initRewardFold submitted TxHash: ", initRewardFoldHash);
 };
 
 await run();

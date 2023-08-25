@@ -6,10 +6,14 @@ import {
   Blockfrost,
   Lucid,
   Network,
+  parseUTxOsAtScript,
   rewardFold,
   RewardFoldConfig,
   utxosAtScript,
 } from "price-discovery-offchain";
+import log4js from "log4js";
+log4js.configure("log4js.json");
+const logger = log4js.getLogger("app");
 
 import applied from "../applied-scripts.json" assert { type: "json" };
 import refScripts from "../deployed-policy.json" assert { type: "json" };
@@ -28,11 +32,13 @@ const run = async () => {
     lucid,
     applied.scripts.discoveryValidator
   );
-  console.log("nodes at discoveryValidator: ", nodeUTxOs.length)
-  console.log("time to process (seconds): ", nodeUTxOs.length * 20)
+  logger.info("running rewardFold");
+  logger.info("nodes at discoveryValidator: ", nodeUTxOs.length);
+  console.log("nodes at discoveryValidator: ", nodeUTxOs.length);
+  logger.info("time to process (seconds): ", nodeUTxOs.length * 20);
+  console.log("time to process (seconds): ", nodeUTxOs.length * 20);
 
   let rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);
-
 
   while (rewardUTxOs.length == 1) {
     const rewardFoldConfig: RewardFoldConfig = {
@@ -76,7 +82,8 @@ const run = async () => {
     const rewardFoldSigned = await rewardFoldUnsigned.data.sign().complete();
     const rewardFoldHash = await rewardFoldSigned.submit();
     await lucid.awaitTx(rewardFoldHash);
-    console.log("submitted TxHash: ", rewardFoldHash);
+    logger.info("rewardFold submitted TxHash: ", rewardFoldHash);
+    console.log("rewardFold submitted TxHash: ", rewardFoldHash);
 
     await setTimeout(20_000);
     rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);

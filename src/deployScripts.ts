@@ -11,6 +11,9 @@ import {
   OutRef,
   toUnit,
 } from "price-discovery-offchain";
+import log4js from "log4js";
+log4js.configure("log4js.json");
+const logger = log4js.getLogger("app");
 
 import applied from "../applied-scripts.json" assert { type: "json" };
 import alwaysFailValidator from "./compiled/alwaysFails.json" assert { type: "json" };
@@ -24,7 +27,7 @@ const run = async () => {
     process.env.NETWORK as Network
   );
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
-  console.log("WALLET_PROJECT_2 Address ", await lucid.wallet.address())
+  logger.info("running deployScripts")
 
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
@@ -41,6 +44,7 @@ const run = async () => {
   }
   const deploy1Hash = await (await deploy1.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy1Hash);
+  logger.info("submitted TxHash: ", deploy1Hash) 
   console.log("submitted TxHash: ", deploy1Hash) 
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -57,6 +61,7 @@ const run = async () => {
   }
   const deploy2Hash = await (await deploy2.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy2Hash);
+  logger.info("submitted TxHash: ", deploy2Hash) 
   console.log("submitted TxHash: ", deploy2Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -73,6 +78,7 @@ const run = async () => {
   }
   const deploy3Hash = await (await deploy3.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy3Hash);
+  logger.info("submitted TxHash: ", deploy3Hash) 
   console.log("submitted TxHash: ", deploy3Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -89,6 +95,7 @@ const run = async () => {
   }
   const deploy4Hash = await (await deploy4.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy4Hash);
+  logger.info("submitted TxHash: ", deploy4Hash) 
   console.log("submitted TxHash: ", deploy4Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -105,6 +112,7 @@ const run = async () => {
   }
   const deploy5Hash = await (await deploy5.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy5Hash);
+  logger.info("submitted TxHash: ", deploy5Hash) 
   console.log("submitted TxHash: ", deploy5Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -121,6 +129,7 @@ const run = async () => {
   }
   const deploy6Hash = await (await deploy6.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy6Hash);
+  logger.info("submitted TxHash: ", deploy6Hash) 
   console.log("submitted TxHash: ", deploy6Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -137,6 +146,7 @@ const run = async () => {
   }
   const deploy7Hash = await (await deploy7.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy7Hash);
+  logger.info("submitted TxHash: ", deploy7Hash) 
   console.log("submitted TxHash: ", deploy7Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -153,6 +163,7 @@ const run = async () => {
   }
   const deploy8Hash = await (await deploy8.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy8Hash);
+  logger.info("submitted TxHash: ", deploy8Hash) 
   console.log("submitted TxHash: ", deploy8Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
@@ -169,6 +180,7 @@ const run = async () => {
   }
   const deploy9Hash = await (await deploy9.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy9Hash);
+  logger.info("submitted TxHash: ", deploy9Hash) 
   console.log("submitted TxHash: ", deploy9Hash)
   // offset wallet & blockchain sync
   await setTimeout(20_000);
