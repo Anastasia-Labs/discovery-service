@@ -13,8 +13,9 @@ import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
-import applied from "../applied-scripts.json" assert { type: "json" };
-import refScripts from "../deployed-policy.json" assert { type: "json" };
+import applied from "../../applied-scripts.json" assert { type: "json" };
+import refScripts from "../../deployed-policy.json" assert { type: "json" };
+import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -28,7 +29,7 @@ const run = async () => {
     type: "PlutusV2",
     script: applied.scripts.discoveryStake,
   });
-  logger.info("running registerStake")
+  await loggerDD("running registerStake");
 
   const registerStakeHash = await (
     await (
@@ -38,8 +39,7 @@ const run = async () => {
       .complete()
   ).submit();
   await lucid.awaitTx(registerStakeHash);
-  logger.info("registerStake submitted TxHash: ", registerStakeHash);
-  console.log("registerStake submitted TxHash: ", registerStakeHash);
+  await loggerDD(`registerStake submitted TxHash: ${registerStakeHash}`);
 
   //NOTE: INIT PROJECT TOKEN HOLDER
   //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!
@@ -56,7 +56,7 @@ const run = async () => {
     },
   };
 
-  logger.info("running initTokenHolder")
+  await loggerDD("running initTokenHolder");
 
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
   const initTokenHolderUnsigned = await initTokenHolder(
@@ -74,8 +74,7 @@ const run = async () => {
     .complete();
   const initTokenHolderHash = await initTokenHolderSigned.submit();
   await lucid.awaitTx(initTokenHolderHash);
-  logger.info("initTokenHolder submitted TxHash: ", initTokenHolderHash);
-  console.log("initTokenHolder submitted TxHash: ", initTokenHolderHash);
+  await loggerDD(`initTokenHolder submitted TxHash: ${initTokenHolderHash}`);
 
   //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {
@@ -93,9 +92,9 @@ const run = async () => {
     },
   };
 
-  logger.info("running initNode")
+  await loggerDD("running initNode");
 
-  lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
+  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
   const initNodeUnsigned = await initNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
@@ -107,8 +106,7 @@ const run = async () => {
   const initNodeSigned = await initNodeUnsigned.data.sign().complete();
   const initNodeHash = await initNodeSigned.submit();
   await lucid.awaitTx(initNodeHash);
-  logger.info("initNode submitted TxHash: ", initNodeHash);
-  console.log("initNode submitted TxHash: ", initNodeHash);
+  await loggerDD(`initNode submitted TxHash: ${initNodeHash}`);
 };
 
 await run();

@@ -15,8 +15,9 @@ import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
-import applied from "../applied-scripts.json" assert { type: "json" };
-import refScripts from "../deployed-policy.json" assert { type: "json" };
+import applied from "../../applied-scripts.json" assert { type: "json" };
+import refScripts from "../../deployed-policy.json" assert { type: "json" };
+import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -24,19 +25,15 @@ const run = async () => {
     process.env.NETWORK as Network
   );
 
-  const beneficiaryAddress = await lucid
-    .selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!)
-    .wallet.address();
+  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
 
   const nodeUTxOs = await utxosAtScript(
     lucid,
     applied.scripts.discoveryValidator
   );
-  logger.info("running rewardFold");
-  logger.info("nodes at discoveryValidator: ", nodeUTxOs.length);
+  await loggerDD("running rewardFold");
   console.log("nodes at discoveryValidator: ", nodeUTxOs.length);
-  logger.info("time to process (seconds): ", nodeUTxOs.length * 20);
-  console.log("time to process (seconds): ", nodeUTxOs.length * 20);
+  console.log("time to process (seconds): ", nodeUTxOs.length * 40);
 
   let rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);
 
@@ -70,7 +67,7 @@ const run = async () => {
       },
     };
 
-    lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
+    lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
     const rewardFoldUnsigned = await rewardFold(lucid, rewardFoldConfig);
 
     if (rewardFoldUnsigned.type == "error") {
@@ -82,8 +79,7 @@ const run = async () => {
     const rewardFoldSigned = await rewardFoldUnsigned.data.sign().complete();
     const rewardFoldHash = await rewardFoldSigned.submit();
     await lucid.awaitTx(rewardFoldHash);
-    logger.info("rewardFold submitted TxHash: ", rewardFoldHash);
-    console.log("rewardFold submitted TxHash: ", rewardFoldHash);
+    await loggerDD(`rewardFold submitted TxHash: ${rewardFoldHash}`);
 
     await setTimeout(20_000);
     rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);

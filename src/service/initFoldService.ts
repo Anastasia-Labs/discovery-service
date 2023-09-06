@@ -11,7 +11,8 @@ import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
-import applied from "../applied-scripts.json" assert { type: "json" };
+import applied from "../../applied-scripts.json" assert { type: "json" };
+import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -29,9 +30,9 @@ const run = async () => {
     },
   };
 
-  logger.info("running initFold")
+  await loggerDD("running initFold");
 
-  lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
+  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
   const initFoldUnsigned = await initFold(lucid, initFoldConfig);
 
   if (initFoldUnsigned.type == "error") {
@@ -42,8 +43,7 @@ const run = async () => {
   const initFoldSigned = await initFoldUnsigned.data.sign().complete();
   const initFoldHash = await initFoldSigned.submit();
   await lucid.awaitTx(initFoldHash);
-  logger.info("initFold submitted TxHash: ", initFoldHash)
-  console.log("initFold submitted TxHash: ", initFoldHash);
+  await loggerDD(`initFold submitted TxHash: ${initFoldHash}`);
 };
 
 await run();

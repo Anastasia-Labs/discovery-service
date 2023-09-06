@@ -13,7 +13,8 @@ import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
-import applied from "../applied-scripts.json" assert { type: "json" };
+import applied from "../../applied-scripts.json" assert { type: "json" };
+import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -38,9 +39,9 @@ const run = async () => {
     },
   };
 
-  logger.info("running multiFold")
+  await loggerDD("running multiFold");
 
-  lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
+  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
   const multiFoldUnsigned = await multiFold(lucid, multiFoldConfig);
 
   if (multiFoldUnsigned.type == "error") {
@@ -52,8 +53,7 @@ const run = async () => {
   const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
   const multiFoldHash = await multiFoldSigned.submit();
   await lucid.awaitTx(multiFoldHash);
-  logger.info("multiFold submitted TxHash: ", multiFoldHash)
-  console.log("multiFold submitted TxHash: ", multiFoldHash);
+  await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
 };
 
 await run();

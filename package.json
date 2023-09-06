@@ -6,14 +6,15 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "get-addresses": "ts-node --esm src/getAddresses.ts",
-    "build-scripts": "ts-node --esm src/buildScripts.ts",
-    "deploy-scripts": "ts-node --esm src/deployScripts.ts",
-    "init-discovery": "ts-node --esm src/initializeDiscovery.ts",
-    "init-fold": "ts-node --esm src/initFoldService.ts",
-    "fold-nodes": "ts-node --esm src/foldNodesService.ts",
-    "init-reward": "ts-node --esm src/initRewardService.ts",
-    "reward-fold": "ts-node --esm src/rewardFoldService.ts"
+    "get-addresses": "ts-node --esm src/utils/getAddresses.ts",
+    "build-scripts": "ts-node --esm src/service/buildScripts.ts",
+    "deploy-scripts": "ts-node --esm src/service/deployScripts.ts",
+    "init-discovery": "ts-node --esm src/service/initializeDiscovery.ts",
+    "init-fold": "ts-node --esm src/service/initFoldService.ts",
+    "fold-nodes": "ts-node --esm src/service/foldNodesService.ts",
+    "init-reward": "ts-node --esm src/service/initRewardService.ts",
+    "reward-fold": "ts-node --esm src/service/rewardFoldService.ts",
+    "datadog-test": "ts-node --esm src/test-datadog.ts"
   },
   "author": "",
   "license": "ISC",
@@ -22,6 +23,7 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@datadog/datadog-api-client": "^1.16.0",
     "dotenv": "^16.3.1",
     "log4js": "^6.9.1",
     "price-discovery-offchain": "file:price-discovery-offchain-0.0.9.tgz",

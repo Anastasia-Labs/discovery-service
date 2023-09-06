@@ -13,8 +13,8 @@ const lucid = await Lucid.new(
 );
 
 export const checkWalletFunds = async () => {
-  lucid.selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!);
-  console.log("WALLET_BENEFICIARY_1")
+  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+  console.log("WALLET_PROJECT_0")
   console.log({
     address: await lucid.wallet.address(),
     lovelace: (await lucid.wallet.getUtxos()).reduce((result, current) => {

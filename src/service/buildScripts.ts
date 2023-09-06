@@ -12,16 +12,16 @@ import {
   toUnit,
   TWENTY_FOUR_HOURS_MS,
 } from "price-discovery-offchain";
-import discoveryValidator from "./compiled/discoveryValidator.json" assert { type: "json" };
-import discoveryPolicy from "./compiled/discoveryMinting.json" assert { type: "json" };
-import discoveryStake from "./compiled/discoveryStakeValidator.json" assert { type: "json" };
-import foldPolicy from "./compiled/foldMint.json" assert { type: "json" };
-import foldValidator from "./compiled/foldValidator.json" assert { type: "json" };
-import rewardPolicy from "./compiled/rewardFoldMint.json" assert { type: "json" };
-import rewardValidator from "./compiled/rewardFoldValidator.json" assert { type: "json" };
-import tokenHolderPolicy from "./compiled/tokenHolderPolicy.json" assert { type: "json" };
-import tokenHolderValidator from "./compiled/tokenHolderValidator.json" assert { type: "json" };
-import alwaysFailValidator from "./compiled/alwaysFails.json";
+import discoveryValidator from "../compiled/discoveryValidator.json" assert { type: "json" };
+import discoveryPolicy from "../compiled/discoveryMinting.json" assert { type: "json" };
+import discoveryStake from "../compiled/discoveryStakeValidator.json" assert { type: "json" };
+import foldPolicy from "../compiled/foldMint.json" assert { type: "json" };
+import foldValidator from "../compiled/foldValidator.json" assert { type: "json" };
+import rewardPolicy from "../compiled/rewardFoldMint.json" assert { type: "json" };
+import rewardValidator from "../compiled/rewardFoldValidator.json" assert { type: "json" };
+import tokenHolderPolicy from "../compiled/tokenHolderPolicy.json" assert { type: "json" };
+import tokenHolderValidator from "../compiled/tokenHolderValidator.json" assert { type: "json" };
+import alwaysFailValidator from "../compiled/alwaysFails.json";
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -31,11 +31,9 @@ const run = async () => {
 
   //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
-  const beneficiaryAddress = await lucid
-    .selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!)
-    .wallet.address();
-  const [beneficiaryUTxO] = await lucid
-    .selectWalletFromSeed(process.env.WALLET_BENEFICIARY_1!)
+  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!
+  const [project0UTxO] = await lucid
+    .selectWalletFromSeed(process.env.WALLET_PROJECT_0!)
     .wallet.getUtxos();
   const [project1UTxO] = await lucid
     .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
@@ -72,7 +70,7 @@ const run = async () => {
 
   const scripts = buildScripts(lucid, {
     discoveryPolicy: {
-      initUTXO: beneficiaryUTxO,
+      initUTXO: project0UTxO,
       deadline: deadline,
       penaltyAddress: beneficiaryAddress,
     },
@@ -104,8 +102,8 @@ const run = async () => {
   const parameters = {
     discoveryPolicy: {
       initOutRef: {
-        txHash: beneficiaryUTxO.txHash,
-        outputIndex: beneficiaryUTxO.outputIndex,
+        txHash: project0UTxO.txHash,
+        outputIndex: project0UTxO.outputIndex,
       },
       deadline: deadline,
       penaltyAddress: beneficiaryAddress,
