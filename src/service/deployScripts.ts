@@ -21,14 +21,16 @@ import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
   //WARNING: Make sure WALLET_PROJECT_2 has enough ADA ideally more than 500 ADA, deployment is expensive
+  await loggerDD("running deployScripts");
 
   //NOTE: DEPLOY
   const lucid = await Lucid.new(
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
     process.env.NETWORK as Network
   );
+  await loggerDD("selecting WALLET_PROJECT_2")
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
-  await loggerDD("running deployScripts");
+
 
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
