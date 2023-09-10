@@ -18,10 +18,12 @@ import refScripts from "../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
+  await loggerDD("running registerStake");
   const lucid = await Lucid.new(
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
     process.env.NETWORK as Network
   );
+  await loggerDD("selecting WALLET_PROJECT_2");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
 
   //NOTE: REGISTER STAKE ADDRESS
@@ -29,7 +31,6 @@ const run = async () => {
     type: "PlutusV2",
     script: applied.scripts.discoveryStake,
   });
-  await loggerDD("running registerStake");
 
   const registerStakeHash = await (
     await (
@@ -58,6 +59,7 @@ const run = async () => {
 
   await loggerDD("running initTokenHolder");
 
+  await loggerDD("selecting WALLET_PROJECT_1");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
   const initTokenHolderUnsigned = await initTokenHolder(
     lucid,
@@ -94,6 +96,7 @@ const run = async () => {
 
   await loggerDD("running initNode");
 
+  await loggerDD("selecting WALLET_PROJECT_0");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
   const initNodeUnsigned = await initNode(lucid, initNodeConfig);
 
