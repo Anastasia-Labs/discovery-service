@@ -31,6 +31,7 @@ const run = async () => {
   };
 
   await loggerDD("running initFold");
+  await loggerDD("selecting WALLET_PROJECT_0");
 
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
   const initFoldUnsigned = await initFold(lucid, initFoldConfig);

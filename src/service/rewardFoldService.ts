@@ -31,7 +31,6 @@ const run = async () => {
     lucid,
     applied.scripts.discoveryValidator
   );
-  await loggerDD("running rewardFold");
   console.log("nodes at discoveryValidator: ", nodeUTxOs.length);
   console.log("time to process (seconds): ", nodeUTxOs.length * 40);
 
@@ -67,6 +66,8 @@ const run = async () => {
       },
     };
 
+    await loggerDD("running rewardFold");
+    await loggerDD("selecting WALLET_PROJECT_0");
     lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
     const rewardFoldUnsigned = await rewardFold(lucid, rewardFoldConfig);
 

@@ -40,6 +40,7 @@ const run = async () => {
   };
 
   await loggerDD("running multiFold");
+  await loggerDD("selecting WALLET_PROJECT_0");
 
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
   const multiFoldUnsigned = await multiFold(lucid, multiFoldConfig);
