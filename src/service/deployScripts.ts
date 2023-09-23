@@ -18,6 +18,7 @@ const logger = log4js.getLogger("app");
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import alwaysFailValidator from "../compiled/alwaysFails.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
+import { lovelaceAtAddress } from "../utils/misc.js";
 
 const run = async () => {
   //WARNING: Make sure WALLET_PROJECT_2 has enough ADA ideally more than 500 ADA, deployment is expensive
@@ -28,9 +29,14 @@ const run = async () => {
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
     process.env.NETWORK as Network
   );
-  await loggerDD("selecting WALLET_PROJECT_2")
+  await loggerDD("selecting WALLET_PROJECT_2");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
-
+  const walletProject2Funds = await lovelaceAtAddress(lucid);
+  if (walletProject2Funds < 200_000_000n) {
+    console.log(`Not enough funds ${walletProject2Funds}, ${await lucid.wallet.address()}`);
+    await loggerDD(`Not enough funds ${walletProject2Funds}`);
+    return
+  }
 
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
@@ -127,7 +133,7 @@ const run = async () => {
   }
   const deploy6Hash = await (await deploy6.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy6Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${ deploy6Hash }`);
+  await loggerDD(`deployRefScripts submitted TxHash: ${deploy6Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
@@ -143,7 +149,7 @@ const run = async () => {
   }
   const deploy7Hash = await (await deploy7.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy7Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${ deploy7Hash }`);
+  await loggerDD(`deployRefScripts submitted TxHash: ${deploy7Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
@@ -159,7 +165,7 @@ const run = async () => {
   }
   const deploy8Hash = await (await deploy8.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy8Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${ deploy8Hash }`);
+  await loggerDD(`deployRefScripts submitted TxHash: ${deploy8Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 

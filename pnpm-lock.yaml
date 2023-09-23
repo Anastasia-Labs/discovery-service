@@ -11,8 +11,8 @@ dependencies:
     specifier: ^6.9.1
     version: 6.9.1
   price-discovery-offchain:
-    specifier: file:price-discovery-offchain-0.0.10.tgz
-    version: file:price-discovery-offchain-0.0.10.tgz
+    specifier: file:price-discovery-offchain-0.0.11.tgz
+    version: file:price-discovery-offchain-0.0.11.tgz
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@20.4.5)(typescript@5.1.6)
@@ -482,10 +482,10 @@ packages:
       - utf-8-validate
     dev: false
 
-  file:price-discovery-offchain-0.0.10.tgz:
-    resolution: {integrity: sha512-L3H0s9C3rZGLucG8UgB2Wdo5tOYSfnDa7s2PRnXemzvYEjxBo5knejqTPvAP8kd6HWgGVkd4f2uOfg46mMKxvg==, tarball: file:price-discovery-offchain-0.0.10.tgz}
+  file:price-discovery-offchain-0.0.11.tgz:
+    resolution: {integrity: sha512-65al877bPLGPh5zPExHa5J1/8QNarhVivQWXbee0Csx+E05QPGNudsrjBs0ToTe/JD4P8NLuYzDyNdV5X7J2kg==, tarball: file:price-discovery-offchain-0.0.11.tgz}
     name: price-discovery-offchain
-    version: 0.0.10
+    version: 0.0.11
     dependencies:
       lucid-cardano: file:lucid-cardano-0.10.6.tgz
     transitivePeerDependencies:

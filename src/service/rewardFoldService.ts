@@ -25,6 +25,10 @@ const run = async () => {
     process.env.NETWORK as Network
   );
 
+  await loggerDD("running rewardFold");
+  await loggerDD("selecting WALLET_PROJECT_0");
+  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+
   const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
 
   const nodeUTxOs = await utxosAtScript(
@@ -36,54 +40,91 @@ const run = async () => {
 
   let rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);
 
-  while (rewardUTxOs.length == 1) {
-    const rewardFoldConfig: RewardFoldConfig = {
-      nodeInputs: nodeUTxOs,
-      projectCS: process.env.PROJECT_CS!,
-      projectTN: process.env.PROJECT_TN!,
-      projectAddress: beneficiaryAddress,
-      scripts: {
-        nodeValidator: applied.scripts.discoveryValidator,
-        discoveryStake: applied.scripts.discoveryStake,
-        rewardFoldPolicy: applied.scripts.rewardPolicy,
-        rewardFoldValidator: applied.scripts.rewardValidator,
-      },
-      refScripts: {
-        nodeValidator: (
-          await lucid.utxosByOutRef([refScripts.scriptsRef.DiscoveryValidator])
-        )[0],
-        discoveryStake: (
-          await lucid.utxosByOutRef([
-            refScripts.scriptsRef.DiscoveryStakeValidator,
-          ])
-        )[0],
-        rewardFoldPolicy: (
-          await lucid.utxosByOutRef([refScripts.scriptsRef.RewardFoldPolicy])
-        )[0],
-        rewardFoldValidator: (
-          await lucid.utxosByOutRef([refScripts.scriptsRef.RewardFoldValidator])
-        )[0],
-      },
-    };
+  const maxRetries = 3;
 
-    await loggerDD("running rewardFold");
-    await loggerDD("selecting WALLET_PROJECT_0");
-    lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
-    const rewardFoldUnsigned = await rewardFold(lucid, rewardFoldConfig);
-
-    if (rewardFoldUnsigned.type == "error") {
-      console.log(rewardFoldUnsigned.error);
-      return;
-    }
-
-    // console.log(initNodeUnsigned.data.txComplete.to_json());
-    const rewardFoldSigned = await rewardFoldUnsigned.data.sign().complete();
-    const rewardFoldHash = await rewardFoldSigned.submit();
-    await lucid.awaitTx(rewardFoldHash);
-    await loggerDD(`rewardFold submitted TxHash: ${rewardFoldHash}`);
-
+  while (true) {
     await setTimeout(20_000);
     rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);
+    console.log(rewardUTxOs)
+    if (rewardUTxOs.length == 0) break;
+
+    let retries = 0;
+    while (retries < maxRetries) {
+      if (retries > 0) {
+        rewardUTxOs = await utxosAtScript(
+          lucid,
+          applied.scripts.rewardValidator
+        );
+        if (rewardUTxOs.length == 0) break;
+        console.log(`retrying ${retries}`);
+      }
+
+      const rewardFoldConfig: RewardFoldConfig = {
+        nodeInputs: nodeUTxOs,
+        projectCS: process.env.PROJECT_CS!,
+        projectTN: process.env.PROJECT_TN!,
+        projectAddress: beneficiaryAddress,
+        scripts: {
+          nodeValidator: applied.scripts.discoveryValidator,
+          discoveryStake: applied.scripts.discoveryStake,
+          rewardFoldPolicy: applied.scripts.rewardPolicy,
+          rewardFoldValidator: applied.scripts.rewardValidator,
+        },
+        refScripts: {
+          nodeValidator: (
+            await lucid.utxosByOutRef([
+              refScripts.scriptsRef.DiscoveryValidator,
+            ])
+          )[0],
+          discoveryStake: (
+            await lucid.utxosByOutRef([
+              refScripts.scriptsRef.DiscoveryStakeValidator,
+            ])
+          )[0],
+          rewardFoldPolicy: (
+            await lucid.utxosByOutRef([refScripts.scriptsRef.RewardFoldPolicy])
+          )[0],
+          rewardFoldValidator: (
+            await lucid.utxosByOutRef([
+              refScripts.scriptsRef.RewardFoldValidator,
+            ])
+          )[0],
+        },
+      };
+
+      const rewardFoldUnsigned = await rewardFold(lucid, rewardFoldConfig);
+
+      // if (rewardFoldUnsigned.type == "error") {
+      //   console.log(rewardFoldUnsigned.error);
+      //   return;
+      // }
+
+      // console.log(initNodeUnsigned.data.txComplete.to_json());
+      if (rewardFoldUnsigned.type == "ok") {
+        // Try again common error:
+        // transaction submit error ShelleyTxValidationError ...
+        try {
+          const rewardFoldSigned = await rewardFoldUnsigned.data
+            .sign()
+            .complete();
+          const rewardFoldHash = await rewardFoldSigned.submit();
+          await lucid.awaitTx(rewardFoldHash);
+          await loggerDD(`rewardFold submitted TxHash: ${rewardFoldHash}`);
+
+          break;
+        } catch (error) {
+          retries++;
+          console.log(`error : ${error}`);
+        }
+      } else {
+        // Try again common error:
+        // CannotCreateEvaluationContext ...
+        console.log(
+          `Function ${rewardFold.name} failed, error : ${rewardFoldUnsigned.error.message}`
+        );
+        retries++;
+      }
+    }
   }
 };
 
