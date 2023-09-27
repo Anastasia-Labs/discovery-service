@@ -5,7 +5,6 @@ import {
   Blockfrost,
   Lucid,
   Network,
-  parseUTxOsAtScript,
   removeNode,
   RemoveNodeConfig,
   utxosAtScript,
@@ -13,7 +12,9 @@ import {
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
-import { timeoutAsyncFunction } from "./misc.js";
+import {
+  signSubmitValidate,
+} from "./misc.js";
 
 const lucid = await Lucid.new(
   new Blockfrost(process.env.API_URL!, process.env.API_KEY),
@@ -34,10 +35,10 @@ for (const wallet of wallets) {
   lucid.selectWalletFromSeed(wallet.seed);
   console.log("\n wallet ", wallet.address);
 
-  // offset wallet & blockchain sync
-  await setTimeout(1_000);
   let retries = 0;
   while (retries < maxRetries) {
+    // offset wallet & blockchain sync
+    await setTimeout(5_000);
     retries > 0 ? console.log(`retrying ${retries}`) : null;
 
     const removeNodeConfig: RemoveNodeConfig = {
@@ -55,29 +56,8 @@ for (const wallet of wallets) {
     };
 
     const removeNodeUnsigned = await removeNode(lucid, removeNodeConfig);
-    if (removeNodeUnsigned.type == "ok") {
-      try {
-        const txHash = await (
-          await removeNodeUnsigned.data.sign().complete()
-        ).submit();
-        const result = await Promise.race([
-          lucid.awaitTx(txHash),
-          setTimeout(120_000, null),
-        ]);
-        if (!result) {
-          throw new Error("timeout async");
-        }
-        console.log(`submitted TxHash:  ${txHash}`);
-        break;
-      } catch (error) {
-        retries++;
-        console.log(`error : ${error}`);
-      }
-    } else {
-      retries++;
-      console.log(
-        `Function ${removeNode.name} failed, error : ${removeNodeUnsigned.error.message}`
-      );
-    }
+    const isValid = await signSubmitValidate(lucid, removeNodeUnsigned);
+    if (isValid) break;
+    retries++;
   }
 }

@@ -21,7 +21,6 @@
     "modify-nodes": "ts-node --esm src/utils/modifyNodes.ts",
     "remove-nodes": "ts-node --esm src/utils/removeNodes.ts",
     "refund-wallet": "ts-node --esm src/utils/refundWallet.ts"
-
   },
   "author": "",
   "license": "ISC",
@@ -34,6 +33,7 @@
     "dotenv": "^16.3.1",
     "log4js": "^6.9.1",
     "price-discovery-offchain": "file:price-discovery-offchain-0.0.11.tgz",
-    "ts-node": "^10.9.1"
+    "ts-node": "^10.9.1",
+    "ts-pattern": "^5.0.5"
   }
 }

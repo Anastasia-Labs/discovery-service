@@ -12,7 +12,9 @@ import {
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
-import { timeoutAsyncFunction } from "./misc.js";
+import {
+  signSubmitValidate,
+} from "./misc.js";
 
 const lucid = await Lucid.new(
   new Blockfrost(process.env.API_URL!, process.env.API_KEY),
@@ -36,7 +38,7 @@ for (const [index, wallet] of wallets.entries()) {
   while (retries < maxRetries) {
     retries > 0 ? console.log(`retrying ${retries}`) : null;
 
-    console.log(`selecting Wallet ${index} , address: ${wallet.address}`);
+    console.log(`\n selecting Wallet ${index} , address: ${wallet.address}`);
     lucid.selectWalletFromSeed(wallet.seed);
 
     const insertNodeConfig: InsertNodeConfig = {
@@ -49,34 +51,12 @@ for (const [index, wallet] of wallets.entries()) {
         nodeValidator: nodeValidatorUTxO,
         nodePolicy: nodePolicyUTxO,
       },
-      amountLovelace: 4_000_000,
+      amountLovelace: 3_000_000,
     };
 
     const insertNodeUnsigned = await insertNode(lucid, insertNodeConfig);
-    if (insertNodeUnsigned.type == "ok") {
-      try {
-        const txHash = await (
-          await insertNodeUnsigned.data.sign().complete()
-        ).submit();
-        console.log(`submitted TxHash:  ${txHash}`);
-        const result = await timeoutAsyncFunction(
-          lucid.awaitTx,
-          txHash,
-          60_000
-        );
-        if (result instanceof Error){
-          throw result
-        }
-        break;
-      } catch (error) {
-        retries++;
-        console.log(`error : ${error}`);
-      }
-    } else {
-      retries++;
-      console.log(
-        `Function ${insertNode.name} failed, error : ${insertNodeUnsigned.error.message}`
-      );
-    }
+    const isValid = await signSubmitValidate(lucid, insertNodeUnsigned);
+    if (isValid) break;
+    retries++;
   }
 }

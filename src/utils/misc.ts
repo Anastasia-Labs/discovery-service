@@ -1,5 +1,11 @@
-import { Lucid, ReadableUTxO, replacer } from "price-discovery-offchain";
+import {
+  Lucid,
+  ReadableUTxO,
+  Result,
+  TxComplete,
+} from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
+import { match } from "ts-pattern";
 
 export const lovelaceAtAddress = async (lucid: Lucid, address?: string) => {
   address ? lucid.selectWalletFrom({ address: address }) : null;
@@ -7,20 +13,76 @@ export const lovelaceAtAddress = async (lucid: Lucid, address?: string) => {
     return (result = result + current.assets["lovelace"]);
   }, 0n);
 };
-// <Fn extends (...arguments_: any[])
-// type Func<TArgs extends any[], TResult> = (...args: TArgs) => TResult;
-//
-export const AsyncFunction = async function () {}.constructor;
 
-export async function timeoutAsyncFunction<T, A>(
-  asyncFn: (arg: A) => Promise<T>,
-  arg: A,
+export async function timeoutAsync<T>(
+  asyncFunction: () => Promise<T>,
   timeoutMs: number
-): Promise<T | null> {
-  return Promise.race([
-    asyncFn(arg),
-    setTimeout(timeoutMs, null),
+): Promise<Result<T>> {
+  const race = await Promise.race([
+    asyncFunction(),
+    setTimeout(timeoutMs, new Error("timeout async")),
   ]);
+  return race instanceof Error
+    ? { type: "error", error: race }
+    : { type: "ok", data: race };
+}
+
+export async function safeAsync<T>(
+  asyncFunction: () => Promise<T>
+): Promise<Result<T>> {
+  try {
+    const data = await asyncFunction();
+    return { type: "ok", data };
+  } catch (error) {
+    return {
+      type: "error",
+      error: error instanceof Error ? error : new Error(JSON.stringify(error)),
+    };
+  }
+}
+
+//the below structure allows for modular error handling and it adds type safety for async functions and timeouts async functions
+export async function signSubmitValidate(
+  lucid: Lucid,
+  txComplete: Result<TxComplete>
+): Promise<boolean> {
+  const tx = match(txComplete)
+    .with({ type: "ok" }, (tx) => tx.data)
+    .otherwise((error) => {
+      console.log(error);
+      return null;
+    });
+  if (!tx) return false;
+
+  const signed = match(await safeAsync(async () => tx.sign().complete()))
+    .with({ type: "ok" }, (signed) => signed.data)
+    .otherwise((error) => {
+      console.log(error);
+      return null;
+    });
+  if (!signed) return false;
+
+  const submitted = match(await safeAsync(async () => signed.submit()))
+    .with({ type: "ok" }, (submmited) => submmited.data)
+    .otherwise((error) => {
+      console.log(error);
+      return null;
+    });
+  if (!submitted) return false;
+
+  const awaited = match(
+    await timeoutAsync(async () => lucid.awaitTx(submitted), 120_000)
+  )
+    .with({ type: "ok" }, () => {
+      console.log(`txSubmitted txHash: ${submitted}`);
+      return true;
+    })
+    .otherwise((error) => {
+      console.log(error);
+      return false;
+    });
+
+  return awaited;
 }
 
 export const sortByKeys = (utxos: ReadableUTxO[], firstKey: string | null) => {
@@ -91,7 +153,7 @@ export const sortByOrefWithIndex = (utxos: ReadableUTxO[]) => {
         );
       });
       if (!item) {
-        return result
+        return result;
       }
       result.push(item);
       return result;

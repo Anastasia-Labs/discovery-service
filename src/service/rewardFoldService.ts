@@ -18,6 +18,7 @@ const logger = log4js.getLogger("app");
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
+import { signSubmitValidate } from "../utils/misc.js";
 
 const run = async () => {
   const lucid = await Lucid.new(
@@ -94,36 +95,9 @@ const run = async () => {
 
       const rewardFoldUnsigned = await rewardFold(lucid, rewardFoldConfig);
 
-      // if (rewardFoldUnsigned.type == "error") {
-      //   console.log(rewardFoldUnsigned.error);
-      //   return;
-      // }
-
-      // console.log(initNodeUnsigned.data.txComplete.to_json());
-      if (rewardFoldUnsigned.type == "ok") {
-        // Try again common error:
-        // transaction submit error ShelleyTxValidationError ...
-        try {
-          const rewardFoldSigned = await rewardFoldUnsigned.data
-            .sign()
-            .complete();
-          const rewardFoldHash = await rewardFoldSigned.submit();
-          await lucid.awaitTx(rewardFoldHash);
-          await loggerDD(`rewardFold submitted TxHash: ${rewardFoldHash}`);
-
-          break;
-        } catch (error) {
-          retries++;
-          console.log(`error : ${error}`);
-        }
-      } else {
-        // Try again common error:
-        // CannotCreateEvaluationContext ...
-        console.log(
-          `Function ${rewardFold.name} failed, error : ${rewardFoldUnsigned.error.message}`
-        );
-        retries++;
-      }
+      const isValid = await signSubmitValidate(lucid, rewardFoldUnsigned);
+      if (isValid) break
+      retries++;
     }
   }
 };

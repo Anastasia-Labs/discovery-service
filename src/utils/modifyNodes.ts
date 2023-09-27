@@ -3,7 +3,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import {
   Blockfrost,
-  insertNode,
   InsertNodeConfig,
   Lucid,
   Network,
@@ -13,6 +12,7 @@ import {
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
+import { signSubmitValidate  } from "./misc.js";
 
 const lucid = await Lucid.new(
   new Blockfrost(process.env.API_URL!, process.env.API_KEY),
@@ -51,23 +51,8 @@ for (const wallet of wallets) {
     };
 
     const insertNodeUnsigned = await modifyNode(lucid, modifyNodeConfig);
-    if (insertNodeUnsigned.type == "ok") {
-      try {
-        const txHash = await (
-          await insertNodeUnsigned.data.sign().complete()
-        ).submit();
-        console.log(`submitted TxHash:  ${txHash}`);
-        await lucid.awaitTx(txHash);
-        break;
-      } catch (error) {
-        retries++;
-        console.log(`error : ${error}`);
-      }
-    } else {
-      retries++;
-      console.log(
-        `Function ${insertNode.name} failed, error : ${insertNodeUnsigned.error.message}`
-      );
-    }
+    const isValid = await signSubmitValidate(lucid, insertNodeUnsigned)
+    if (isValid) break;
+    retries++;
   }
 }
