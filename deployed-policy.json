@@ -1,40 +1,40 @@
 {
-  "policy": "f14619acc63a028ff098046a9078bbde6bd176f0fbb36688c031ba68",
+  "policy": "5311840183be31b2eebc5172b1cb5fa054e116d61536d8b98061ba65",
   "scriptsRef": {
     "DiscoveryPolicy": {
-      "txHash": "f0c8e7c63b4759904fb4d0b087950c8848df672af86458d1ec6c6e1d9daebc09",
+      "txHash": "ba464546272ac37694ba86d3e2021a63189704259a708d83ded54b6eba9b721d",
       "outputIndex": 0
     },
     "DiscoveryValidator": {
-      "txHash": "9ffe7aab5ecbea4fbc654ab2206d76234e65efd902a3ab5aa4d4fcb1e7ad029c",
+      "txHash": "5ce83772dabedc1eeea992b68eb232c42dbd59ba260e057c890bfa77364bc7f3",
       "outputIndex": 0
     },
     "FoldPolicy": {
-      "txHash": "45871bca15846f51a78bb9474098786567466c8b0771e5f597b0e97406b063e3",
+      "txHash": "662a2b385337bb63b757c78ac372a763875a63f8931b69332bf37e6f1ecaaa15",
       "outputIndex": 0
     },
     "FoldValidator": {
-      "txHash": "43a977f1d0fbb92919f739064c7baee1c5a17b798dd02bfe11955b929dd48995",
+      "txHash": "8a587f8e5e16e476a98d62269d45a2048bdc1088e177f4cadcc86f413043816d",
       "outputIndex": 0
     },
     "RewardFoldPolicy": {
-      "txHash": "768ea698043c72fe142dd685859ad4f0035829704bb82ea5f2ad5643770dcc82",
+      "txHash": "284cfd4b579850d30ba4ae2a0b50e097ee5d85482ef4babe405bafabb23107c9",
       "outputIndex": 0
     },
     "RewardFoldValidator": {
-      "txHash": "80681d4678eb9b2b5bf31ee2f50f39eb8a11e3e971211d71f4bb00cd78b1bb41",
+      "txHash": "0c89ee45342735cd63ca6c65ace72abfd3c172eb044a0ce12ac1982e4dd5ba5e",
       "outputIndex": 0
     },
     "TokenHolderPolicy": {
-      "txHash": "1e2baae36333efa5541766d3a5b1b2385d0188bebcdfcaf87ee785166f4babe8",
+      "txHash": "f3668469c6f2a7415f56b936aadf10fe2a6451e00a738fc7609b5a9c2a075e32",
       "outputIndex": 0
     },
     "TokenHolderValidator": {
-      "txHash": "d5b189d52fcf5dc0f6d5c1a35c50d50de4d13f0d330e2fa33588fec32b8aece9",
+      "txHash": "ff0778c250bd8fb55d903366f4b4a2d9a217bc1ac5f9a214c52e859076c4a0da",
       "outputIndex": 0
     },
     "DiscoveryStakeValidator": {
-      "txHash": "26fe4c42a1068d18756270c270a79d5be4122f33d24c57b4fbad66618a48174f",
+      "txHash": "e704ea94472760cfb544a5ab424f06342343e639b723c483e56968fe656ff8b5",
       "outputIndex": 0
     }
   }
