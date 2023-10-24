@@ -10,6 +10,11 @@ const configurationOpts = {
 };
 
 export const loggerDD = async (message: string) => {
+  if (!process.env.DD_API_KEY || !process.env.DD_APP_KEY) {
+    console.log(message);
+    return;
+  }
+
   const configuration = client.createConfiguration(configurationOpts);
   const apiInstance = new v2.LogsApi(configuration);
 

@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import {
   Blockfrost,
-  generateSeedPhrase,
   Lucid,
   Network,
 } from "price-discovery-offchain";
