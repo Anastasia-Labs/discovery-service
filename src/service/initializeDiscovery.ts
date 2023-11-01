@@ -11,7 +11,6 @@ import {
 } from "price-discovery-offchain";
 import log4js from "log4js";
 log4js.configure("log4js.json");
-const logger = log4js.getLogger("app");
 
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
