@@ -63,7 +63,7 @@ export async function mintNFT(): Promise<TxHash> {
 
   const txHash = await signedTx.submit();
 
-  console.log(`Minted token ${value} under policy ID (${mintingPolicy.script}). TxHash: ${txHash}`)
+  console.log(`Minted token ${value} under policy ID (${policyId}). TxHash: ${txHash}`)
   return txHash;
 }
 

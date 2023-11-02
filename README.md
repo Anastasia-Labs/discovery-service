@@ -8,5 +8,5 @@
 - Update the `.env` file with token policy ID and token name.
 - Then run `yarn build-scripts`
 - Once `./applied-scripts.json` file is created, run `yarn deploy-scripts` (**NOTE**: This takes quite a while.)
-- Once that is done, run `yarn initialize-discovery`
+- Once that is done, run `yarn init-discovery`
 - Your Taste Test is live!

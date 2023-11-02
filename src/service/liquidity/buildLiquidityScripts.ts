@@ -5,21 +5,22 @@ import path from "path";
 import { fileURLToPath } from "url";
 import {
   Blockfrost,
-  buildLiquidityScripts,
   fromText,
   Lucid,
   Network,
   toUnit,
-} from "price-discovery-offchain";
+} from "lucid-cardano";
+import { buildLiquidityScripts } from "price-discovery-offchain";
+
 import discoveryValidator from "../../compiled/liquidity/discoveryValidator.json" assert { type: "json" };
-import discoveryPolicy from "../../compiled/liquidity/discoveryPolicy.json" assert { type: "json" };
+import discoveryPolicy from "../../compiled/liquidity/discoveryMinting.json" assert { type: "json" };
 import discoveryStake from "../../compiled/liquidity/discoveryStakeValidator.json" assert { type: "json" };
 import foldPolicy from "../../compiled/liquidity/foldMint.json" assert { type: "json" };
 import foldValidator from "../../compiled/liquidity/foldValidator.json" assert { type: "json" };
 import rewardPolicy from "../../compiled/liquidity/rewardFoldMint.json" assert { type: "json" };
 import rewardValidator from "../../compiled/liquidity/rewardFoldValidator.json" assert { type: "json" };
-import tokenHolderPolicy from "../../compiled/liquidity/tokenHolderPolicy.json" assert { type: "json" };
-import tokenHolderValidator from "../../compiled/liquidity/tokenHolderValidator.json" assert { type: "json" };
+import tokenHolderPolicy from "../../compiled/tokenHolderPolicy.json" assert { type: "json" };
+import tokenHolderValidator from "../../compiled/tokenHolderValidator.json" assert { type: "json" };
 
 const run = async () => {
   const lucid = await Lucid.new(
