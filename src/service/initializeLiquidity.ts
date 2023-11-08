@@ -18,74 +18,76 @@ import refScripts from "../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 
 const run = async () => {
-  await loggerDD("running registerStake");
   const lucid = await Lucid.new(
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
     process.env.NETWORK as Network
   );
-  await loggerDD("selecting WALLET_PROJECT_2");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
+  // await loggerDD("running registerStake");
+  // await loggerDD("selecting WALLET_PROJECT_2");
+  // lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
 
-  //NOTE: REGISTER STAKE ADDRESS
-  const discoveryStakeRewardAddress = lucid.utils.validatorToRewardAddress({
-    type: "PlutusV2",
-    script: applied.scripts.discoveryStake, 
-  });
+  // //NOTE: REGISTER STAKE ADDRESS
+  // const discoveryStakeRewardAddress = lucid.utils.validatorToRewardAddress({
+  //   type: "PlutusV2",
+  //   script: applied.scripts.rewardStake, 
+  // });
 
-  const registerStakeHash = await (
-    await (
-      await lucid.newTx().registerStake(discoveryStakeRewardAddress!).complete()
-    )
-      .sign()
-      .complete()
-  ).submit();
-  await lucid.awaitTx(registerStakeHash);
-  await loggerDD(`registerStake submitted TxHash: ${registerStakeHash}`);
+  // const registerStakeHash = await (
+  //   await (
+  //     await lucid.newTx().registerStake(discoveryStakeRewardAddress!).complete()
+  //   )
+  //     .sign()
+  //     .complete()
+  // ).submit();
+  // await lucid.awaitTx(registerStakeHash);
+  // await loggerDD(`registerStake submitted TxHash: ${registerStakeHash}`);
 
-  //NOTE: INIT PROJECT TOKEN HOLDER
-  //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!
-  const initTokenHolderConfig: InitTokenHolderConfig = {
-    initUTXO: (
-      await lucid.utxosByOutRef([applied.projectTokenHolder.initOutRef])
-    )[0],
-    projectCS: applied.rewardValidator.projectCS,
-    projectTN: applied.rewardValidator.projectTN,
-    projectAmount: Number(process.env.PROJECT_AMNT), // 100_000 without decimals
-    scripts: {
-      tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
-      tokenHolderValidator: applied.scripts.tokenHolderValidator,
-    },
-  };
+  // //NOTE: INIT PROJECT TOKEN HOLDER
+  // //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!
+  // const initTokenHolderConfig: InitTokenHolderConfig = {
+  //   initUTXO: (
+  //     await lucid.utxosByOutRef([applied.projectTokenHolder.initOutRef])
+  //   )[0],
+  //   projectCS: applied.rewardValidator.projectCS,
+  //   projectTN: applied.rewardValidator.projectTN,
+  //   projectAmount: Number(process.env.PROJECT_AMNT), // 100_000 without decimals
+  //   scripts: {
+  //     tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
+  //     tokenHolderValidator: applied.scripts.tokenHolderValidator,
+  //   },
+  // };
 
-  await loggerDD("running initTokenHolder");
+  // await loggerDD("running initTokenHolder");
 
-  await loggerDD("selecting WALLET_PROJECT_1");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
-  const initTokenHolderUnsigned = await initTokenHolder(
-    lucid,
-    initTokenHolderConfig
-  );
+  // await loggerDD("selecting WALLET_PROJECT_1");
+  // lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
+  // const initTokenHolderUnsigned = await initTokenHolder(
+  //   lucid,
+  //   initTokenHolderConfig
+  // );
 
-  if (initTokenHolderUnsigned.type == "error") {
-    console.log(initTokenHolderUnsigned.error);
-    return;
-  }
+  // if (initTokenHolderUnsigned.type == "error") {
+  //   console.log(initTokenHolderUnsigned.error);
+  //   return;
+  // }
 
-  const initTokenHolderSigned = await initTokenHolderUnsigned.data
-    .sign()
-    .complete();
-  const initTokenHolderHash = await initTokenHolderSigned.submit();
-  await lucid.awaitTx(initTokenHolderHash);
-  await loggerDD(`initTokenHolder submitted TxHash: ${initTokenHolderHash}`);
+  // const initTokenHolderSigned = await initTokenHolderUnsigned.data
+  //   .sign()
+  //   .complete();
+  // const initTokenHolderHash = await initTokenHolderSigned.submit();
+  // await lucid.awaitTx(initTokenHolderHash);
+  // await loggerDD(`initTokenHolder submitted TxHash: ${initTokenHolderHash}`);
 
-  //NOTE: INIT NODE
+  // //NOTE: INIT NODE
+  await loggerDD("running initNode");
+  
   const initNodeConfig: InitNodeConfig = {
     initUTXO: (
       await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])
     )[0],
     scripts: {
-      nodePolicy: applied.scripts.discoveryPolicy,
-      nodeValidator: applied.scripts.discoveryValidator,
+      nodePolicy: applied.scripts.liquidityPolicy,
+      nodeValidator: applied.scripts.liquidityValidator,
     },
     refScripts: {
       nodePolicy: (
@@ -93,8 +95,6 @@ const run = async () => {
       )[0],
     },
   };
-
-  await loggerDD("running initNode");
 
   await loggerDD("selecting WALLET_PROJECT_0");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);

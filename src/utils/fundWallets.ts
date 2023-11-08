@@ -14,7 +14,7 @@ const lucid = await Lucid.new(
   process.env.NETWORK as Network
 );
 
-lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
 
 const maxRetries = 3;
 
@@ -31,7 +31,7 @@ for (const [index, wallet] of wallets.entries()) {
     const tx = await safeAsync(async () =>
       lucid
         .newTx()
-        .payToAddress(wallet.address, { lovelace: 5_000_000n })
+        .payToAddress(wallet.address, { lovelace: 10_000_000n })
         .complete()
     );
 

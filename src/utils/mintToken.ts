@@ -18,7 +18,7 @@ const lucid = await Lucid.new(
   process.env.NETWORK as Network
 );
 
-lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!)
+lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
 
 const { paymentCredential } = lucid.utils.getAddressDetails(
   await lucid.wallet.address(),
@@ -63,7 +63,7 @@ export async function mintNFT(): Promise<TxHash> {
 
   const txHash = await signedTx.submit();
 
-  console.log(`Minted token ${value} under policy ID (${mintingPolicy.script}). TxHash: ${txHash}`)
+  console.log(`Minted token ${value} under policy ID (${policyId}). TxHash: ${txHash}`)
   return txHash;
 }
 
