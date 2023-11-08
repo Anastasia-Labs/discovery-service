@@ -38,7 +38,7 @@
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
     "log4js": "^6.9.1",
-    "price-discovery-offchain": "file:price-discovery-offchain-0.0.11.tgz",
+    "price-discovery-offchain": "file:price-discovery-offchain-0.0.12.tgz",
     "ts-node": "^10.9.1",
     "ts-pattern": "^5.0.5"
   }
