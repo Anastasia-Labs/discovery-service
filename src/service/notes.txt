@@ -1,0 +1,13 @@
+directSale terminology  -- liquidity event terminology -- API terminology
+discoveryMinting        => liquidityMinting            => TasteTestPolicy         (Used when minting a node (i.e. an insert or delete))
+discoveryStakeValidator => liquidityStakeValidator     => TasteTestStakeValidator (stake address withdrawal attached when doing a collect fold, N/A right now)
+discoveryValidator      => liquidityValidator          => TasteTestValidator      (The script we pay nodes into)
+foldMint                => collectionFoldMint          => CollectFoldPolicy       (used when starting the collect fold, N/A right now)
+foldValidator           => collectionFoldValidator     => CollectFoldValidator    (the script we pay the collect fold into, N/A right now)
+rewardFoldMint          => distributionFoldMint        => RewardFoldPolicy        (used when starting the reward fold, N/A right now)
+rewardFoldValidator     => distributionFoldValidator   => RewardFoldValidator     (the script we pay the reward fold into, N/A right now)
+tokenHolderPolicy       => tokenHolderPolicy           => TokenHolderPolicy       (mint for a tracker token for the project token UTXO, use the one from compiled for now)
+tokenHolderValidator    => tokenHolderValidator        => TokenHolderValidator    (the script we pay the project tokens into, use the one from compiled for now)
+                        => distributionStakeValidator  =>                         (the stake address withdrawal attached when doing a distribution fold, N/A right now)
+
+TODO: standardize terminology lol
