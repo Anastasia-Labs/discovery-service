@@ -19,6 +19,11 @@ lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
 const maxRetries = 3;
 
 for (const [index, wallet] of wallets.entries()) {
+  // We don't need to fund more than 4.
+  if (index === 3) {
+    break;
+  }
+
   // offset wallet & blockchain sync
   await setTimeout(5_000);
   let retries = 0;
@@ -31,7 +36,7 @@ for (const [index, wallet] of wallets.entries()) {
     const tx = await safeAsync(async () =>
       lucid
         .newTx()
-        .payToAddress(wallet.address, { lovelace: 5_000_000n })
+        .payToAddress(wallet.address, { lovelace: 250_000_000n })
         .complete()
     );
 

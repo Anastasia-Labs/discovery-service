@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "discovery-services",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,6 +8,7 @@
     "build": "tsc",
     "get-addresses": "ts-node --esm src/utils/getAddresses.ts",
     "build-scripts": "ts-node --esm src/service/buildScripts.ts",
+    "build-scripts:lp": "ts-node --esm src/service/buildLiquidityScripts.ts",
     "deploy-scripts": "ts-node --esm src/service/deployScripts.ts",
     "init-discovery": "ts-node --esm src/service/initializeDiscovery.ts",
     "init-fold": "ts-node --esm src/service/initFoldService.ts",
@@ -31,11 +32,12 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@anastasia-labs/lucid-cardano-fork": "^0.10.7",
     "@datadog/datadog-api-client": "^1.16.0",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
     "log4js": "^6.9.1",
-    "price-discovery-offchain": "file:price-discovery-offchain-0.0.11.tgz",
+    "price-discovery-offchain": "file:price-discovery-offchain-v0.0.12.tgz",
     "ts-node": "^10.9.1",
     "ts-pattern": "^5.0.5"
   }

@@ -6,7 +6,7 @@
 - Then run `yarn fund-wallets` to fund other wallets.
 - Then create a new test token with `yarn mint-token` (change the token name before executing).
 - Update the `.env` file with token policy ID and token name.
-- Then run `yarn build-scripts`
+- Then run `yarn build-scripts` or `yarn build-scripts:lp` for liquidity taste tests.
 - Once `./applied-scripts.json` file is created, run `yarn deploy-scripts` (**NOTE**: This takes quite a while.)
 - Once that is done, run `yarn initialize-discovery`
 - Your Taste Test is live!

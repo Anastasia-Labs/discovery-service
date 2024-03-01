@@ -2,6 +2,15 @@
 # yarn lockfile v1
 
 
+"@anastasia-labs/lucid-cardano-fork@^0.10.7":
+  version "0.10.7"
+  resolved "https://registry.yarnpkg.com/@anastasia-labs/lucid-cardano-fork/-/lucid-cardano-fork-0.10.7.tgz#d91a70994c6c3ada40beeda3cc423eb337c53dd2"
+  integrity sha512-41MVPku0QzRpm1E3/Ynux3L1NhC2UpbPr+ODFl8FiUrnbuH3ymVEPRVfhNtFu9BFr0ZpWSUsujLT0kylqgCsHg==
+  dependencies:
+    "@peculiar/webcrypto" "^1.4.0"
+    node-fetch "^3.2.3"
+    ws "^8.10.0"
+
 "@cspotcode/source-map-support@^0.8.0":
   version "0.8.1"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-support/-/source-map-support-0.8.1.tgz#00629c35a688e05a88b1cda684fb9d5e73f000a1"

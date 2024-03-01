@@ -42,8 +42,8 @@ const run = async () => {
   const deployTime = Date.now();
 
   const deploy1 = await deployRefScripts(lucid, {
-    script: applied.scripts.discoveryPolicy,
-    name: "DiscoveryPolicy",
+    script: applied.scripts.liquidityPolicy,
+    name: "LiquidityPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
   });
@@ -58,8 +58,8 @@ const run = async () => {
   await setTimeout(20_000);
 
   const deploy2 = await deployRefScripts(lucid, {
-    script: applied.scripts.discoveryValidator,
-    name: "DiscoveryValidator",
+    script: applied.scripts.liquidityValidator,
+    name: "LiquidityValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
   });
@@ -74,7 +74,7 @@ const run = async () => {
   await setTimeout(20_000);
 
   const deploy3 = await deployRefScripts(lucid, {
-    script: applied.scripts.foldPolicy,
+    script: applied.scripts.collectFoldPolicy,
     name: "FoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
@@ -90,7 +90,7 @@ const run = async () => {
   await setTimeout(20_000);
 
   const deploy4 = await deployRefScripts(lucid, {
-    script: applied.scripts.foldValidator,
+    script: applied.scripts.collectFoldValidator,
     name: "FoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
@@ -106,7 +106,7 @@ const run = async () => {
   await setTimeout(20_000);
 
   const deploy5 = await deployRefScripts(lucid, {
-    script: applied.scripts.rewardPolicy,
+    script: applied.scripts.rewardFoldPolicy,
     name: "RewardFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
@@ -122,7 +122,7 @@ const run = async () => {
   await setTimeout(20_000);
 
   const deploy6 = await deployRefScripts(lucid, {
-    script: applied.scripts.rewardValidator,
+    script: applied.scripts.rewardFoldValidator,
     name: "RewardFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
@@ -170,7 +170,7 @@ const run = async () => {
   await setTimeout(20_000);
 
   const deploy9 = await deployRefScripts(lucid, {
-    script: applied.scripts.discoveryStake,
+    script: applied.scripts.rewardStake,
     name: "DiscoveryStakeValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
