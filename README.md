@@ -7,6 +7,6 @@
 - Then create a new test token with `yarn mint-token` (change the token name before executing).
 - Update the `.env` file with token policy ID and token name.
 - Then run `yarn build-scripts` or `yarn build-scripts:lp` for liquidity taste tests.
-- Once `./applied-scripts.json` file is created, run `yarn deploy-scripts` (**NOTE**: This takes quite a while.)
-- Once that is done, run `yarn initialize-discovery`
+- Once `./applied-scripts.json` file is created, run `yarn deploy-scripts` or `yarn deploy-scripts:lp` for liquidity taste tests (**NOTE**: This takes quite a while.)
+- Once that is done, run `yarn init-discovery` or `yarn init-liquidity` for liquidity taste tests.
 - Your Taste Test is live!

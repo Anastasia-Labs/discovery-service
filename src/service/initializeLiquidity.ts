@@ -27,14 +27,14 @@ const run = async () => {
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
 
   //NOTE: REGISTER STAKE ADDRESS
-  const discoveryStakeRewardAddress = lucid.utils.validatorToRewardAddress({
+  const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
     type: "PlutusV2",
-    script: applied.scripts.discoveryStake, 
+    script: applied.scripts.liquidityValidator, 
   });
 
   const registerStakeHash = await (
     await (
-      await lucid.newTx().registerStake(discoveryStakeRewardAddress!).complete()
+      await lucid.newTx().registerStake(liquidityStakeRewardAddress!).complete()
     )
       .sign()
       .complete()
@@ -84,12 +84,12 @@ const run = async () => {
       await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])
     )[0],
     scripts: {
-      nodePolicy: applied.scripts.discoveryPolicy,
-      nodeValidator: applied.scripts.discoveryValidator,
+      nodePolicy: applied.scripts.liquidityPolicy,
+      nodeValidator: applied.scripts.liquidityValidator,
     },
     refScripts: {
       nodePolicy: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.DiscoveryPolicy])
+        await lucid.utxosByOutRef([refScripts.scriptsRef.TasteTestPolicy])
       )[0],
     },
   };
