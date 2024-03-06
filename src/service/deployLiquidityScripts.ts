@@ -4,7 +4,7 @@ dotenv.config();
 import { writeFile } from "node:fs";
 import {
   Blockfrost,
-  deployRefScripts,
+  DiscoveryEndpoints,
   fromText,
   Lucid,
   Network,
@@ -41,7 +41,7 @@ const run = async () => {
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
 
-  const deploy1 = await deployRefScripts(lucid, {
+  const deploy1 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.liquidityPolicy,
     name: "TasteTestPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -53,11 +53,11 @@ const run = async () => {
   }
   const deploy1Hash = await (await deploy1.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy1Hash);
-  await loggerDD(`deployRefScripts submitted TxHash:  ${deploy1Hash}`);
+  await loggerDD(`TasteTestPolicy submitted TxHash:  ${deploy1Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy2 = await deployRefScripts(lucid, {
+  const deploy2 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.liquidityValidator,
     name: "TasteTestValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -69,11 +69,11 @@ const run = async () => {
   }
   const deploy2Hash = await (await deploy2.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy2Hash);
-  await loggerDD(`deployRefScripts submitted TxHash:  ${deploy2Hash}`);
+  await loggerDD(`TasteTestValidator submitted TxHash:  ${deploy2Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy3 = await deployRefScripts(lucid, {
+  const deploy3 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.collectFoldPolicy,
     name: "CollectFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -85,11 +85,11 @@ const run = async () => {
   }
   const deploy3Hash = await (await deploy3.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy3Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${deploy3Hash}`);
+  await loggerDD(`CollectFoldPolicy submitted TxHash: ${deploy3Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy4 = await deployRefScripts(lucid, {
+  const deploy4 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.collectFoldValidator,
     name: "CollectFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -101,11 +101,11 @@ const run = async () => {
   }
   const deploy4Hash = await (await deploy4.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy4Hash);
-  await loggerDD(`deployRefScripts submitted TxHash:  ${deploy4Hash}`);
+  await loggerDD(`CollectFoldValidator submitted TxHash:  ${deploy4Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy5 = await deployRefScripts(lucid, {
+  const deploy5 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldPolicy,
     name: "RewardFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -117,11 +117,11 @@ const run = async () => {
   }
   const deploy5Hash = await (await deploy5.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy5Hash);
-  await loggerDD(`deployRefScripts submitted TxHash:  ${deploy5Hash}`);
+  await loggerDD(`RewardFoldPolicy submitted TxHash:  ${deploy5Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy6 = await deployRefScripts(lucid, {
+  const deploy6 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldValidator,
     name: "RewardFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -133,11 +133,11 @@ const run = async () => {
   }
   const deploy6Hash = await (await deploy6.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy6Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${deploy6Hash}`);
+  await loggerDD(`RewardFoldValidator submitted TxHash: ${deploy6Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy7 = await deployRefScripts(lucid, {
+  const deploy7 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,
     name: "TokenHolderPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -149,11 +149,11 @@ const run = async () => {
   }
   const deploy7Hash = await (await deploy7.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy7Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${deploy7Hash}`);
+  await loggerDD(`TokenHolderPolicy submitted TxHash: ${deploy7Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy8 = await deployRefScripts(lucid, {
+  const deploy8 = await DiscoveryEndpoints.deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderValidator,
     name: "TokenHolderValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -165,12 +165,12 @@ const run = async () => {
   }
   const deploy8Hash = await (await deploy8.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy8Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${deploy8Hash}`);
+  await loggerDD(`TokenHolderValidator submitted TxHash: ${deploy8Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy9 = await deployRefScripts(lucid, {
-    script: applied.scripts.liquidityValidator,
+  const deploy9 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+    script: applied.scripts.collectStake,
     name: "TasteTestStakeValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
@@ -181,7 +181,7 @@ const run = async () => {
   }
   const deploy9Hash = await (await deploy9.data.tx.sign().complete()).submit();
   await lucid.awaitTx(deploy9Hash);
-  await loggerDD(`deployRefScripts submitted TxHash: ${deploy9Hash}`);
+  await loggerDD(`TasteTestStakeValidator submitted TxHash: ${deploy9Hash}`);
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
