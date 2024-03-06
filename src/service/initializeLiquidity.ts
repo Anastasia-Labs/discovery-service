@@ -2,9 +2,8 @@ import dotenv from "dotenv";
 dotenv.config();
 import {
   Blockfrost,
-  initNode,
+  LiquidityEndpoints,
   InitNodeConfig,
-  initTokenHolder,
   InitTokenHolderConfig,
   Lucid,
   Network,
@@ -16,9 +15,10 @@ const logger = log4js.getLogger("app");
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
+import { UTxO } from "@anastasia-labs/lucid-cardano-fork";
 
 const run = async () => {
-  await loggerDD("running registerStake");
+  // await loggerDD("running registerStake");
   const lucid = await Lucid.new(
     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
     process.env.NETWORK as Network
@@ -27,14 +27,14 @@ const run = async () => {
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
 
   //NOTE: REGISTER STAKE ADDRESS
-  const discoveryStakeRewardAddress = lucid.utils.validatorToRewardAddress({
+  const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
     type: "PlutusV2",
-    script: applied.scripts.discoveryStake, 
+    script: applied.scripts.liquidityValidator, 
   });
 
   const registerStakeHash = await (
     await (
-      await lucid.newTx().registerStake(discoveryStakeRewardAddress!).complete()
+      await lucid.newTx().registerStake(liquidityStakeRewardAddress!).complete()
     )
       .sign()
       .complete()
@@ -47,7 +47,7 @@ const run = async () => {
   const initTokenHolderConfig: InitTokenHolderConfig = {
     initUTXO: (
       await lucid.utxosByOutRef([applied.projectTokenHolder.initOutRef])
-    )[0],
+    ).find(({ outputIndex }) => outputIndex === applied.projectTokenHolder.initOutRef.outputIndex) as UTxO,
     projectCS: applied.rewardValidator.projectCS,
     projectTN: applied.rewardValidator.projectTN,
     projectAmount: Number(process.env.PROJECT_AMNT), // 100_000 without decimals
@@ -61,7 +61,7 @@ const run = async () => {
 
   await loggerDD("selecting WALLET_PROJECT_1");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
-  const initTokenHolderUnsigned = await initTokenHolder(
+  const initTokenHolderUnsigned = await LiquidityEndpoints.initTokenHolder(
     lucid,
     initTokenHolderConfig
   );
@@ -78,19 +78,19 @@ const run = async () => {
   await lucid.awaitTx(initTokenHolderHash);
   await loggerDD(`initTokenHolder submitted TxHash: ${initTokenHolderHash}`);
 
-  //NOTE: INIT NODE
+  // //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {
     initUTXO: (
       await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])
-    )[0],
+    ).find(({ outputIndex }) => outputIndex === applied.discoveryPolicy.initOutRef.outputIndex) as UTxO,
     scripts: {
-      nodePolicy: applied.scripts.discoveryPolicy,
-      nodeValidator: applied.scripts.discoveryValidator,
+      nodePolicy: applied.scripts.liquidityPolicy,
+      nodeValidator: applied.scripts.liquidityValidator,
     },
     refScripts: {
       nodePolicy: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.DiscoveryPolicy])
-      )[0],
+        await lucid.utxosByOutRef([refScripts.scriptsRef.TasteTestPolicy])
+      ).find(({ outputIndex }) => outputIndex === refScripts.scriptsRef.TasteTestPolicy.outputIndex) as UTxO,
     },
   };
 
@@ -98,7 +98,7 @@ const run = async () => {
 
   await loggerDD("selecting WALLET_PROJECT_0");
   lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
-  const initNodeUnsigned = await initNode(lucid, initNodeConfig);
+  const initNodeUnsigned = await LiquidityEndpoints.initNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
     console.log(initNodeUnsigned.error);
