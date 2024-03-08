@@ -1,0 +1,517 @@
+{
+  "pk": {
+    "S": "fee00ffe01f3b7e52e4588cd6ab773699c2e2e775998527714efa6d4"
+  },
+  "adaHandle": {
+    "S": "000de14074745f74657374"
+  },
+  "asset": {
+    "M": {
+      "AssetId": {
+        "S": "7f7333d2f93ce9598d626eb4f14df26ba1cefe37c3178592b52aa727.4f72616e676573"
+      },
+      "AssetName": {
+        "S": "Oranges"
+      },
+      "Decimals": {
+        "N": "6"
+      },
+      "Logo": {
+        "NULL": true
+      },
+      "MintDate": {
+        "M": {
+          "Slot": {
+            "S": "43266980"
+          },
+          "SlotOffset": {
+            "N": "1666656000"
+          }
+        }
+      },
+      "PolicyId": {
+        "S": "7f7333d2f93ce9598d626eb4f14df26ba1cefe37c3178592b52aa727"
+      },
+      "Ticker": {
+        "S": "ORANG"
+      },
+      "TotalSupply": {
+        "S": "100000000"
+      }
+    }
+  },
+  "createdDate": {
+    "M": {
+      "Slot": {
+        "S": "43266980"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "creationTxHash": {
+    "S": "ac3e09b1ca430929cab19496bb37d164817236be51ef6a82cbb2cee38ba88db1"
+  },
+  "endDate": {
+    "M": {
+      "Slot": {
+        "S": "43260346"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "finalTxHash": {
+    "NULL": true
+  },
+  "fundingAllocations": {
+    "L": [
+      {
+        "M": {
+          "Label": {
+            "S": "SS"
+          },
+          "Percentage": {
+            "N": "1"
+          }
+        }
+      }
+    ]
+  },
+  "lastCallDate": {
+    "M": {
+      "Slot": {
+        "S": "43173946"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "openDate": {
+    "M": {
+      "Slot": {
+        "S": "43266980"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "parameters": {
+    "M": {
+      "beneficiaryAddress": {
+        "S": "addr_test1qpfy6cwk92rfqnjy7vrx9fefjgdusra7asf57pswty8z558nmulc5eejh429907q8835ap3udl27p37wja8hptp3mkeqythj5v"
+      },
+      "foldFee": {
+        "N": "1000000"
+      },
+      "minUTXO": {
+        "N": "3000000"
+      },
+      "penaltyAddress": {
+        "S": "addr_test1qpfy6cwk92rfqnjy7vrx9fefjgdusra7asf57pswty8z558nmulc5eejh429907q8835ap3udl27p37wja8hptp3mkeqythj5v"
+      },
+      "penaltyPercentage": {
+        "N": "0.25"
+      },
+      "poolFee": {
+        "M": {
+          "Denominator": {
+            "N": "1000"
+          },
+          "Numerator": {
+            "N": "30"
+          }
+        }
+      }
+    }
+  },
+  "poolTxHash": {
+    "NULL": true
+  },
+  "projectDetails": {
+    "M": {
+      "Description": {
+        "S": "An example description of the Oranges projects"
+      },
+      "Handle": {
+        "S": "yes"
+      },
+      "Name": {
+        "S": "Oranges"
+      },
+      "Socials": {
+        "L": [
+          {
+            "M": {
+              "Name": {
+                "S": "Reddit"
+              },
+              "Url": {
+                "S": "https://example.com"
+              }
+            }
+          },
+          {
+            "M": {
+              "Name": {
+                "S": "Telegram"
+              },
+              "Url": {
+                "S": "https://example.com"
+              }
+            }
+          }
+        ]
+      },
+      "Team": {
+        "M": {
+          "Company": {
+            "S": "Oranges, Inc."
+          },
+          "Members": {
+            "L": [
+              {
+                "M": {
+                  "Name": {
+                    "S": "Lorem Ipsum"
+                  },
+                  "Role": {
+                    "S": "CEO"
+                  },
+                  "Social": {
+                    "NULL": true
+                  }
+                }
+              }
+            ]
+          },
+          "Other": {
+            "L": [
+              {
+                "S": "AP1"
+              }
+            ]
+          },
+          "Socials": {
+            "NULL": true
+          }
+        }
+      },
+      "Tokenomics": {
+        "L": [
+          {
+            "M": {
+              "Label": {
+                "S": "DAO Treasury"
+              },
+              "Percentage": {
+                "N": "50"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Airdrop"
+              },
+              "Percentage": {
+                "N": "15"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Governance"
+              },
+              "Percentage": {
+                "N": "10"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Team"
+              },
+              "Percentage": {
+                "N": "5"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Protocol Liquidity"
+              },
+              "Percentage": {
+                "N": "12"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Taste Test"
+              },
+              "Percentage": {
+                "N": "8"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "projectTokens": {
+    "N": "100000000"
+  },
+  "scripts": {
+    "M": {
+      "CollectFoldPolicy": {
+        "M": {
+          "purpose": {
+            "S": "CollectFoldPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "a0b355181a5656ec17937905794f77762311e8999a6e46e101805b3f"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "a0a46b7d3d8f0762e35ef3fae975b1ccc11df506ab2c876b2c559d6657d85c23"
+              }
+            }
+          }
+        }
+      },
+      "CollectFoldValidator": {
+        "M": {
+          "purpose": {
+            "S": "CollectFoldValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "e6b026b0e5b3d8ae3b6811d9e462a83f7cac67171f8438c3f4c5069c"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "70930618c3af48b152ca91ef08d77553b2cd8994bdb30a58ce1d026141c77d5d"
+              }
+            }
+          }
+        }
+      },
+      "RewardFoldPolicy": {
+        "M": {
+          "purpose": {
+            "S": "RewardFoldPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "ac43fe5b529f234a9d6fcd78a30e9967e3007a8367e86bd26124a780"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "08f9b410ee5216007f1ba774cbca2c7517b0a3c601d9c952f698dc8bf0948bff"
+              }
+            }
+          }
+        }
+      },
+      "RewardFoldValidator": {
+        "M": {
+          "purpose": {
+            "S": "RewardFoldValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "e8c363465fea3c7024777fbeb3e342c72fa945e5d514730879eca2b9"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "12306aab5426f928cd75357fe227a6c6cb46c6d2f8416bbbb29f885769a716d6"
+              }
+            }
+          }
+        }
+      },
+      "TasteTestPolicy": {
+        "M": {
+          "purpose": {
+            "S": "TasteTestPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "c696b0f7bfbb401821fcf12a4dd38a7411ef2f0b52059061c1d95b65"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "043301e76a69a33c8f6a2e0e9a24ba4944cd58e1e51b6a1040e6bc949936231f"
+              }
+            }
+          }
+        }
+      },
+      "TasteTestValidator": {
+        "M": {
+          "purpose": {
+            "S": "TasteTestValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "2b0d3bae138cb533b1e1e7e1775a58af1c9ea0a31852ae97d0f1be50"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "83c2e2d6f0d9fec657c111ee9ab110b473f18646eabdf52c9ed11443c6e90bcb"
+              }
+            }
+          }
+        }
+      },
+      "TasteTestStakeValidator": {
+        "M": {
+          "purpose": {
+            "S": "TasteTestStakeValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "b8c62aa0bfd43d65b6044ea777dc53a9a40c8d83d02cdb635cd0dad1"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "d6f802a812779061077e6a4f4f561b69f5f74c892936e9136114d29d1b170342"
+              }
+            }
+          }
+        }
+      },
+      "TokenHolderPolicy": {
+        "M": {
+          "purpose": {
+            "S": "TokenHolderPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "fd2b193b42532ebd93fbb936171507e45f71b8a903e255d360b2945d"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "e59dd5de17445dc8fcdea6367933aea0a70e4eac1a94764809c328c3a59320f7"
+              }
+            }
+          }
+        }
+      },
+      "TokenHolderValidator": {
+        "M": {
+          "purpose": {
+            "S": "TokenHolderValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "38d433431ebd5594942b7c2c612507ce654acc7098db38a70477d6ee"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "740122a7611c8cf764c21d67d9759fed4a145a35e6fd5ba2becf089e87d2ae4b"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "slug": {
+    "S": "oranges"
+  },
+  "type": {
+    "S": "Liquidity"
+  },
+  "vestingSchedule": {
+    "L": [
+      {
+        "M": {
+          "Address": {
+            "S": "addr1justoneparty"
+          },
+          "Amount": {
+            "S": "1000000"
+          },
+          "Label": {
+            "S": "Just One Party"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "51906980"
+              },
+              "SlotOffset": {
+                "N": "1666656000"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
