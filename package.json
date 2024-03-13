@@ -13,6 +13,7 @@
     "deploy-scripts:lp": "ts-node --esm src/service/deployLiquidityScripts.ts",
     "init-discovery": "ts-node --esm src/service/initializeDiscovery.ts",
     "init-liquidity": "ts-node --esm src/service/initializeLiquidity.ts",
+    "start-tt": "ts-node --esm src/service/startTasteTest.ts",
     "init-fold": "ts-node --esm src/service/initFoldService.ts",
     "fold-nodes": "ts-node --esm src/service/foldNodesService.ts",
     "init-reward": "ts-node --esm src/service/initRewardService.ts",
@@ -24,7 +25,8 @@
     "modify-nodes": "ts-node --esm src/utils/modifyNodes.ts",
     "remove-nodes": "ts-node --esm src/utils/removeNodes.ts",
     "refund-wallet": "ts-node --esm src/utils/refundWallet.ts",
-    "mint-token": "ts-node --esm src/utils/mintToken.ts"
+    "mint-token": "ts-node --esm src/utils/mintToken.ts",
+    "build-dynamo": "ts-node --esm src/utils/generateDBEntry.ts"
   },
   "author": "",
   "license": "ISC",

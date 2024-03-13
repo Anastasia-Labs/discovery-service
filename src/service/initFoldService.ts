@@ -13,12 +13,10 @@ const logger = log4js.getLogger("app");
 
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
+import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
-  const lucid = await Lucid.new(
-    new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-    process.env.NETWORK as Network
-  );
+  const lucid = await getLucidInstance();
 
   //NOTE: INIT FOLD
   const initFoldConfig: InitFoldConfig = {
@@ -33,7 +31,7 @@ const run = async () => {
   await loggerDD("running initFold");
   await loggerDD("selecting WALLET_PROJECT_0");
 
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+  await selectLucidWallet(0);
   const initFoldUnsigned = await initFold(lucid, initFoldConfig);
 
   if (initFoldUnsigned.type == "error") {

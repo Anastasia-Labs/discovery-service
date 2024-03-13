@@ -1,24 +1,20 @@
 import dotenv from "dotenv";
 dotenv.config();
-import {
-  Blockfrost,
-  Lucid,
-  Network,
-} from "price-discovery-offchain";
+import { selectLucidWallet } from "./wallet.js";
+import { lovelaceAtAddress } from "./misc.js";
 
-const lucid = await Lucid.new(
-  new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
-);
+const lucid = await selectLucidWallet(0);
 
-lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+const refund = async () => {
+  const balance = await lovelaceAtAddress(lucid)
+  
+  const tx = await lucid
+    .newTx()
+    .payToAddress("addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s", { lovelace:  balance - 500_000n })
+    .complete();
+  const txHash = await (await tx.sign().complete()).submit();
+  
+  console.log(`submitted TxHash:  ${txHash}`);
+}
 
-const tx = await lucid
-  .newTx()
-  .payToAddress("addr_test1qruuags3hcf5h5cydlqcendq50v489h4k8ap2y3p3dkpgt5elrhta8vpt75q0mpdjvmxy9a4xep4p5y8w9mf8ajv5skqjttvnt", { lovelace:  137_310_098_423n})
-  .complete();
-const txHash = await (await tx.sign().complete()).submit();
-
-await lucid.awaitTx(txHash);
-
-console.log(`submitted TxHash:  ${txHash}`);
+refund();

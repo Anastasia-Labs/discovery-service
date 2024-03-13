@@ -1,16 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { writeFile } from "node:fs";
-import path from "path";
-import { fileURLToPath } from "url";
 import {
-  Blockfrost,
   buildScripts,
   fromText,
-  Lucid,
-  Network,
   toUnit,
-  TWENTY_FOUR_HOURS_MS,
 } from "price-discovery-offchain";
 import discoveryValidator from "../compiled/discoveryValidator.json" assert { type: "json" };
 import discoveryPolicy from "../compiled/discoveryMinting.json" assert { type: "json" };
@@ -21,33 +15,26 @@ import rewardPolicy from "../compiled/rewardFoldMint.json" assert { type: "json"
 import rewardValidator from "../compiled/rewardFoldValidator.json" assert { type: "json" };
 import tokenHolderPolicy from "../compiled/tokenHolderPolicy.json" assert { type: "json" };
 import tokenHolderValidator from "../compiled/tokenHolderValidator.json" assert { type: "json" };
-import alwaysFailValidator from "../compiled/alwaysFails.json";
+
+import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
-  const lucid = await Lucid.new(
-    new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-    process.env.NETWORK as Network
-  );
+  const wallet0 = await selectLucidWallet(0);
+  const wallet1 = await selectLucidWallet(1);
 
   //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
   const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!
-  const [project0UTxO] = await lucid
-    .selectWalletFromSeed(process.env.WALLET_PROJECT_0!)
-    .wallet.getUtxos();
-  const [project1UTxO] = await lucid
-    .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
-    .wallet.getUtxos();
+  const project0Utxos = await wallet0.wallet.getUtxos();
+  const project1Utxos = await wallet1.wallet.getUtxos();
 
   const checkProjectToken = (
-    await lucid
-      .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
-      .wallet.getUtxos()
+    project1Utxos
   ).find((utxo) => {
     return (
       utxo.assets[
         toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!))
-      ] == BigInt(Number(process.env.PROJECT_AMNT!))
+      ] === BigInt(Number(process.env.PROJECT_AMNT!))
     );
   });
 
@@ -57,8 +44,7 @@ const run = async () => {
       `Send project ${
         Number(process.env.PROJECT_AMNT!) / 1_000_000
       } token to: `,
-      await lucid
-        .selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
+      await wallet1
         .wallet.address()
     );
     return;
@@ -68,9 +54,10 @@ const run = async () => {
   const deadline = Number(process.env.DEADLINE);
   console.log("Deadline UTC", new Date(deadline).toUTCString());
 
+  const lucid = await getLucidInstance();
   const scripts = buildScripts(lucid, {
     discoveryPolicy: {
-      initUTXO: project0UTxO,
+      initUTXO: project0Utxos[0],
       deadline: deadline,
       penaltyAddress: beneficiaryAddress,
     },
@@ -80,7 +67,7 @@ const run = async () => {
       projectAddr: beneficiaryAddress,
     },
     projectTokenHolder: {
-      initUTXO: project1UTxO,
+      initUTXO: project1Utxos[0],
     },
     unapplied: {
       discoveryPolicy: discoveryPolicy.cborHex,
@@ -102,8 +89,8 @@ const run = async () => {
   const parameters = {
     discoveryPolicy: {
       initOutRef: {
-        txHash: project0UTxO.txHash,
-        outputIndex: project0UTxO.outputIndex,
+        txHash: project0Utxos[0].txHash,
+        outputIndex: project0Utxos[0].outputIndex
       },
       deadline: deadline,
       penaltyAddress: beneficiaryAddress,
@@ -115,8 +102,8 @@ const run = async () => {
     },
     projectTokenHolder: {
       initOutRef: {
-        txHash: project1UTxO.txHash,
-        outputIndex: project1UTxO.outputIndex,
+        txHash: project1Utxos[0].txHash,
+        outputIndex: project1Utxos[0].outputIndex
       },
     },
   };

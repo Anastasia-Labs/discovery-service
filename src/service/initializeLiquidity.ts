@@ -9,6 +9,7 @@ import {
   Network,
 } from "price-discovery-offchain";
 import log4js from "log4js";
+import { writeFile } from 'fs';
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
@@ -16,15 +17,13 @@ import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 import { UTxO } from "@anastasia-labs/lucid-cardano-fork";
+import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
   // await loggerDD("running registerStake");
-  const lucid = await Lucid.new(
-    new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-    process.env.NETWORK as Network
-  );
+  const lucid = await getLucidInstance();
   await loggerDD("selecting WALLET_PROJECT_2");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
+  await selectLucidWallet(2);
 
   //NOTE: REGISTER STAKE ADDRESS
   const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
@@ -60,7 +59,7 @@ const run = async () => {
   await loggerDD("running initTokenHolder");
 
   await loggerDD("selecting WALLET_PROJECT_1");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
+  await selectLucidWallet(1);
   const initTokenHolderUnsigned = await LiquidityEndpoints.initTokenHolder(
     lucid,
     initTokenHolderConfig
@@ -97,7 +96,7 @@ const run = async () => {
   await loggerDD("running initNode");
 
   await loggerDD("selecting WALLET_PROJECT_0");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+  await selectLucidWallet(0);
   const initNodeUnsigned = await LiquidityEndpoints.initNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
@@ -105,11 +104,30 @@ const run = async () => {
     return;
   }
 
-  // console.log(initNodeUnsigned.data.txComplete.to_json());
-  const initNodeSigned = await initNodeUnsigned.data.sign().complete();
-  const initNodeHash = await initNodeSigned.submit();
-  await lucid.awaitTx(initNodeHash);
-  await loggerDD(`initNode submitted TxHash: ${initNodeHash}`);
+  const unsignedCbor = Buffer.from(initNodeUnsigned.data.txComplete.to_bytes()).toString("hex");
+  const signedTransaction = await initNodeUnsigned.data.sign().complete();
+  const signedCbor = Buffer.from(signedTransaction.txSigned.to_bytes()).toString("hex");
+  const signedTxHash = signedTransaction.toHash();
+
+  writeFile(
+    `./init-tx.json`,
+    JSON.stringify(
+      {
+        cbor: unsignedCbor,
+        signedCbor,
+        txHash: signedTxHash
+      },
+      undefined,
+      2
+    ),
+    (error) => {
+      error
+        ? console.log(error)
+        : console.log(
+            `Init liquidity transaction saved!`
+          );
+    }
+  );
 };
 
 await run();

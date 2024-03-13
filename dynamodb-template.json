@@ -1,0 +1,517 @@
+{
+  "pk": {
+    "S": "0f13b583ac21248b5a77d7bd7f46fc74d714b44f2952b1b5bc516562"
+  },
+  "adaHandle": {
+    "S": "000de14074745f74657374"
+  },
+  "asset": {
+    "M": {
+      "AssetId": {
+        "S": "64766fe0b7fbf76d4d799d00211690a1720519722a2925047c29e4eb.34486f7572"
+      },
+      "AssetName": {
+        "S": "4Hour"
+      },
+      "Decimals": {
+        "N": "6"
+      },
+      "Logo": {
+        "NULL": true
+      },
+      "MintDate": {
+        "M": {
+          "Slot": {
+            "S": "43694243"
+          },
+          "SlotOffset": {
+            "N": "1666656000"
+          }
+        }
+      },
+      "PolicyId": {
+        "S": "64766fe0b7fbf76d4d799d00211690a1720519722a2925047c29e4eb"
+      },
+      "Ticker": {
+        "S": "4HOUR"
+      },
+      "TotalSupply": {
+        "S": "100000000"
+      }
+    }
+  },
+  "createdDate": {
+    "M": {
+      "Slot": {
+        "S": "43694243"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "creationTxHash": {
+    "S": "9505a5f1ea9b68319e4e790891eaf26431d0529b83b2ad3bbcb1ddd8f34aeca4"
+  },
+  "endDate": {
+    "M": {
+      "Slot": {
+        "S": "43715903"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "finalTxHash": {
+    "NULL": true
+  },
+  "fundingAllocations": {
+    "L": [
+      {
+        "M": {
+          "Label": {
+            "S": "SS"
+          },
+          "Percentage": {
+            "N": "1"
+          }
+        }
+      }
+    ]
+  },
+  "lastCallDate": {
+    "M": {
+      "Slot": {
+        "S": "43629503"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "openDate": {
+    "M": {
+      "Slot": {
+        "S": "43694243"
+      },
+      "SlotOffset": {
+        "N": "1666656000"
+      }
+    }
+  },
+  "parameters": {
+    "M": {
+      "beneficiaryAddress": {
+        "S": "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s"
+      },
+      "foldFee": {
+        "N": "1000000"
+      },
+      "minUTXO": {
+        "N": "3000000"
+      },
+      "penaltyAddress": {
+        "S": "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s"
+      },
+      "penaltyPercentage": {
+        "N": "0.25"
+      },
+      "poolFee": {
+        "M": {
+          "Denominator": {
+            "N": "1000"
+          },
+          "Numerator": {
+            "N": "30"
+          }
+        }
+      }
+    }
+  },
+  "poolTxHash": {
+    "NULL": true
+  },
+  "projectDetails": {
+    "M": {
+      "Description": {
+        "S": "An example project description goes here."
+      },
+      "Handle": {
+        "S": "yes"
+      },
+      "Name": {
+        "S": "4 Hour Taste Test"
+      },
+      "Socials": {
+        "L": [
+          {
+            "M": {
+              "Name": {
+                "S": "Reddit"
+              },
+              "Url": {
+                "S": "https://example.com"
+              }
+            }
+          },
+          {
+            "M": {
+              "Name": {
+                "S": "Telegram"
+              },
+              "Url": {
+                "S": "https://example.com"
+              }
+            }
+          }
+        ]
+      },
+      "Team": {
+        "M": {
+          "Company": {
+            "S": "4Hour, Inc."
+          },
+          "Members": {
+            "L": [
+              {
+                "M": {
+                  "Name": {
+                    "S": "Lorem Ipsum"
+                  },
+                  "Role": {
+                    "S": "CEO"
+                  },
+                  "Social": {
+                    "NULL": true
+                  }
+                }
+              }
+            ]
+          },
+          "Other": {
+            "L": [
+              {
+                "S": "AP1"
+              }
+            ]
+          },
+          "Socials": {
+            "NULL": true
+          }
+        }
+      },
+      "Tokenomics": {
+        "L": [
+          {
+            "M": {
+              "Label": {
+                "S": "DAO Treasury"
+              },
+              "Percentage": {
+                "N": "50"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Airdrop"
+              },
+              "Percentage": {
+                "N": "15"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Governance"
+              },
+              "Percentage": {
+                "N": "10"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Team"
+              },
+              "Percentage": {
+                "N": "5"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Protocol Liquidity"
+              },
+              "Percentage": {
+                "N": "12"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Taste Test"
+              },
+              "Percentage": {
+                "N": "8"
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "projectTokens": {
+    "N": "100000000"
+  },
+  "scripts": {
+    "M": {
+      "CollectFoldPolicy": {
+        "M": {
+          "purpose": {
+            "S": "CollectFoldPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "37aac6da118a4f6dc1a2f1ec7a4f342bdadc85fe41403678db6ff229"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "54c83f11ff4bb9cf7bac2ee1ed562082310afac12f62bec628643c0df2c6e870"
+              }
+            }
+          }
+        }
+      },
+      "CollectFoldValidator": {
+        "M": {
+          "purpose": {
+            "S": "CollectFoldValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "cf932ae2daeda916befac65141dc69b564aea9a0088755d6e89d4ab9"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "8365cf93f8ae9ac5962a9532d3d7c31ee2b2d66441c4b61f1f66f0c975bbeea5"
+              }
+            }
+          }
+        }
+      },
+      "RewardFoldPolicy": {
+        "M": {
+          "purpose": {
+            "S": "RewardFoldPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "bf04e6cb8ac00a431f4d3423de6ea1ba45ae3cee6212d5c6be9d1415"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "2392cb272c9064b5ab458241133a3369c7db1d9fdbb590007e42a38974a05bb7"
+              }
+            }
+          }
+        }
+      },
+      "RewardFoldValidator": {
+        "M": {
+          "purpose": {
+            "S": "RewardFoldValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "61085cc9b30ad5618ab0aaef87f1c3179e6c05aa26d86a51a83ac05d"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "f7cdd5e0f4385d0e37e7e22b4687fdda12079f0253c3e8c825985d787ffe2d91"
+              }
+            }
+          }
+        }
+      },
+      "TasteTestPolicy": {
+        "M": {
+          "purpose": {
+            "S": "TasteTestPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "d23134685de56c3fc2d1961951bbb9ec13eaf65a8001d46fc3e3eb62"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "3bcb3a9796bd7403cb66cf963d5d033366f920124e9e092b038f3a1cf58b9559"
+              }
+            }
+          }
+        }
+      },
+      "TasteTestValidator": {
+        "M": {
+          "purpose": {
+            "S": "TasteTestValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "c2387ea46fd6b6177b865e925e305b0620f2ff92139710ff2a864f5c"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "c6d1aeff265539b5724e24076a5794c875461f023c5266fd37c1cd3883a842be"
+              }
+            }
+          }
+        }
+      },
+      "TasteTestStakeValidator": {
+        "M": {
+          "purpose": {
+            "S": "TasteTestStakeValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "5125b84b09da90dff3bd3aa58e4079be550c155b7ac63704a56ca73c"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "21968678fe7556be9d560f1e85f56ed9111f7795aed3ace83b8646b2103f7a24"
+              }
+            }
+          }
+        }
+      },
+      "TokenHolderPolicy": {
+        "M": {
+          "purpose": {
+            "S": "TokenHolderPolicy"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "06027cf1e18eaa25155d56f52984a5104e5ff08840e13dc6cf2a6913"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "a1518bd33256cbed6b0a6e5e461d65d707f5eccc0d79b5eedb87af2044407812"
+              }
+            }
+          }
+        }
+      },
+      "TokenHolderValidator": {
+        "M": {
+          "purpose": {
+            "S": "TokenHolderValidator"
+          },
+          "scriptBytes": {
+            "NULL": true
+          },
+          "scriptHash": {
+            "S": "502fd41ea3e5ae541ae4db7e239271958d67d8f4a6087698980f242a"
+          },
+          "utxo": {
+            "M": {
+              "index": {
+                "N": "0"
+              },
+              "txId": {
+                "S": "e3ef7f4631b88045e6ca83273577d14139ee96fe1dc1c7043282f2b80931e0d9"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "slug": {
+    "S": "4-hour taste test"
+  },
+  "type": {
+    "S": "Liquidity"
+  },
+  "vestingSchedule": {
+    "L": [
+      {
+        "M": {
+          "Address": {
+            "S": "addr1justoneparty"
+          },
+          "Amount": {
+            "S": "1000000"
+          },
+          "Label": {
+            "S": "Just One Party"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "52334243"
+              },
+              "SlotOffset": {
+                "N": "1666656000"
+              }
+            }
+          }
+        }
+      }
+    ]
+  }
+}
