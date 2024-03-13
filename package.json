@@ -13,7 +13,7 @@
     "deploy-scripts:lp": "ts-node --esm src/service/deployLiquidityScripts.ts",
     "init-discovery": "ts-node --esm src/service/initializeDiscovery.ts",
     "init-liquidity": "ts-node --esm src/service/initializeLiquidity.ts",
-    "start-taste-test": "ts-node --esm src/service/startTasteTest.ts",
+    "start-tt": "ts-node --esm src/service/startTasteTest.ts",
     "init-fold": "ts-node --esm src/service/initFoldService.ts",
     "fold-nodes": "ts-node --esm src/service/foldNodesService.ts",
     "init-reward": "ts-node --esm src/service/initRewardService.ts",

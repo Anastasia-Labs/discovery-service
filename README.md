@@ -11,5 +11,5 @@
 9. Once that is done, run `yarn init-discovery` or `yarn init-liquidity` for liquidity taste tests.
 10. After this, you should see the final transaction to initialize the taste test node printed to `init-tx.json`.
 11. Run `yarn build-dynamo` to generate a DynamoDB JSON file (found in `dynamodb-template.json` after running this script). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
-12. Now you can run `yarn start-taste-test` to submit the signed transaction.
+12. Now you can run `yarn start-tt` to submit the signed transaction.
 13. Your Taste Test is live!
