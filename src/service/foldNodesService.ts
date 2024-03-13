@@ -18,13 +18,10 @@ const logger = log4js.getLogger("app");
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 import { sortByKeys, sortByOrefWithIndex } from "../utils/misc.js";
+import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
-  const lucid = await Lucid.new(
-    new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-    process.env.NETWORK as Network
-  );
-
+  const lucid = await getLucidInstance();
   const readableUTxOs = await parseUTxOsAtScript(
     lucid,
     applied.scripts.discoveryValidator
@@ -63,7 +60,7 @@ const run = async () => {
     await loggerDD("running multiFold");
     await loggerDD("selecting WALLET_PROJECT_0");
 
-    lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+    await selectLucidWallet(0);
     const multiFoldUnsigned = await multiFold(lucid, multiFoldConfig);
 
     if (multiFoldUnsigned.type == "error") {

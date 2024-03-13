@@ -19,18 +19,16 @@ import applied from "../../applied-scripts.json" assert { type: "json" };
 import alwaysFailValidator from "../compiled/alwaysFails.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 import { lovelaceAtAddress } from "../utils/misc.js";
+import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
   //WARNING: Make sure WALLET_PROJECT_2 has enough ADA ideally more than 500 ADA, deployment is expensive
   await loggerDD("running deployScripts");
 
   //NOTE: DEPLOY
-  const lucid = await Lucid.new(
-    new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-    process.env.NETWORK as Network
-  );
+  const lucid = await getLucidInstance();
   await loggerDD("selecting WALLET_PROJECT_2");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
+  await selectLucidWallet(2);
   const walletProject2Funds = await lovelaceAtAddress(lucid);
   if (walletProject2Funds < 200_000_000n) {
     console.log(`Not enough funds ${walletProject2Funds}, ${await lucid.wallet.address()}`);

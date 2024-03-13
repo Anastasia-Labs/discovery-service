@@ -1,14 +1,25 @@
-import { Blockfrost, Lucid, Network } from "@anastasia-labs/lucid-cardano-fork";
+import { Blockfrost, Lucid, Network } from "price-discovery-offchain";
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../constants/network.js";
 
-export const selectLucidWallet = async (index: 0 | 1 | 2) => {
-    const lucid = await Lucid.new(
-        new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-        process.env.NETWORK as Network
-      );
-      lucid.selectWalletFromSeed(process.env[`WALLET_PROJECT_${index}`] as string);
+let lucidInstance: Lucid;
 
-      return lucid;
+export const getLucidInstance = async () => {
+  if (!lucidInstance) {
+    lucidInstance = await Lucid.new(
+     new Blockfrost(process.env.API_URL!, process.env.API_KEY),
+     process.env.NETWORK as Network
+   );
+  }
+
+  return lucidInstance;
+}
+
+export const selectLucidWallet = async (index: 0 | 1 | 2) => {
+  const lucid = await getLucidInstance();
+  const { default: wallets } = await import("../../test/wallets.json", { assert: { type: "json" } })
+  lucid.selectWalletFromSeed(wallets[index].seed as string);
+
+  return lucid;
 }
 
 export const fetchFromBlockfrost = async (slug: string) => {

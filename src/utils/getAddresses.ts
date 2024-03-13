@@ -6,21 +6,19 @@ import {
   Network,
 } from "price-discovery-offchain";
 import { lovelaceAtAddress } from "./misc.js";
+import { getLucidInstance, selectLucidWallet } from "./wallet.js";
 
-const lucid = await Lucid.new(
-  new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
-);
+const lucid = await getLucidInstance();
 
 export const checkWalletFunds = async () => {
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+  await selectLucidWallet(0);
   console.log("WALLET_PROJECT_0");
   console.log({
     address: await lucid.wallet.address(),
     lovelace: await lovelaceAtAddress(lucid),
   });
 
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!);
+  await selectLucidWallet(1);
   console.log("WALLET_PROJECT_1");
   console.log({
     address: await lucid.wallet.address(),
@@ -28,7 +26,7 @@ export const checkWalletFunds = async () => {
   });
 
   console.log("WALLET_PROJECT_2");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_2!);
+  await selectLucidWallet(2);
   console.log({
     address: await lucid.wallet.address(),
     lovelace: await lovelaceAtAddress(lucid),

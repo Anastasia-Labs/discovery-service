@@ -12,18 +12,9 @@ import {
   Unit,
   Network
 } from "@anastasia-labs/lucid-cardano-fork";
+import { selectLucidWallet } from "./wallet.js";
 
-const lucid = await Lucid.new(
-  new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
-);
-
-lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_1!)
-
-const lucid2 = await Lucid.new(
-  new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
-);
+const lucid = await selectLucidWallet(1);
 
 const { paymentCredential } = lucid.utils.getAddressDetails(
   await lucid.wallet.address(),

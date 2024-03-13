@@ -1,17 +1,8 @@
 import dotenv from "dotenv";
 dotenv.config();
-import {
-  Blockfrost,
-  Lucid,
-  Network,
-} from "price-discovery-offchain";
+import { selectLucidWallet } from "./wallet.js";
 
-const lucid = await Lucid.new(
-  new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
-);
-
-lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+const lucid = await selectLucidWallet(0);
 
 const tx = await lucid
   .newTx()
