@@ -38,10 +38,10 @@
   "dependencies": {
     "@anastasia-labs/lucid-cardano-fork": "^0.10.7",
     "@datadog/datadog-api-client": "^1.16.0",
-    "price-discovery-offchain": "file:price-discovery-offchain-v0.0.12.tgz",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
     "log4js": "^6.9.1",
+    "price-discovery-offchain": "file:price-discovery-offchain-v0.0.12.tgz",
     "ts-node": "^10.9.1",
     "ts-pattern": "^5.0.5"
   }

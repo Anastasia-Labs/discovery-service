@@ -943,7 +943,7 @@ packages:
     dev: false
 
   file:price-discovery-offchain-v0.0.12.tgz:
-    resolution: {integrity: sha512-7eai4+cVXVbG/VBV1w6K/APtiVblNo2BYkzBy27CorWMCxOZ+33p5ScqiCu26QQ5RKmqQn+WWtYIT+w7ES7sYA==, tarball: file:price-discovery-offchain-v0.0.12.tgz}
+    resolution: {integrity: sha512-Qmo0dVQVwjIM+fSy0Dg4IkreIVMJf+VgNPRTKMG8JKBX36bQjXqMZ5igX4PFT5uzuOrca2EnSeUbPLzYem+B6A==, tarball: file:price-discovery-offchain-v0.0.12.tgz}
     name: price-discovery-offchain
     version: 0.0.12
     dependencies:
