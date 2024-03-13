@@ -11,14 +11,10 @@ import {
   TxHash,
   Unit,
   Network
-} from "lucid-cardano";
+} from "@anastasia-labs/lucid-cardano-fork";
+import { selectLucidWallet } from "./wallet.js";
 
-const lucid = await Lucid.new(
-  new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
-);
-
-lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!)
+const lucid = await selectLucidWallet(1);
 
 const { paymentCredential } = lucid.utils.getAddressDetails(
   await lucid.wallet.address(),
@@ -63,7 +59,7 @@ export async function mintNFT(): Promise<TxHash> {
 
   const txHash = await signedTx.submit();
 
-  console.log(`Minted token ${value} under policy ID (${mintingPolicy.script}). TxHash: ${txHash}`)
+  console.log(`Minted token ${value} under policy ID (${policyId}). TxHash: ${txHash}`)
   return txHash;
 }
 

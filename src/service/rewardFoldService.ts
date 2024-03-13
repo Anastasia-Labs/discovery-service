@@ -19,16 +19,14 @@ import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 import { signSubmitValidate } from "../utils/misc.js";
+import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
-  const lucid = await Lucid.new(
-    new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-    process.env.NETWORK as Network
-  );
+  const lucid = await getLucidInstance();
 
   await loggerDD("running rewardFold");
   await loggerDD("selecting WALLET_PROJECT_0");
-  lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
+  await selectLucidWallet(0);
 
   const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
 
