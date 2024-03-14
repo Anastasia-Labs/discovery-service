@@ -1,12 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
 import {
-  Blockfrost,
-  LiquidityEndpoints,
   InitNodeConfig,
   InitTokenHolderConfig,
-  Lucid,
-  Network,
+  initLqNode,
+  initLqTokenHolder,
 } from "price-discovery-offchain";
 import log4js from "log4js";
 import { writeFile } from 'fs';
@@ -60,7 +58,7 @@ const run = async () => {
 
   await loggerDD("selecting WALLET_PROJECT_1");
   await selectLucidWallet(1);
-  const initTokenHolderUnsigned = await LiquidityEndpoints.initTokenHolder(
+  const initTokenHolderUnsigned = await initLqTokenHolder(
     lucid,
     initTokenHolderConfig
   );
@@ -97,7 +95,7 @@ const run = async () => {
 
   await loggerDD("selecting WALLET_PROJECT_0");
   await selectLucidWallet(0);
-  const initNodeUnsigned = await LiquidityEndpoints.initNode(lucid, initNodeConfig);
+  const initNodeUnsigned = await initLqNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
     console.log(initNodeUnsigned.error);
