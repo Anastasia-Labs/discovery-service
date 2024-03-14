@@ -6,6 +6,7 @@ import {
   multiLqFold,
   MultiFoldConfig,
   parseUTxOsAtScript,
+  UTxO,
 } from "price-discovery-offchain";
 import log4js from "log4js";
 log4js.configure("log4js.json");
@@ -17,7 +18,8 @@ import { sortByKeys, sortByOrefWithIndex } from "../utils/misc.js";
 import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 const run = async () => {
-  const lucid = await getLucidInstance();
+  const lucid = await selectLucidWallet(0);
+  const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript(
     lucid,
     applied.scripts.liquidityValidator,
@@ -38,9 +40,14 @@ const run = async () => {
     // offset wallet & blockchain sync
     await setTimeout(20_000);
     console.log(`processing chunk ${index}`);
-    console.log(chunk)
+    // console.log(chunk)
     const sortedInputs = sortByOrefWithIndex(chunk);
-    console.log(sortedInputs)
+    // console.log(sortedInputs)
+    
+    const feeInput = (await lucid.wallet.getUtxos()).find(({ assets }) => assets.lovelace > 2_000_000n);
+    if (!feeInput) {
+      throw Error("Could not find a UTxO that had at least 2 ADA in it.")
+    }
 
     const multiFoldConfig: MultiFoldConfig = {
       nodeRefInputs: sortedInputs.map((data) => {
@@ -49,7 +56,11 @@ const run = async () => {
       indices: sortedInputs.map((data) => {
         return data.index;
       }),
+      feeInput,
+      changeAddress,
       scripts: {
+        liquidityValidator: applied.scripts.liquidityValidator,
+        collectStake: applied.scripts.collectStake,
         foldPolicy: applied.scripts.collectFoldPolicy,
         foldValidator: applied.scripts.collectFoldValidator,
       },
