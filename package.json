@@ -15,8 +15,11 @@
     "init-liquidity": "ts-node --esm src/service/initializeLiquidity.ts",
     "start-tt": "ts-node --esm src/service/startTasteTest.ts",
     "init-fold": "ts-node --esm src/service/initFoldService.ts",
+    "init-fold:lp": "ts-node --esm src/service/initLiquidityFoldService.ts",
     "fold-nodes": "ts-node --esm src/service/foldNodesService.ts",
+    "fold-nodes:lp": "ts-node --esm src/service/foldLiquidityNodesService.ts",
     "init-reward": "ts-node --esm src/service/initRewardService.ts",
+    "init-reward:lp": "ts-node --esm src/service/initLiquidityRewardService.ts",
     "reward-fold": "ts-node --esm src/service/rewardFoldService.ts",
     "datadog-test": "ts-node --esm src/test-datadog.ts",
     "create-wallets": "ts-node --esm src/utils/createWallets.ts",
@@ -41,7 +44,7 @@
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
     "log4js": "^6.9.1",
-    "price-discovery-offchain": "file:price-discovery-offchain-v0.0.12.tgz",
+    "price-discovery-offchain": "0.0.13",
     "ts-node": "^10.9.1",
     "ts-pattern": "^5.0.5"
   }
