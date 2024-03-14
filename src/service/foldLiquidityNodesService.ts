@@ -2,14 +2,10 @@ import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
 dotenv.config();
 import {
-  Blockfrost,
   chunkArray,
-  Lucid,
-  multiFold,
+  multiLqFold,
   MultiFoldConfig,
-  Network,
   parseUTxOsAtScript,
-  sortByOutRefWithIndex,
 } from "price-discovery-offchain";
 import log4js from "log4js";
 log4js.configure("log4js.json");
@@ -24,9 +20,10 @@ const run = async () => {
   const lucid = await getLucidInstance();
   const readableUTxOs = await parseUTxOsAtScript(
     lucid,
-    applied.scripts.discoveryValidator,
-    "Direct"
+    applied.scripts.liquidityValidator,
+    "Liquidity"
   );
+
   const head = readableUTxOs.find((utxo) => {
     return utxo.datum.key == null;
   });
@@ -53,8 +50,8 @@ const run = async () => {
         return data.index;
       }),
       scripts: {
-        foldPolicy: applied.scripts.foldPolicy,
-        foldValidator: applied.scripts.foldValidator,
+        foldPolicy: applied.scripts.collectFoldPolicy,
+        foldValidator: applied.scripts.collectFoldValidator,
       },
     };
 
@@ -62,7 +59,7 @@ const run = async () => {
     await loggerDD("selecting WALLET_PROJECT_0");
 
     await selectLucidWallet(0);
-    const multiFoldUnsigned = await multiFold(lucid, multiFoldConfig);
+    const multiFoldUnsigned = await multiLqFold(lucid, multiFoldConfig);
 
     if (multiFoldUnsigned.type == "error") {
       console.log(multiFoldUnsigned.error);
@@ -71,9 +68,10 @@ const run = async () => {
 
     // console.log(initNodeUnsigned.data.txComplete.to_json());
     const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-    const multiFoldHash = await multiFoldSigned.submit();
-    await lucid.awaitTx(multiFoldHash);
-    await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
+    console.log(Buffer.from(multiFoldSigned.txSigned.body().to_bytes()).toString("hex"))
+    // const multiFoldHash = await multiFoldSigned.submit();
+    // await lucid.awaitTx(multiFoldHash);
+    // await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
   }
 };
 

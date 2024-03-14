@@ -4,7 +4,7 @@ dotenv.config();
 import { writeFile } from "node:fs";
 import {
   Blockfrost,
-  DiscoveryEndpoints,
+  deployRefScripts,
   fromText,
   Lucid,
   Network,
@@ -39,7 +39,7 @@ const run = async () => {
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
 
-  const deploy1 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy1 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityPolicy,
     name: "TasteTestPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -55,7 +55,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy2 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy2 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityValidator,
     name: "TasteTestValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -71,7 +71,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy3 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy3 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldPolicy,
     name: "CollectFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -87,7 +87,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy4 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy4 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldValidator,
     name: "CollectFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -103,7 +103,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy5 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy5 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldPolicy,
     name: "RewardFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -119,7 +119,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy6 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy6 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldValidator,
     name: "RewardFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -135,7 +135,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy7 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy7 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,
     name: "TokenHolderPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -151,7 +151,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy8 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy8 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderValidator,
     name: "TokenHolderValidator",
     alwaysFails: alwaysFailValidator.cborHex,
@@ -167,7 +167,7 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  const deploy9 = await DiscoveryEndpoints.deployRefScripts(lucid, {
+  const deploy9 = await deployRefScripts(lucid, {
     script: applied.scripts.collectStake,
     name: "TasteTestStakeValidator",
     alwaysFails: alwaysFailValidator.cborHex,
