@@ -1,6 +1,6 @@
 {
   "pk": {
-    "S": "5a1ea9466555508032b01d3a79d8810a21f6de135a65ee8f2cc3844d"
+    "S": "e49f5ebf253b229ea0dd9f8e1cbee53c4d5f5b083471dfcc1a6b6643"
   },
   "adaHandle": {
     "S": "000de14074745f74657374"
@@ -8,10 +8,10 @@
   "asset": {
     "M": {
       "AssetId": {
-        "S": "ea0ce3030e0ddf327aa5b006d382734fd74441b46dd75a2c763a3c8c.31486f7572"
+        "S": "cdff65063490ece618616c0e3667d4dc229a11d79290cafbc2f47f2a.54756573646179"
       },
       "AssetName": {
-        "S": "1Hour"
+        "S": "Tuesday"
       },
       "Decimals": {
         "N": "6"
@@ -22,7 +22,7 @@
       "MintDate": {
         "M": {
           "Slot": {
-            "S": "43779093"
+            "S": "43787095"
           },
           "SlotOffset": {
             "N": "1666656000"
@@ -30,10 +30,10 @@
         }
       },
       "PolicyId": {
-        "S": "ea0ce3030e0ddf327aa5b006d382734fd74441b46dd75a2c763a3c8c"
+        "S": "cdff65063490ece618616c0e3667d4dc229a11d79290cafbc2f47f2a"
       },
       "Ticker": {
-        "S": "1HOUR"
+        "S": "TUESD"
       },
       "TotalSupply": {
         "S": "100000000"
@@ -43,7 +43,7 @@
   "createdDate": {
     "M": {
       "Slot": {
-        "S": "43779093"
+        "S": "43787095"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -51,12 +51,12 @@
     }
   },
   "creationTxHash": {
-    "S": "2be1c9da2bb1ce99563a1dbdf44503d092311edf866581789865d78ed0a754ec"
+    "S": "9714a5d4fb2ad93c9486500c11f9998833a23d79d514f2b1b7ba3110d32d2b0c"
   },
   "endDate": {
     "M": {
       "Slot": {
-        "S": "43782730"
+        "S": "44219049"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -83,7 +83,7 @@
   "lastCallDate": {
     "M": {
       "Slot": {
-        "S": "43696330"
+        "S": "44132649"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -93,7 +93,7 @@
   "openDate": {
     "M": {
       "Slot": {
-        "S": "43779093"
+        "S": "43787095"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -141,7 +141,7 @@
         "S": "yes"
       },
       "Name": {
-        "S": "1 Hour Taste Test"
+        "S": "Tuesday Taste Test"
       },
       "Socials": {
         "L": [
@@ -170,7 +170,7 @@
       "Team": {
         "M": {
           "Company": {
-            "S": "1Hour, Inc."
+            "S": "Tuesday, Inc."
           },
           "Members": {
             "L": [
@@ -281,7 +281,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "6570dbb673628f78fe28b277031eda0b1a4058fb286e7814a013f3f8"
+            "S": "37060d0eb7afd4dac4746343c2e150aead0cf3e1809b471643131358"
           },
           "utxo": {
             "M": {
@@ -289,7 +289,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "ec2eb83ca96805fc9fff5413ffc6bfedd0119179820c3066f566d8dc4882cd4e"
+                "S": "04fd8797bae6e7af21d5f9dc1446045f7acb698dee8c9b6d0e4e73caf13d6443"
               }
             }
           }
@@ -304,7 +304,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "a5bbec8ccd61ecc4f857569bf389e9417d8bb7f96eddcea44b0d0669"
+            "S": "7857bf80ba283427c9e62f6b22978eb2591a1a05592ae73d451840d9"
           },
           "utxo": {
             "M": {
@@ -312,7 +312,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "7ee2b224a1952331b4144395aaddad723a7eaf558b7bb89d3842f184c4d57d70"
+                "S": "87f0c537925659566dedc52a76c5866125d0c263e1245789977bab0efb8ee4a4"
               }
             }
           }
@@ -327,7 +327,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "fa5f22889c2c7cb232fa2ce3495bd22e7e70d7b7f6f8bbee828fa400"
+            "S": "b8e088cfd1294f4099c522459e86253a5f98f95078390c67d5198362"
           },
           "utxo": {
             "M": {
@@ -335,7 +335,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "ca033e317ead72bcb740c97fbdc471d4e1e9c314664921e1d9224412d22c637a"
+                "S": "7da0b8bf7d79b0191dd4b1a249453823d766b3f7a2e980540ef7ca2f0a928c9f"
               }
             }
           }
@@ -350,7 +350,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "defba3de0b3b9054548e1692d868faa493370a49fab099172eaa7fb3"
+            "S": "636d6d5b021bcdf41f6c38f7123d57bd89fc066e0d062b753815daeb"
           },
           "utxo": {
             "M": {
@@ -358,7 +358,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "1a1b58b3bc8dcf2b412c3b5ef98871abe4b5ba84cf11d5f307498cb2c3f5e240"
+                "S": "a5d0e1dcfbc7c9d1286ed5ef0c3eb9d6bfbfdb63d32be32f3198854008b0c1a3"
               }
             }
           }
@@ -373,7 +373,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "9ffe7fef06b839e2be8bc922b6f1dff6eb68803c118a048dcab8ccca"
+            "S": "96bf4bdddd6bb4635de4314213527b5fbc287da97bc5f9c836402eca"
           },
           "utxo": {
             "M": {
@@ -381,7 +381,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "663db747043c61d5353347b098da4e111df09663a36128fd238f4c3a1e8b15f9"
+                "S": "a3a18a4481db163574c8365f57e90b8326393c2e09aea1b4bb4ced9179772896"
               }
             }
           }
@@ -396,7 +396,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "900a4a2cbdb12ec93b245adffd4389420ed8c6c64bb4d7cde9952ab9"
+            "S": "fa58663df259a78db7c91ad8c8504fe133c66e2472a836b771422e79"
           },
           "utxo": {
             "M": {
@@ -404,7 +404,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "0b082b7d513aa88918712a5313128ac858d08e5910b81a2b0bb26c0181ffe07d"
+                "S": "836be6850393ef652f98713593929368090c70f0d92f9ec73295414b55bbf541"
               }
             }
           }
@@ -419,7 +419,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "aa716d49cb1acf86d2c9ce39689989b37633295bafef1ac8fc42c481"
+            "S": "e67dade5c1da9f208e2411f1659c5efd3f1e16e3715537c98fb215c2"
           },
           "utxo": {
             "M": {
@@ -427,7 +427,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "20b6a224ed9f801ce0a4ec8cf8241b7120f5a5b725d308bb6354baa72205a3a8"
+                "S": "a78890652923fe368a92acdb58db861703558483c5a7bbb6d549e157c615d5b5"
               }
             }
           }
@@ -442,7 +442,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "aedc0a03562dd8d83be4b4e6d7ff31f06cae120326c2801b7794cecc"
+            "S": "295349e209c57bad32b4e6d247a396beccda30714fcaf3c236ad5f9e"
           },
           "utxo": {
             "M": {
@@ -450,7 +450,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "79606becc386af2c22adb7211dac82e96a3bc6834c32bb83a2713011e53faa31"
+                "S": "e470235f9fd5346387f6f4b0bcf20f240704b35aaebb5896cc72618dcfa42084"
               }
             }
           }
@@ -465,7 +465,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "221f8546e026594ae84fbe5d613a7e20896b07e8cf433ad434aede8c"
+            "S": "6d8831aa242d9eed3545f8fec636464449a8f059dbc60d38b6153711"
           },
           "utxo": {
             "M": {
@@ -473,7 +473,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "235e1037b09be2f9a5a0ea9ffbb62fde76580a27bed99d2cc6723fdad8ab502f"
+                "S": "7580eb3dc1ac3394356d7bca4155961542cd8e635c8f1d1e99e6d04f1f113cda"
               }
             }
           }
@@ -482,7 +482,7 @@
     }
   },
   "slug": {
-    "S": "1-hour taste test"
+    "S": "tuesday-taste test"
   },
   "type": {
     "S": "Liquidity"
@@ -503,7 +503,7 @@
           "ReleaseDate": {
             "M": {
               "Slot": {
-                "S": "52419093"
+                "S": "52427095"
               },
               "SlotOffset": {
                 "N": "1666656000"

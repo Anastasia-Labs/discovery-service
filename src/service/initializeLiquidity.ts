@@ -24,20 +24,20 @@ const run = async () => {
   await selectLucidWallet(2);
 
   //NOTE: REGISTER STAKE ADDRESS
-  const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
-    type: "PlutusV2",
-    script: applied.scripts.liquidityValidator, 
-  });
+  // const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
+  //   type: "PlutusV2",
+  //   script: applied.scripts.liquidityValidator, 
+  // });
 
-  const registerStakeHash = await (
-    await (
-      await lucid.newTx().registerStake(liquidityStakeRewardAddress!).complete()
-    )
-      .sign()
-      .complete()
-  ).submit();
-  await lucid.awaitTx(registerStakeHash);
-  await loggerDD(`registerStake submitted TxHash: ${registerStakeHash}`);
+  // const registerStakeHash = await (
+  //   await (
+  //     await lucid.newTx().registerStake(liquidityStakeRewardAddress!).complete()
+  //   )
+  //     .sign()
+  //     .complete()
+  // ).submit();
+  // await lucid.awaitTx(registerStakeHash);
+  // await loggerDD(`registerStake submitted TxHash: ${registerStakeHash}`);
 
   //NOTE: INIT PROJECT TOKEN HOLDER
   //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!

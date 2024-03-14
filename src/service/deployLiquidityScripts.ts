@@ -69,7 +69,7 @@ const run = async () => {
   await lucid.awaitTx(deploy2Hash);
   await loggerDD(`TasteTestValidator submitted TxHash:  ${deploy2Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy3 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldPolicy,
@@ -85,7 +85,7 @@ const run = async () => {
   await lucid.awaitTx(deploy3Hash);
   await loggerDD(`CollectFoldPolicy submitted TxHash: ${deploy3Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy4 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldValidator,
@@ -101,7 +101,7 @@ const run = async () => {
   await lucid.awaitTx(deploy4Hash);
   await loggerDD(`CollectFoldValidator submitted TxHash:  ${deploy4Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy5 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldPolicy,
@@ -117,7 +117,7 @@ const run = async () => {
   await lucid.awaitTx(deploy5Hash);
   await loggerDD(`RewardFoldPolicy submitted TxHash:  ${deploy5Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy6 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldValidator,
@@ -133,7 +133,7 @@ const run = async () => {
   await lucid.awaitTx(deploy6Hash);
   await loggerDD(`RewardFoldValidator submitted TxHash: ${deploy6Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy7 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,
@@ -149,7 +149,7 @@ const run = async () => {
   await lucid.awaitTx(deploy7Hash);
   await loggerDD(`TokenHolderPolicy submitted TxHash: ${deploy7Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy8 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderValidator,
@@ -165,7 +165,7 @@ const run = async () => {
   await lucid.awaitTx(deploy8Hash);
   await loggerDD(`TokenHolderValidator submitted TxHash: ${deploy8Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   const deploy9 = await deployRefScripts(lucid, {
     script: applied.scripts.collectStake,
@@ -181,7 +181,7 @@ const run = async () => {
   await lucid.awaitTx(deploy9Hash);
   await loggerDD(`TasteTestStakeValidator submitted TxHash: ${deploy9Hash}`);
   // offset wallet & blockchain sync
-  await setTimeout(20_000);
+  // await setTimeout(20_000);
 
   //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;

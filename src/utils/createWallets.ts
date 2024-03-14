@@ -27,7 +27,7 @@ for (let i = 0; i < target; i++) {
   wallets.push(wallet);
 }
 
-console.log(`Fund this wallet address (seed wallet): ${wallets[wallets.length - 1].address}`);
+console.log(`Fund this wallet address (seed wallet): ${wallets[0].address}`);
 
 writeFile(path, JSON.stringify(wallets, undefined, 2), (error) => {
   error ? console.log(error) : console.log(`Wallets saved at ${path} `);
