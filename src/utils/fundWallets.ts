@@ -23,20 +23,26 @@ async function fundWallets() {
       continue;
     }
 
-    // We need at least 500 ada in the deploy wallet for reference scripts.
-    if (index === 2) {
-      console.log("Sending 500 ADA to our deploy script wallet.")
-      tx.payToAddress(wallet.address, { lovelace: 500_000_000n });
+    if (index === 1) {
+      console.log("Sending 5 ADA to our token minting wallet.");
+      tx.payToAddress(wallet.address, { lovelace: 5_000_000n });
       continue;
     }
 
-    // Limit 10 addresses.
-    if (index === 10) {
+    // We need at least 200 ada in the deploy wallet for reference scripts.
+    if (index === 2) {
+      console.log("Sending 500 ADA to our deploy script wallet.")
+      tx.payToAddress(wallet.address, { lovelace: 200_000_000n });
+      continue;
+    }
+
+    // Limit 13 addresses.
+    if (index === 13) {
       break;
     }
 
-    console.log("Sending 5 ADA to " + wallet.address)
-    tx.payToAddress(wallet.address, { lovelace: 5_000_000n });
+    console.log("Sending 15 ADA to " + wallet.address)
+    tx.payToAddress(wallet.address, { lovelace: 15_000_000n });
   }
 
   const completedTx = await safeAsync(async () =>

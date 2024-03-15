@@ -11,7 +11,7 @@ import { UTxO } from "@anastasia-labs/lucid-cardano-fork";
 import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
 
 async function run() {
-    const lucid = await selectLucidWallet(0);
+    const lucid = await selectLucidWallet(13);
 
     const tx = await removeLqNode(lucid, {
         penaltyAddress: process.env.BENEFICIARY_ADDRESS as string,

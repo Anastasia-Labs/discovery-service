@@ -2,7 +2,7 @@
 
 1. Run `yarn create-wallets`
 2. Update the `.env` file with the first 3 wallet seeds generated above. BENEFICIARY_ADDRESS can be whatever you want.
-3. Fund wallet Project 0 with testnet funds (at least 2,000 ADA).
+3. Fund wallet Project 0 with testnet funds (at least 5,000 ADA).
 4. Then run `yarn fund-wallets` to fund other wallets (this can take a while).
 5. Then create a new test token with `yarn mint-token` (change the token name before executing).
 6. Update the `.env` file with token policy ID and token name.
@@ -13,6 +13,10 @@
 11. Run `yarn build-dynamo` to generate a DynamoDB JSON file (found in `dynamodb-template.json` after running this script). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
 12. Now you can run `yarn start-tt` to submit the signed transaction.
 13. Your Taste Test is live!
+
+## Funding a Taste Test
+1. Once a Taste Test has started, you can test funding it.
+2. Run `yarn insert-nodes` or `yarn insert-node:lp`.
 
 ## Closing a Taste Test
 1. Once a Taste Test has closed, you can now fold the UTxOs.
