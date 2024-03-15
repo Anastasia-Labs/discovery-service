@@ -4,14 +4,15 @@ import {
     modifyLqNode,
 } from "price-discovery-offchain"
 
-import applied from "../../applied-scripts.json" assert { type: "json" };
-import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
+import applied from "../../../applied-scripts.json" assert { type: "json" };
+import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
+import { setTimeout } from "timers/promises";
 
 async function run() {
     const lucid = await getLucidInstance();
 
     let loop = true;
-    let walletIdx = 3;
+    let walletIdx = 5;
     while (loop) {
         try {
             await selectLucidWallet(walletIdx);
@@ -34,13 +35,16 @@ async function run() {
             console.log(`Done: ${txHash}`);
     
             // Stop after wallet index 13
-            if (walletIdx === 13) {
+            if (walletIdx === 10) {
                 loop = false;
             } else {
                 walletIdx++;
+                await setTimeout(20_000)
             }
         } catch (e) {
-            console.log("Failed to update TT with wallet: " + walletIdx, (e as Error).message);
+            console.log("Failed to fund TT with wallet: " + walletIdx, (e as Error).message);
+            console.log("Waiting to try again...")
+            await setTimeout(20_000)
         }
     }
 }

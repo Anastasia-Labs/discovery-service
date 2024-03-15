@@ -7,16 +7,16 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 
-import liquidityValidator from "../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
-import liquidityPolicy from "../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
-import liquidityStake from "../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
-import collectionFoldPolicy from "../compiledLiquidity/liquidityFoldMint.json" assert { type: "json" };
-import collectionFoldValidator from "../compiledLiquidity/liquidityFoldValidator.json" assert { type: "json" };
-import distributionFoldPolicy from "../compiledLiquidity/distributionRewardFoldMint.json" assert { type: "json" };
-import distributionFoldValidator from "../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };
-import tokenHolderPolicy from "../compiled/tokenHolderPolicy.json" assert { type: "json" };
-import tokenHolderValidator from "../compiled/tokenHolderValidator.json" assert { type: "json" };
-import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
+import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
+import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
+import liquidityStake from "../../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
+import collectionFoldPolicy from "../../compiledLiquidity/liquidityFoldMint.json" assert { type: "json" };
+import collectionFoldValidator from "../../compiledLiquidity/liquidityFoldValidator.json" assert { type: "json" };
+import distributionFoldPolicy from "../../compiledLiquidity/distributionRewardFoldMint.json" assert { type: "json" };
+import distributionFoldValidator from "../../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };
+import tokenHolderPolicy from "../../compiled/tokenHolderPolicy.json" assert { type: "json" };
+import tokenHolderValidator from "../../compiled/tokenHolderValidator.json" assert { type: "json" };
+import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
 const run = async () => {
   const lucid = await getLucidInstance();

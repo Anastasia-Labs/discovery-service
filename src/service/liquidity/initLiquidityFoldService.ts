@@ -3,14 +3,15 @@ dotenv.config();
 import {
   initFold,
   InitFoldConfig,
+  initLqFold,
 } from "price-discovery-offchain";
 import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
-import applied from "../../applied-scripts.json" assert { type: "json" };
-import { loggerDD } from "../logs/datadog-service.js";
-import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
+import applied from "../../../applied-scripts.json" assert { type: "json" };
+import { loggerDD } from "../../logs/datadog-service.js";
+import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
 const run = async () => {
   const lucid = await getLucidInstance();
@@ -29,7 +30,7 @@ const run = async () => {
   await loggerDD("selecting WALLET_PROJECT_0");
 
   await selectLucidWallet(0);
-  const initFoldUnsigned = await initFold(lucid, initFoldConfig);
+  const initFoldUnsigned = await initLqFold(lucid, initFoldConfig);
 
   if (initFoldUnsigned.type == "error") {
     console.log(initFoldUnsigned.error);

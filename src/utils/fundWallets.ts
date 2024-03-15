@@ -31,7 +31,7 @@ async function fundWallets() {
 
     // We need at least 200 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log("Sending 500 ADA to our deploy script wallet.")
+      console.log("Sending 200 ADA to our deploy script wallet.")
       tx.payToAddress(wallet.address, { lovelace: 200_000_000n });
       continue;
     }

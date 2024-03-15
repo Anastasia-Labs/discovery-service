@@ -6,17 +6,17 @@ import {
   fromText,
   toUnit,
 } from "price-discovery-offchain";
-import discoveryValidator from "../compiled/discoveryValidator.json" assert { type: "json" };
-import discoveryPolicy from "../compiled/discoveryMinting.json" assert { type: "json" };
-import discoveryStake from "../compiled/discoveryStakeValidator.json" assert { type: "json" };
-import foldPolicy from "../compiled/foldMint.json" assert { type: "json" };
-import foldValidator from "../compiled/foldValidator.json" assert { type: "json" };
-import rewardPolicy from "../compiled/rewardFoldMint.json" assert { type: "json" };
-import rewardValidator from "../compiled/rewardFoldValidator.json" assert { type: "json" };
-import tokenHolderPolicy from "../compiled/tokenHolderPolicy.json" assert { type: "json" };
-import tokenHolderValidator from "../compiled/tokenHolderValidator.json" assert { type: "json" };
+import discoveryValidator from "../../compiled/discoveryValidator.json" assert { type: "json" };
+import discoveryPolicy from "../../compiled/discoveryMinting.json" assert { type: "json" };
+import discoveryStake from "../../compiled/discoveryStakeValidator.json" assert { type: "json" };
+import foldPolicy from "../../compiled/foldMint.json" assert { type: "json" };
+import foldValidator from "../../compiled/foldValidator.json" assert { type: "json" };
+import rewardPolicy from "../../compiled/rewardFoldMint.json" assert { type: "json" };
+import rewardValidator from "../../compiled/rewardFoldValidator.json" assert { type: "json" };
+import tokenHolderPolicy from "../../compiled/tokenHolderPolicy.json" assert { type: "json" };
+import tokenHolderValidator from "../../compiled/tokenHolderValidator.json" assert { type: "json" };
 
-import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
+import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
 const run = async () => {
   const wallet0 = await selectLucidWallet(0);

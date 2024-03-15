@@ -4,14 +4,11 @@ import {
     removeLqNode
 } from "price-discovery-offchain"
 
-import applied from "../../applied-scripts.json" assert { type: "json" };
-import refScripts from "../../deployed-policy.json" assert { type: "json" };
-import { loggerDD } from "../logs/datadog-service.js";
-import { UTxO } from "@anastasia-labs/lucid-cardano-fork";
-import { getLucidInstance, selectLucidWallet } from "../utils/wallet.js";
+import applied from "../../../applied-scripts.json" assert { type: "json" };
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 async function run() {
-    const lucid = await selectLucidWallet(13);
+    const lucid = await selectLucidWallet(10);
 
     const tx = await removeLqNode(lucid, {
         penaltyAddress: process.env.BENEFICIARY_ADDRESS as string,
