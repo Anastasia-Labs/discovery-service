@@ -25,8 +25,11 @@
     "create-wallets": "ts-node --esm src/utils/createWallets.ts",
     "fund-wallets": "ts-node --esm src/utils/fundWallets.ts",
     "insert-nodes": "ts-node --esm src/utils/insertNodes.ts",
+    "insert-node:lp": "ts-node --esm src/service/insertLqNode.ts",
     "modify-nodes": "ts-node --esm src/utils/modifyNodes.ts",
+    "modify-node:lp": "ts-node --esm src/service/modifyLqNode.ts",
     "remove-nodes": "ts-node --esm src/utils/removeNodes.ts",
+    "remove-node:lp": "ts-node --esm src/service/removeLqNode.ts",
     "refund-wallet": "ts-node --esm src/utils/refundWallet.ts",
     "mint-token": "ts-node --esm src/utils/mintToken.ts",
     "build-dynamo": "ts-node --esm src/utils/generateDBEntry.ts"

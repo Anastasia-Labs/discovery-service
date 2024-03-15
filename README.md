@@ -13,3 +13,8 @@
 11. Run `yarn build-dynamo` to generate a DynamoDB JSON file (found in `dynamodb-template.json` after running this script). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
 12. Now you can run `yarn start-tt` to submit the signed transaction.
 13. Your Taste Test is live!
+
+## Closing a Taste Test
+1. Once a Taste Test has closed, you can now fold the UTxOs.
+2. Run `yarn init-fold` or `yarn init-fold:lp`.
+3. Run `yarn fold-nodes` or `yarn fold-nodes:lp`.

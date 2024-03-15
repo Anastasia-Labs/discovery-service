@@ -14,7 +14,7 @@ export const getLucidInstance = async () => {
   return lucidInstance;
 }
 
-export const selectLucidWallet = async (index: 0 | 1 | 2) => {
+export const selectLucidWallet = async (index: number) => {
   const lucid = await getLucidInstance();
   const { default: wallets } = await import("../../test/wallets.json", { assert: { type: "json" } })
   lucid.selectWalletFromSeed(wallets[index].seed as string);

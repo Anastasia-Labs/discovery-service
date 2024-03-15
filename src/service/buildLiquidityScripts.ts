@@ -50,7 +50,7 @@ const run = async () => {
 
   // const deadline = Date.now() + TWENTY_FOUR_HOURS_MS * 5; // 5 days
   const deadline = Number(process.env.DEADLINE);
-  console.log("Deadline UTC", new Date(deadline).toUTCString());
+  console.log("Deadline UTC", deadline, new Date(deadline).toUTCString());
 
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {

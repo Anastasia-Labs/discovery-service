@@ -69,7 +69,6 @@ const run = async () => {
     await loggerDD("running multiFold");
     await loggerDD("selecting WALLET_PROJECT_0");
 
-    await selectLucidWallet(0);
     const multiFoldUnsigned = await multiLqFold(lucid, multiFoldConfig);
 
     if (multiFoldUnsigned.type == "error") {
@@ -79,10 +78,9 @@ const run = async () => {
 
     // console.log(initNodeUnsigned.data.txComplete.to_json());
     const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-    console.log(Buffer.from(multiFoldSigned.txSigned.body().to_bytes()).toString("hex"))
-    // const multiFoldHash = await multiFoldSigned.submit();
-    // await lucid.awaitTx(multiFoldHash);
-    // await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
+    const multiFoldHash = await multiFoldSigned.submit();
+    await lucid.awaitTx(multiFoldHash);
+    await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
   }
 };
 
