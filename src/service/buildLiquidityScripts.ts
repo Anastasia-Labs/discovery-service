@@ -6,6 +6,7 @@ import {
   buildLiquidityScripts,
   toUnit,
 } from "price-discovery-offchain";
+
 import liquidityValidator from "../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
 import liquidityPolicy from "../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
 import liquidityStake from "../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
@@ -59,7 +60,7 @@ const run = async () => {
     },
     rewardFoldValidator: {
       projectCS: process.env.PROJECT_CS!,
-      projectTN: process.env.PROJECT_TN!,
+      projectLpPolicyId: process.env.POOL_POLICY_ID!,
       projectAddr: beneficiaryAddress,
     },
     projectTokenHolder: {
