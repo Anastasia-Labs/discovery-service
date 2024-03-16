@@ -7,12 +7,13 @@ import {
 import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 import { setTimeout } from "timers/promises";
+import { MAX_WALLET_GROUP_COUNT, WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
 
 async function run() {
     const lucid = await getLucidInstance();
 
     let loop = true;
-    let walletIdx = 8;
+    let walletIdx = WALLET_GROUP_START_INDEX;
     while (loop) {
         try {
             await selectLucidWallet(walletIdx);
@@ -34,8 +35,7 @@ async function run() {
             const txHash = await txComplete.submit();
             console.log(`Done: ${txHash}`);
     
-            // Stop after wallet index 13
-            if (walletIdx === 12) {
+            if (walletIdx === MAX_WALLET_GROUP_COUNT) {
                 loop = false;
             } else {
                 walletIdx++;

@@ -9,6 +9,7 @@ import {
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import { safeAsync, signSubmitValidate } from "./misc.js";
 import { getLucidInstance, selectLucidWallet } from "./wallet.js";
+import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
 
 async function fundWallets() {
   const lucid = await getLucidInstance();
@@ -37,7 +38,7 @@ async function fundWallets() {
     }
 
     // Limit 13 addresses.
-    if (index === 13) {
+    if (index === MAX_WALLET_GROUP_COUNT) {
       break;
     }
 

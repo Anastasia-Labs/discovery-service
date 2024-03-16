@@ -14,7 +14,7 @@ const refund = async () => {
     .complete();
   const txHash = await (await tx.sign().complete()).submit();
   
-  console.log(`Refunded seed wallet:  ${txHash}`);
+  console.log(`Refunded seed wallet of ${balance - 500_000n} lovelace:  ${txHash}`);
 
   await selectLucidWallet(2);
   const newBalance = await lovelaceAtAddress(lucid);
@@ -24,7 +24,7 @@ const refund = async () => {
     .complete();
   const newTxHash = await (await newTx.sign().complete()).submit();
 
-  console.log(`Refunded deploy wallet:  ${newTxHash}`);
+  console.log(`Refunded deploy wallet of ${newBalance - 500_000n} lovelace:  ${newTxHash}`);
 }
 
 refund();
