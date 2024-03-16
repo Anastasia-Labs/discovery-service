@@ -86,11 +86,6 @@ export async function signSubmitValidate(
 }
 
 export const sortByKeys = (utxos: ReadableUTxO[], firstKey: string | null) => {
-  // const head = utxos.find((utxo) => {
-  //   return utxo.datum.key == null;
-  // });
-  // if (!head) throw new Error("head error");
-
   const firstNode = utxos.find((readableUTxO) => {
     return readableUTxO.datum.key == firstKey;
   });
@@ -103,6 +98,11 @@ export const sortByKeys = (utxos: ReadableUTxO[], firstKey: string | null) => {
   return nodesOnly.reduce(
     (result, current) => {
       if (current.datum.next == null) return result;
+
+      if (result[result.length -1].datum.next == null) {
+        return result;
+      }
+
       const item = nodesOnly.find((readableUTxO) => {
         return readableUTxO.datum.key == result[result.length - 1].datum.next;
       });

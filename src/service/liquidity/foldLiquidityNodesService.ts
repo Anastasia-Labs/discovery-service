@@ -7,6 +7,10 @@ import {
   MultiFoldConfig,
   parseUTxOsAtScript,
   UTxO,
+  LiquidityFoldDatum,
+  Data,
+  LiquiditySetNode,
+  utxosAtScript,
 } from "price-discovery-offchain";
 import log4js from "log4js";
 log4js.configure("log4js.json");
@@ -20,30 +24,46 @@ import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 const run = async () => {
   const lucid = await selectLucidWallet(0);
   const changeAddress = await lucid.wallet.address();
-  const readableUTxOs = await parseUTxOsAtScript(
+  const [foldUtxo] = await utxosAtScript(
+    lucid,
+    applied.scripts.collectFoldValidator
+  )
+  const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
     applied.scripts.liquidityValidator,
     "Liquidity"
   );
 
+  if (!foldUtxo) {
+    throw new Error("We don't have a fold utxo! Run `init-fold:lp`")
+  }
+
   const head = readableUTxOs.find((utxo) => {
-    return utxo.datum.key == null;
+    const foldDatum = Data.from(foldUtxo.datum as string, LiquidityFoldDatum);
+
+    return utxo.datum.key == foldDatum.currNode.next;
   });
   if (!head) {
     console.log("error head");
     return;
   }
 
+  // @ts-ignore
+  const serializeBigint = (_, v) => typeof v === 'bigint' ? v.toString() : v;
+  // console.log(JSON.stringify(readableUTxOs, serializeBigint), JSON.stringify(head, serializeBigint))
+
   /**
    * @todo
    * Increase chunk from 2 to 8
    */
-  const nodes = chunkArray(sortByKeys(readableUTxOs, head.datum.next), 2)
-  console.log("nodes", nodes)
+  const unprocessedNodes = readableUTxOs.filter(({ datum }) => {
+    return datum.commitment === 0n;
+  })
+
+  // console.log(JSON.stringify(unprocessedNodes, serializeBigint))
+  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 2)
 
   for (const [index, chunk] of nodes.entries()) {
-    // offset wallet & blockchain sync
-    await setTimeout(20_000);
     console.log(`processing chunk ${index}`);
     // console.log(chunk)
     const sortedInputs = sortByOrefWithIndex(chunk);
@@ -86,6 +106,9 @@ const run = async () => {
     const multiFoldHash = await multiFoldSigned.submit();
     await lucid.awaitTx(multiFoldHash);
     await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
+
+    // offset wallet & blockchain sync
+    await setTimeout(20_000);
   }
 };
 
