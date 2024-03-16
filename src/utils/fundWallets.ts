@@ -37,12 +37,11 @@ async function fundWallets() {
       continue;
     }
 
-    // Limit 13 addresses.
     if (index === MAX_WALLET_GROUP_COUNT) {
       break;
     }
 
-    console.log("Sending 15 ADA to " + wallet.address)
+    console.log("Sending 15 ADA to wallet: " + index)
     tx.payToAddress(wallet.address, { lovelace: 15_000_000n });
   }
 

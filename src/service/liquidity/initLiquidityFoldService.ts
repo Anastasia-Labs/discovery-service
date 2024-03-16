@@ -39,8 +39,9 @@ const run = async () => {
 
   const initFoldSigned = await initFoldUnsigned.data.sign().complete();
   const initFoldHash = await initFoldSigned.submit();
+  console.log(`Submitted: ${initFoldHash}`);
   await lucid.awaitTx(initFoldHash);
-  await loggerDD(`initFold submitted TxHash: ${initFoldHash}`);
+  await loggerDD(`Done!`);
 };
 
 await run();

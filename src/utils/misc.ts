@@ -116,7 +116,6 @@ export const sortByKeys = (utxos: ReadableUTxO[], firstKey: string | null) => {
 
 export const sortByOrefWithIndex = (utxos: ReadableUTxO[]) => {
   const firstNode = utxos[0];
-  console.log(firstNode);
 
   const sortedByOutRef = utxos
     .sort((a, b) => {

@@ -1,2 +1,2 @@
-export const MAX_WALLET_GROUP_COUNT = 15;
+export const MAX_WALLET_GROUP_COUNT = 8;
 export const WALLET_GROUP_START_INDEX = 3;

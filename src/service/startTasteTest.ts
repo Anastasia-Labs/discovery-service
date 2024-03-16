@@ -7,9 +7,7 @@ import { selectLucidWallet } from "../utils/wallet.js";
 async function submitInitTx() {
     const lucid = await selectLucidWallet(0);
 
-    const initNodeUnsigned = lucid.fromTx(initTx.cbor)
-    const initNodeSigned = await initNodeUnsigned.sign().complete();
-  const initNodeHash = await initNodeSigned.submit();
+  const initNodeHash = await lucid.provider.submitTx(initTx.signedCbor)
   await lucid.awaitTx(initNodeHash);
   await loggerDD(`initNode generated TxHash: ${initTx.txHash}`);
   await loggerDD(`initNode submitted TxHash: ${initNodeHash}`);
