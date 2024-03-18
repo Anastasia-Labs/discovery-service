@@ -44,6 +44,8 @@ const run = async () => {
     return utxo.datum.key == foldDatum.currNode.next;
   });
 
+  console.log(head?.outRef)
+
   if (!head) {
     console.log("error head");
     return;
@@ -95,12 +97,11 @@ const run = async () => {
       return;
     }
 
-    // console.log(initNodeUnsigned.data.txComplete.to_json());
     try {
       const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-      const multiFoldHash = await multiFoldSigned.submit();
-      await loggerDD(`Submitting: ${multiFoldHash}`);
-      await lucid.awaitTx(multiFoldHash);
+      // const multiFoldHash = await multiFoldSigned.submit();
+      // await loggerDD(`Submitting: ${multiFoldHash}`);
+      // await lucid.awaitTx(multiFoldHash);
       await loggerDD(`Done!`);
     } catch (e) {
       await loggerDD(`Failed to build fold with error: ${(e as Error).message}`);

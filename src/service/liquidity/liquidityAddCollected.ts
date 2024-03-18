@@ -21,12 +21,12 @@ import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 const run = async () => {
   const lucid = await getLucidInstance();
 
-  const proxyTokenHolderSpendingValidator: SpendingValidator = {
-    type: "PlutusV2",
-    script: proxyTokenHolder.cborHex
-  }
+//   const proxyTokenHolderSpendingValidator: SpendingValidator = {
+//     type: "PlutusV2",
+//     script: proxyTokenHolder.cborHex
+//   }
 
-  console.log(lucid.utils.validatorToAddress(proxyTokenHolderSpendingValidator));
+//   const addr = lucid.utils.validatorToAddress(proxyTokenHolderSpendingValidator);
 
   const addCollectedConfig: AddCollectedConfig = {
     scripts: {
