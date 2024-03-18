@@ -44,8 +44,9 @@ const run = async () => {
       .sign()
       .complete()
   ).submit();
+  await loggerDD(`Submitting: ${registerStakeHash}`)
   await lucid.awaitTx(registerStakeHash);
-  await loggerDD(`registerStake submitted TxHash: ${registerStakeHash}`);
+  await loggerDD(`Done!`);
 
   //NOTE: INIT PROJECT TOKEN HOLDER
   //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!
@@ -81,8 +82,9 @@ const run = async () => {
     .sign()
     .complete();
   const initTokenHolderHash = await initTokenHolderSigned.submit();
+  await loggerDD(`Submitting: ${initTokenHolderHash}`);
   await lucid.awaitTx(initTokenHolderHash);
-  await loggerDD(`initTokenHolder submitted TxHash: ${initTokenHolderHash}`);
+  await loggerDD(`Done!`);
 
   // // //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {

@@ -33,13 +33,14 @@ async function run() {
             console.log("Depositing 5 ADA to TT with wallet: " + walletIdx)
             const txComplete = await tx.data.sign().complete();
             const txHash = await txComplete.submit();
-            console.log(`Done: ${txHash}`);
-    
+            console.log(`Submitting: ${txHash}`);
+            await lucid.awaitTx(txHash);
+            console.log('Done!');
+            
             if (walletIdx === MAX_WALLET_GROUP_COUNT) {
                 loop = false;
             } else {
                 walletIdx++;
-                await setTimeout(20_000)
             }
         } catch (e) {
             console.log("Failed to fund TT with wallet: " + walletIdx, (e as Error).message);

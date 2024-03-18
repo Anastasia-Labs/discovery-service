@@ -43,14 +43,11 @@ const run = async () => {
 
     return utxo.datum.key == foldDatum.currNode.next;
   });
+
   if (!head) {
     console.log("error head");
     return;
   }
-
-  // @ts-ignore
-  const serializeBigint = (_, v) => typeof v === 'bigint' ? v.toString() : v;
-  // console.log(JSON.stringify(readableUTxOs, serializeBigint), JSON.stringify(head, serializeBigint))
 
   /**
    * @todo
@@ -60,14 +57,11 @@ const run = async () => {
     return datum.commitment === 0n;
   })
 
-  // console.log(JSON.stringify(unprocessedNodes, serializeBigint))
   const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 2)
 
   for (const [index, chunk] of nodes.entries()) {
     console.log(`processing chunk ${index}`);
-    // console.log(chunk)
     const sortedInputs = sortByOrefWithIndex(chunk);
-    // console.log(sortedInputs)
     
     const feeInput = (await lucid.wallet.getUtxos()).find(({ assets }) => assets.lovelace > 2_000_000n);
     if (!feeInput) {
@@ -102,13 +96,18 @@ const run = async () => {
     }
 
     // console.log(initNodeUnsigned.data.txComplete.to_json());
-    const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-    const multiFoldHash = await multiFoldSigned.submit();
-    await lucid.awaitTx(multiFoldHash);
-    await loggerDD(`multiFold submitted TxHash: ${multiFoldHash}`);
-
-    // offset wallet & blockchain sync
-    await setTimeout(20_000);
+    try {
+      const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
+      const multiFoldHash = await multiFoldSigned.submit();
+      await loggerDD(`Submitting: ${multiFoldHash}`);
+      await lucid.awaitTx(multiFoldHash);
+      await loggerDD(`Done!`);
+    } catch (e) {
+      await loggerDD(`Failed to build fold with error: ${(e as Error).message}`);
+      await loggerDD(`Trying again...`)
+      // offset wallet & blockchain sync
+      await setTimeout(20_000);
+    }
   }
 };
 

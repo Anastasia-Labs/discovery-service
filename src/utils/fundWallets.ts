@@ -37,7 +37,7 @@ async function fundWallets() {
       continue;
     }
 
-    if (index === MAX_WALLET_GROUP_COUNT) {
+    if (index > MAX_WALLET_GROUP_COUNT) {
       break;
     }
 

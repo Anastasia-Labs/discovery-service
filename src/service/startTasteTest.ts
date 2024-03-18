@@ -8,9 +8,9 @@ async function submitInitTx() {
     const lucid = await selectLucidWallet(0);
 
   const initNodeHash = await lucid.provider.submitTx(initTx.signedCbor)
+  await loggerDD(`Submitting: ${initTx.txHash}`);
   await lucid.awaitTx(initNodeHash);
-  await loggerDD(`initNode generated TxHash: ${initTx.txHash}`);
-  await loggerDD(`initNode submitted TxHash: ${initNodeHash}`);
+  await loggerDD(`Done!`);
 }
 
 submitInitTx();

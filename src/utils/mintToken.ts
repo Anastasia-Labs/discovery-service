@@ -57,9 +57,10 @@ export async function mintNFT(): Promise<TxHash> {
 
   const signedTx = await tx.sign().complete();
   const txHash = await signedTx.submit();
+  console.log(`Submitting: ${txHash}`)
   await lucid.awaitTx(txHash);
 
-  console.log(`Minted token ${value} under policy ID (${policyId}). TxHash: ${txHash}`)
+  console.log(`Done! Minted token ${value} under policy ID (${policyId}).`)
   return txHash;
 }
 
