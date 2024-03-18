@@ -6,17 +6,27 @@ import {
   initFold,
   InitFoldConfig,
   initLqFold,
+  MintingPolicy,
+  SpendingValidator,
 } from "price-discovery-offchain";
 import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
+import proxyTokenHolder from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" }
 import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
 const run = async () => {
   const lucid = await getLucidInstance();
+
+  const proxyTokenHolderSpendingValidator: SpendingValidator = {
+    type: "PlutusV2",
+    script: proxyTokenHolder.cborHex
+  }
+
+  console.log(lucid.utils.validatorToAddress(proxyTokenHolderSpendingValidator));
 
   const addCollectedConfig: AddCollectedConfig = {
     scripts: {

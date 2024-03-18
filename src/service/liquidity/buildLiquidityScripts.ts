@@ -14,8 +14,9 @@ import collectionFoldPolicy from "../../compiledLiquidity/liquidityFoldMint.json
 import collectionFoldValidator from "../../compiledLiquidity/liquidityFoldValidator.json" assert { type: "json" };
 import distributionFoldPolicy from "../../compiledLiquidity/distributionRewardFoldMint.json" assert { type: "json" };
 import distributionFoldValidator from "../../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };
-import tokenHolderPolicy from "../../compiled/tokenHolderPolicy.json" assert { type: "json" };
-import tokenHolderValidator from "../../compiled/tokenHolderValidator.json" assert { type: "json" };
+import tokenHolderPolicy from "../../compiledLiquidity/liquidityTokenHolderMint.json" assert { type: "json" };
+import tokenHolderValidator from "../../compiledLiquidity/liquidityTokenHolderValidator.json" assert { type: "json" };
+
 import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
 const run = async () => {
