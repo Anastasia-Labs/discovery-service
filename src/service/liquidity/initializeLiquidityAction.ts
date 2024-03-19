@@ -1,29 +1,22 @@
 import dotenv from "dotenv";
 dotenv.config();
+
 import {
   InitNodeConfig,
   InitTokenHolderConfig,
   initLqNode,
   initLqTokenHolder,
 } from "price-discovery-offchain";
-import log4js from "log4js";
-import { writeFile } from 'fs';
-log4js.configure("log4js.json");
-const logger = log4js.getLogger("app");
+import { Lucid, UTxO } from "lucid-fork"
+import { writeFileSync } from 'fs';
 
-import applied from "../../../applied-scripts.json" assert { type: "json" };
-import refScripts from "../../../deployed-policy.json" assert { type: "json" };
 import { loggerDD } from "../../logs/datadog-service.js";
-import { UTxO } from "@anastasia-labs/lucid-cardano-fork";
-import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
-const run = async () => {
-  // await loggerDD("running registerStake");
-  const lucid = await getLucidInstance();
-  await loggerDD("selecting WALLET_PROJECT_2");
-  await selectLucidWallet(2);
+export const initializeLiquidityAction = async (lucid: Lucid) => {
+  await selectLucidWallet(lucid, 2);
+  const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
 
-  // // //NOTE: REGISTER STAKE ADDRESS
   const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
     type: "PlutusV2",
     script: applied.scripts.collectStake,
@@ -44,29 +37,30 @@ const run = async () => {
       .sign()
       .complete()
   ).submit();
-  await loggerDD(`Submitting: ${registerStakeHash}`)
-  await lucid.awaitTx(registerStakeHash);
-  await loggerDD(`Done!`);
 
-  //NOTE: INIT PROJECT TOKEN HOLDER
-  //WARNING: make sure WALLET_PROJECT_1 has project token amount!!!
+  await loggerDD(`Submitting Registration: ${registerStakeHash}`)
+  await lucid.awaitTx(registerStakeHash);
+
+  await selectLucidWallet(lucid, 1);
+  const tokenHolderUtxo = await lucid.utxosByOutRef([applied.projectTokenHolder.initOutRef]);
+  const initUtxo = tokenHolderUtxo.find(({ outputIndex }) => outputIndex === applied.projectTokenHolder.initOutRef.outputIndex) as UTxO;
+
+  if (!initUtxo) {
+    console.log(applied.projectTokenHolder.initOutRef, await lucid.wallet.getUtxos())
+    await loggerDD("Aborting. Could not find an initUTXO to initialize the token holder with!")
+    return;
+  }
+
   const initTokenHolderConfig: InitTokenHolderConfig = {
-    initUTXO: (
-      await lucid.utxosByOutRef([applied.projectTokenHolder.initOutRef])
-    ).find(({ outputIndex }) => outputIndex === applied.projectTokenHolder.initOutRef.outputIndex) as UTxO,
+    initUTXO: initUtxo,
     projectCS: applied.rewardValidator.projectCS,
     projectTN: applied.rewardValidator.projectTN,
-    projectAmount: Number(process.env.PROJECT_AMNT), // 100_000 without decimals
+    projectAmount: Number(process.env.PROJECT_AMNT),
     scripts: {
       tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
       tokenHolderValidator: applied.scripts.tokenHolderValidator,
     },
   };
-
-  await loggerDD("running initTokenHolder");
-
-  await loggerDD("selecting WALLET_PROJECT_1");
-  await selectLucidWallet(1);
   
   const initTokenHolderUnsigned = await initLqTokenHolder(
     lucid,
@@ -82,9 +76,8 @@ const run = async () => {
     .sign()
     .complete();
   const initTokenHolderHash = await initTokenHolderSigned.submit();
-  await loggerDD(`Submitting: ${initTokenHolderHash}`);
+  await loggerDD(`Submitting TokenHolder: ${initTokenHolderHash}`);
   await lucid.awaitTx(initTokenHolderHash);
-  await loggerDD(`Done!`);
 
   // // //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {
@@ -97,10 +90,7 @@ const run = async () => {
     }
   };
 
-  await loggerDD("running initNode");
-
-  await loggerDD("selecting WALLET_PROJECT_0");
-  await selectLucidWallet(0);
+  await selectLucidWallet(lucid, 0);
   const initNodeUnsigned = await initLqNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
@@ -108,12 +98,13 @@ const run = async () => {
     return;
   }
 
+  await loggerDD(`Building initNode Tx...`);
   const unsignedCbor = Buffer.from(initNodeUnsigned.data.txComplete.to_bytes()).toString("hex");
   const signedTransaction = await initNodeUnsigned.data.sign().complete();
   const signedCbor = Buffer.from(signedTransaction.txSigned.to_bytes()).toString("hex");
   const signedTxHash = signedTransaction.toHash();
 
-  writeFile(
+  await writeFileSync(
     `./init-tx.json`,
     JSON.stringify(
       {
@@ -123,15 +114,10 @@ const run = async () => {
       },
       undefined,
       2
-    ),
-    (error) => {
-      error
-        ? console.log(error)
-        : console.log(
-            `Init liquidity transaction saved!`
-          );
-    }
+    )
+  );
+
+  console.log(
+    `Done!`
   );
 };
-
-await run();

@@ -6,23 +6,19 @@ import {
   multiLqFold,
   MultiFoldConfig,
   parseUTxOsAtScript,
-  UTxO,
   LiquidityFoldDatum,
-  Data,
   LiquiditySetNode,
   utxosAtScript,
 } from "price-discovery-offchain";
-import log4js from "log4js";
-log4js.configure("log4js.json");
-const logger = log4js.getLogger("app");
+import { Data, Lucid, UTxO, Emulator } from "lucid-fork"
 
 import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { loggerDD } from "../../logs/datadog-service.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
-import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
-const run = async () => {
-  const lucid = await selectLucidWallet(0);
+export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator) => {
+  await selectLucidWallet(lucid, 0);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
@@ -72,6 +68,7 @@ const run = async () => {
     }
 
     const multiFoldConfig: MultiFoldConfig = {
+      currenTime: emulator?.now() ?? Date.now(),
       nodeRefInputs: sortedInputs.map((data) => {
         return data.value.outRef;
       }),
@@ -88,9 +85,6 @@ const run = async () => {
       },
     };
 
-    await loggerDD("running multiFold");
-    await loggerDD("selecting WALLET_PROJECT_0");
-
     const multiFoldUnsigned = await multiLqFold(lucid, multiFoldConfig);
 
     if (multiFoldUnsigned.type == "error") {
@@ -103,7 +97,6 @@ const run = async () => {
       const multiFoldHash = await multiFoldSigned.submit();
       await loggerDD(`Submitting: ${multiFoldHash}`);
       await lucid.awaitTx(multiFoldHash);
-      await loggerDD(`Done!`);
 
       while (foldUtxo.txHash !== multiFoldHash) {
         await setTimeout(3_000);
@@ -121,6 +114,6 @@ const run = async () => {
       await setTimeout(20_000);
     }
   }
-};
 
-await run();
+  await loggerDD(`Done!`);
+};

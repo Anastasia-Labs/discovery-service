@@ -1,41 +1,41 @@
 {
-  "policy": "18fda07f5c471f38aab5bc2536ffb2a2d70673e44e66bcf2f0ec8d4b",
+  "policy": "dce4345ca5e72de75518280d6e4ef43da697f4242ad79390be1958a8",
   "scriptsRef": {
     "TasteTestPolicy": {
-      "txHash": "4638606f6a12b2346c5a7795f5ff3b777ef284e44384d319fec2e3a142f27766",
+      "txHash": "8dd4efcff5de6f6a46492daa9394d110c0339414075abb52ae6b20fe8125273f",
       "outputIndex": 0
     },
     "TasteTestValidator": {
-      "txHash": "7c2e05aaf48f431d69a38e93f6e50b7ea8c6b773adf3cfc16868e1b7b67c54d3",
-      "outputIndex": 0
+      "txHash": "8dd4efcff5de6f6a46492daa9394d110c0339414075abb52ae6b20fe8125273f",
+      "outputIndex": 1
     },
     "CollectFoldPolicy": {
-      "txHash": "03e90cf2c90a13f54fda6499f7b249534405d95f85b034fea0c872b689418371",
+      "txHash": "f67b7dc6ea991f6f931ae883fde211f1223e0560d43fadc1c9313e0c2de96ae0",
       "outputIndex": 0
     },
     "CollectFoldValidator": {
-      "txHash": "82e107a4b22880c65721eaf24b00f4a6f949c07c25bc40ad17b56932fa0a0ba6",
-      "outputIndex": 0
+      "txHash": "f67b7dc6ea991f6f931ae883fde211f1223e0560d43fadc1c9313e0c2de96ae0",
+      "outputIndex": 1
     },
     "RewardFoldPolicy": {
-      "txHash": "a9e4bba1c0b0bcfb56a75dc0f95f96aa2e3867b0046236df2623b91c8229463b",
+      "txHash": "c93ad95ad9f286202fbb0df36b9eb04adb1f23c601d147fe14930c82fc4f56eb",
       "outputIndex": 0
     },
     "RewardFoldValidator": {
-      "txHash": "5a5f18309fee3b19f58de24981236c68f570711c16e7b8ded77f4817255c5893",
-      "outputIndex": 0
+      "txHash": "c93ad95ad9f286202fbb0df36b9eb04adb1f23c601d147fe14930c82fc4f56eb",
+      "outputIndex": 1
     },
     "TokenHolderPolicy": {
-      "txHash": "b3e0eb2c4c24b22b010879a8c231a708702b48844a476957f692a817a5e26215",
-      "outputIndex": 0
+      "txHash": "c93ad95ad9f286202fbb0df36b9eb04adb1f23c601d147fe14930c82fc4f56eb",
+      "outputIndex": 2
     },
     "TokenHolderValidator": {
-      "txHash": "3e19213a89be1f1d08dedd583436cd6cff2d4251632d665139b6a907cfe9b781",
+      "txHash": "2d25fb96f4dc5e1831740f0e68b53334f048610967e27c95ac37d0f0afb7ee51",
       "outputIndex": 0
     },
     "TasteTestStakeValidator": {
-      "txHash": "9d08acc74c8d4a088761af833fcfc2473fa01b64b3074922992e7d8145b5644f",
-      "outputIndex": 0
+      "txHash": "2d25fb96f4dc5e1831740f0e68b53334f048610967e27c95ac37d0f0afb7ee51",
+      "outputIndex": 1
     }
   }
 }

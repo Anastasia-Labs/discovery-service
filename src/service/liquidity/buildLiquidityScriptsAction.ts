@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { writeFile } from "node:fs";
+
 import {
-  fromText,
   buildLiquidityScripts,
-  toUnit,
 } from "price-discovery-offchain";
+import { fromText, Lucid, UTxO, toUnit, Emulator } from "lucid-fork";
 
 import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
 import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
@@ -17,14 +16,18 @@ import distributionFoldValidator from "../../compiledLiquidity/distributionFoldV
 import tokenHolderPolicy from "../../compiledLiquidity/liquidityTokenHolderMint.json" assert { type: "json" };
 import tokenHolderValidator from "../../compiledLiquidity/liquidityTokenHolderValidator.json" assert { type: "json" };
 
-import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
+import { writeFile } from "fs/promises";
+import { EMULATOR_DELAY } from "../../constants/utils.js";
 
-const run = async () => {
-  const lucid = await getLucidInstance();
-  const wallet0 = await selectLucidWallet(0);
-  const project0Utxos = await wallet0.wallet.getUtxos();
-  const wallet1 = await selectLucidWallet(1);
-  const project1Utxos = await wallet1.wallet.getUtxos();
+export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline?: number, policyId?: string, name?: string) => {
+  const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) => wallet.getUtxos());
+  const [wallet1Address, project1Utxos] = await selectLucidWallet(lucid, 1).then(async ({ wallet }): Promise<[string, UTxO[]]> => {
+    return [
+      await wallet.address(),
+      await wallet.getUtxos()
+    ]
+  });
 
   //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
@@ -33,7 +36,7 @@ const run = async () => {
   const checkProjectToken = project1Utxos.find((utxo) => {
     return (
       utxo.assets[
-        toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!))
+        toUnit(policyId ?? process.env.PROJECT_CS!, fromText(name ?? process.env.PROJECT_TN!))
       ] === BigInt(process.env.PROJECT_AMNT!)
     );
   });
@@ -42,15 +45,14 @@ const run = async () => {
     console.log("WALLET_PROJECT_1 project token missing");
     console.log(
       `Send project ${
-        Number(process.env.PROJECT_AMNT!) / 1_000_000
+        Number(process.env.PROJECT_AMNT!)
       } token to: `,
-      await wallet1.wallet.address()
+      wallet1Address
     );
     return;
   }
 
-  // const deadline = Date.now() + TWENTY_FOUR_HOURS_MS * 5; // 5 days
-  const deadline = Number(process.env.DEADLINE);
+  const deadline = Number(emulatorDeadline ?? process.env.DEADLINE);
   console.log("Deadline UTC", deadline, new Date(deadline).toUTCString());
 
   const scripts = buildLiquidityScripts(lucid, {
@@ -60,7 +62,7 @@ const run = async () => {
       penaltyAddress: beneficiaryAddress,
     },
     rewardFoldValidator: {
-      projectCS: process.env.PROJECT_CS!,
+      projectCS: policyId ?? process.env.PROJECT_CS!,
       projectLpPolicyId: process.env.POOL_POLICY_ID!,
       projectAddr: beneficiaryAddress,
     },
@@ -94,8 +96,8 @@ const run = async () => {
       penaltyAddress: beneficiaryAddress,
     },
     rewardValidator: {
-      projectCS: process.env.PROJECT_CS!,
-      projectTN: process.env.PROJECT_TN!,
+      projectCS: policyId ?? process.env.PROJECT_CS!,
+      projectTN: name ?? process.env.PROJECT_TN!,
       projectAddr: beneficiaryAddress,
     },
     projectTokenHolder: {
@@ -106,7 +108,7 @@ const run = async () => {
     },
   };
 
-  writeFile(
+  await writeFile(
     `./applied-scripts.json`,
     JSON.stringify(
       {
@@ -117,12 +119,8 @@ const run = async () => {
       },
       undefined,
       2
-    ),
-    (error) => {
-      error
-        ? console.log(error)
-        : console.log(`Scripts have been saved , version ${currenTime}\n`);
-    }
+    )
   );
+
+  console.log(`Scripts have been saved , version ${currenTime}\n`);
 };
-await run();
