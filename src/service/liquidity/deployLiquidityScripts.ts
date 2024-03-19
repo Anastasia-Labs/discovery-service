@@ -30,7 +30,7 @@ const run = async () => {
   await loggerDD("selecting WALLET_PROJECT_2");
   await selectLucidWallet(2);
   const walletProject2Funds = await lovelaceAtAddress(lucid);
-  if (walletProject2Funds < 200_000_000n) {
+  if (walletProject2Funds < 300_000_000n) {
     console.log(`Not enough funds ${walletProject2Funds}, ${await lucid.wallet.address()}`);
     await loggerDD(`Not enough funds ${walletProject2Funds}`);
     return
@@ -55,85 +55,85 @@ const run = async () => {
   // offset wallet & blockchain sync
   await setTimeout(20_000);
 
-  // const deploy2 = await deployRefScripts(lucid, {
-  //   script: applied.scripts.liquidityValidator,
-  //   name: "TasteTestValidator",
-  //   alwaysFails: alwaysFailValidator.cborHex,
-  //   currenTime: deployTime,
-  // });
-  // if (deploy2.type == "error") {
-  //   console.log(deploy2.error);
-  //   return;
-  // }
-  // const deploy2Hash = await (await deploy2.data.tx.sign().complete()).submit();
-  // await lucid.awaitTx(deploy2Hash);
-  // await loggerDD(`TasteTestValidator submitted TxHash:  ${deploy2Hash}`);
-  // // offset wallet & blockchain sync
-  // await setTimeout(20_000);
+  const deploy2 = await deployRefScripts(lucid, {
+    script: applied.scripts.liquidityValidator,
+    name: "TasteTestValidator",
+    alwaysFails: alwaysFailValidator.cborHex,
+    currenTime: deployTime,
+  });
+  if (deploy2.type == "error") {
+    console.log(deploy2.error);
+    return;
+  }
+  const deploy2Hash = await (await deploy2.data.tx.sign().complete()).submit();
+  await lucid.awaitTx(deploy2Hash);
+  await loggerDD(`TasteTestValidator submitted TxHash:  ${deploy2Hash}`);
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
-  // const deploy3 = await deployRefScripts(lucid, {
-  //   script: applied.scripts.collectFoldPolicy,
-  //   name: "CollectFoldPolicy",
-  //   alwaysFails: alwaysFailValidator.cborHex,
-  //   currenTime: deployTime,
-  // });
-  // if (deploy3.type == "error") {
-  //   console.log(deploy3.error);
-  //   return;
-  // }
-  // const deploy3Hash = await (await deploy3.data.tx.sign().complete()).submit();
-  // await lucid.awaitTx(deploy3Hash);
-  // await loggerDD(`CollectFoldPolicy submitted TxHash: ${deploy3Hash}`);
-  // // offset wallet & blockchain sync
-  // await setTimeout(20_000);
+  const deploy3 = await deployRefScripts(lucid, {
+    script: applied.scripts.collectFoldPolicy,
+    name: "CollectFoldPolicy",
+    alwaysFails: alwaysFailValidator.cborHex,
+    currenTime: deployTime,
+  });
+  if (deploy3.type == "error") {
+    console.log(deploy3.error);
+    return;
+  }
+  const deploy3Hash = await (await deploy3.data.tx.sign().complete()).submit();
+  await lucid.awaitTx(deploy3Hash);
+  await loggerDD(`CollectFoldPolicy submitted TxHash: ${deploy3Hash}`);
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
-  // const deploy4 = await deployRefScripts(lucid, {
-  //   script: applied.scripts.collectFoldValidator,
-  //   name: "CollectFoldValidator",
-  //   alwaysFails: alwaysFailValidator.cborHex,
-  //   currenTime: deployTime,
-  // });
-  // if (deploy4.type == "error") {
-  //   console.log(deploy4.error);
-  //   return;
-  // }
-  // const deploy4Hash = await (await deploy4.data.tx.sign().complete()).submit();
-  // await lucid.awaitTx(deploy4Hash);
-  // await loggerDD(`CollectFoldValidator submitted TxHash:  ${deploy4Hash}`);
-  // // offset wallet & blockchain sync
-  // await setTimeout(20_000);
+  const deploy4 = await deployRefScripts(lucid, {
+    script: applied.scripts.collectFoldValidator,
+    name: "CollectFoldValidator",
+    alwaysFails: alwaysFailValidator.cborHex,
+    currenTime: deployTime,
+  });
+  if (deploy4.type == "error") {
+    console.log(deploy4.error);
+    return;
+  }
+  const deploy4Hash = await (await deploy4.data.tx.sign().complete()).submit();
+  await lucid.awaitTx(deploy4Hash);
+  await loggerDD(`CollectFoldValidator submitted TxHash:  ${deploy4Hash}`);
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
-  // const deploy5 = await deployRefScripts(lucid, {
-  //   script: applied.scripts.rewardFoldPolicy,
-  //   name: "RewardFoldPolicy",
-  //   alwaysFails: alwaysFailValidator.cborHex,
-  //   currenTime: deployTime,
-  // });
-  // if (deploy5.type == "error") {
-  //   console.log(deploy5.error);
-  //   return;
-  // }
-  // const deploy5Hash = await (await deploy5.data.tx.sign().complete()).submit();
-  // await lucid.awaitTx(deploy5Hash);
-  // await loggerDD(`RewardFoldPolicy submitted TxHash:  ${deploy5Hash}`);
-  // // offset wallet & blockchain sync
-  // await setTimeout(20_000);
+  const deploy5 = await deployRefScripts(lucid, {
+    script: applied.scripts.rewardFoldPolicy,
+    name: "RewardFoldPolicy",
+    alwaysFails: alwaysFailValidator.cborHex,
+    currenTime: deployTime,
+  });
+  if (deploy5.type == "error") {
+    console.log(deploy5.error);
+    return;
+  }
+  const deploy5Hash = await (await deploy5.data.tx.sign().complete()).submit();
+  await lucid.awaitTx(deploy5Hash);
+  await loggerDD(`RewardFoldPolicy submitted TxHash:  ${deploy5Hash}`);
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
-  // const deploy6 = await deployRefScripts(lucid, {
-  //   script: applied.scripts.rewardFoldValidator,
-  //   name: "RewardFoldValidator",
-  //   alwaysFails: alwaysFailValidator.cborHex,
-  //   currenTime: deployTime,
-  // });
-  // if (deploy6.type == "error") {
-  //   console.log(deploy6.error);
-  //   return;
-  // }
-  // const deploy6Hash = await (await deploy6.data.tx.sign().complete()).submit();
-  // await lucid.awaitTx(deploy6Hash);
-  // await loggerDD(`RewardFoldValidator submitted TxHash: ${deploy6Hash}`);
-  // // offset wallet & blockchain sync
-  // await setTimeout(20_000);
+  const deploy6 = await deployRefScripts(lucid, {
+    script: applied.scripts.rewardFoldValidator,
+    name: "RewardFoldValidator",
+    alwaysFails: alwaysFailValidator.cborHex,
+    currenTime: deployTime,
+  });
+  if (deploy6.type == "error") {
+    console.log(deploy6.error);
+    return;
+  }
+  const deploy6Hash = await (await deploy6.data.tx.sign().complete()).submit();
+  await lucid.awaitTx(deploy6Hash);
+  await loggerDD(`RewardFoldValidator submitted TxHash: ${deploy6Hash}`);
+  // offset wallet & blockchain sync
+  await setTimeout(20_000);
 
   const deploy7 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,

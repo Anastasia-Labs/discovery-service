@@ -3,9 +3,8 @@ dotenv.config();
 import { selectLucidWallet } from "./wallet.js";
 import { lovelaceAtAddress } from "./misc.js";
 
-const lucid = await selectLucidWallet(0);
-
-const refund = async () => {
+export const refund = async () => {
+  const lucid = await selectLucidWallet(0);
   const balance = await lovelaceAtAddress(lucid)
   
   const tx = await lucid

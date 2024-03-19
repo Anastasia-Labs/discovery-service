@@ -50,7 +50,7 @@ export async function mintNFT(): Promise<TxHash> {
 
   const tx = await lucid
     .newTx()
-    .mintAssets({ [unit]: 100000000n })
+    .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT as string) })
     .validTo(Date.now() + 100000)
     .attachMintingPolicy(mintingPolicy)
     .complete();

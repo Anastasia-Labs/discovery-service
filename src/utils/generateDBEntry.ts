@@ -49,6 +49,18 @@ async function generateDBEntry() {
         adaHandle: {
             S: "000de14074745f74657374"
         },
+        banner: {
+            S: ""
+        },
+        primary_color: {
+            S: "#2457f2"
+        },
+        secondary_color: {
+            S: "#dce0ef"
+        },
+        profile: {
+            S: ""
+        },
         asset: {
             M: {
                 AssetId: {
@@ -58,7 +70,7 @@ async function generateDBEntry() {
                     S: process.env.PROJECT_TN as string
                 },
                 Decimals: {
-                    N: "6"
+                    N: process.env.PROJECT_TN_DECIMALS as string
                 },
                 Logo: {
                     NULL: true,
