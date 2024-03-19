@@ -13,7 +13,7 @@ async function run() {
     const lucid = await getLucidInstance();
 
     let loop = true;
-    let walletIdx = WALLET_GROUP_START_INDEX;
+    let walletIdx = 5;
     while (loop) {
         try {
             await selectLucidWallet(walletIdx);

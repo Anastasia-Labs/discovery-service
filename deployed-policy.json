@@ -26,11 +26,11 @@
       "outputIndex": 0
     },
     "TokenHolderPolicy": {
-      "txHash": "27cfb9bbeb30d5e68f0ac5b9ca4a56dd7470ea465cb18349e6da823ab0496f0f",
+      "txHash": "47ba149ba4298eb20f9142af5b09f4159a0e817ae69a1e7dd2619506d9a28dd9",
       "outputIndex": 0
     },
     "TokenHolderValidator": {
-      "txHash": "708b2bc1f924c38f7e12094afdbb3ebc045dc4265071e9b1c0926c769e221687",
+      "txHash": "c38fcc0f01e663aab149cc8f108668528179b5af432c6ccd20f483003935b2a8",
       "outputIndex": 0
     },
     "TasteTestStakeValidator": {

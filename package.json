@@ -19,6 +19,7 @@
     "fold-nodes": "ts-node --esm src/service/discovery/foldNodesService.ts",
     "fold-nodes:lp": "ts-node --esm src/service/liquidity/foldLiquidityNodesService.ts",
     "add-collected:lp": "ts-node --esm src/service/liquidity/liquidityAddCollected.ts",
+    "spend-to-proxy:lp": "ts-node --esm src/service/liquidity/spendToProxy.ts",
     "init-reward": "ts-node --esm src/service/discovery/initRewardService.ts",
     "init-reward:lp": "ts-node --esm src/service/liquidity/initLiquidityRewardService.ts",
     "reward-fold": "ts-node --esm src/service/discovery/rewardFoldService.ts",

@@ -24,15 +24,18 @@ import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 const run = async () => {
   const lucid = await selectLucidWallet(0);
   const changeAddress = await lucid.wallet.address();
-  const [foldUtxo] = await utxosAtScript(
-    lucid,
-    applied.scripts.collectFoldValidator
-  )
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
     applied.scripts.liquidityValidator,
     "Liquidity"
   );
+
+  let foldUtxo: UTxO;
+  const foldUtxoRes = await utxosAtScript(
+    lucid,
+    applied.scripts.collectFoldValidator
+  )
+  foldUtxo = foldUtxoRes[0];
 
   if (!foldUtxo) {
     throw new Error("We don't have a fold utxo! Run `init-fold:lp`")
@@ -43,8 +46,6 @@ const run = async () => {
 
     return utxo.datum.key == foldDatum.currNode.next;
   });
-
-  console.log(head?.outRef)
 
   if (!head) {
     console.log("error head");
@@ -99,10 +100,20 @@ const run = async () => {
 
     try {
       const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-      // const multiFoldHash = await multiFoldSigned.submit();
-      // await loggerDD(`Submitting: ${multiFoldHash}`);
-      // await lucid.awaitTx(multiFoldHash);
+      const multiFoldHash = await multiFoldSigned.submit();
+      await loggerDD(`Submitting: ${multiFoldHash}`);
+      await lucid.awaitTx(multiFoldHash);
       await loggerDD(`Done!`);
+
+      while (foldUtxo.txHash !== multiFoldHash) {
+        await setTimeout(3_000);
+        const [newFoldUtxo] = await utxosAtScript(
+          lucid,
+          applied.scripts.collectFoldValidator
+        );
+
+        foldUtxo = newFoldUtxo;
+      }
     } catch (e) {
       await loggerDD(`Failed to build fold with error: ${(e as Error).message}`);
       await loggerDD(`Trying again...`)
