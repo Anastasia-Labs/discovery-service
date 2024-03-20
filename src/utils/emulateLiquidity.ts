@@ -16,6 +16,7 @@ import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityN
 import { initFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
+import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 
 const emulateLiquidity = async () => {
     const restAccounts = [...wallets].slice(3, MAX_WALLET_GROUP_COUNT + 1).map(({ address }) => ({
@@ -105,6 +106,11 @@ const emulateLiquidity = async () => {
 
     console.log("\n\n\nEMULATOR: Adding Liquidity to Token Holder...")
     await liquidityAddCollectedAction(lucidInstance, emulator);
+    console.log("Moving to next step...")
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Spending to Proxy Token Holder...")
+    await spendToProxyAction(lucidInstance, emulator);
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 }
