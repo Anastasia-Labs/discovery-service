@@ -1,9 +1,7 @@
-import { Emulator, Lucid, C, OutputData, Assets } from "lucid-fork"
+import { Emulator, Lucid } from "lucid-fork"
 
 import wallets from "../../test/wallets.json" assert { type: "json" }
-import applied from "../../applied-scripts.json" assert { type: "json" }
 import { mintNFTAction } from "./mintTokenAction.js";
-import { selectLucidWallet } from "./wallet.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
 import { deployLiquidityScriptsAction } from "../service/liquidity/deployLiquidityScriptsAction.js";
 import { setTimeout } from "timers/promises";
@@ -31,7 +29,7 @@ const emulateLiquidity = async () => {
         {
             address: wallets[0].address,
             assets: {
-                lovelace: 10_000_000_000n
+                lovelace: 10_000_000_000n,
             }
         },
         {
@@ -126,7 +124,7 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Creating V1 Pool...")
-    await createV1PoolAction(lucidInstance, emulator, proxyDatum);
+    await createV1PoolAction(lucidInstance, emulator, proxyDatum, policyId, name);
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 }

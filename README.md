@@ -24,3 +24,6 @@
 1. Once a Taste Test has closed, you can now fold the UTxOs.
 2. Run `yarn init-fold` or `yarn init-fold:lp`.
 3. Run `yarn fold-nodes` or `yarn fold-nodes:lp`.
+4. (**Optional**) Run `yarn add-collected:lp` for Liquidity TT's.
+5. (**Optional**) Run `yarn spend-to-proxy:lp` for Spending to the proxy UTXO.
+6. (**Optional**) Run `yarn create-v1-pool:lp` for Creating the V1 Pool.

@@ -1,19 +1,14 @@
-import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
 dotenv.config();
-import {
-  Blockfrost,
-  Lucid,
-  Network,
-} from "price-discovery-offchain";
+import { Lucid } from "lucid-fork";
+
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import { safeAsync, signSubmitValidate } from "./misc.js";
-import { getLucidInstance, selectLucidWallet } from "./wallet.js";
+import { selectLucidWallet } from "./wallet.js";
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
 
-async function fundWallets() {
-  const lucid = await getLucidInstance();
-  await selectLucidWallet(0);
+export async function fundWalletsAction(lucid: Lucid) {
+  await selectLucidWallet(lucid, 0);
 
   const tx = lucid.newTx();
 
@@ -51,5 +46,3 @@ async function fundWallets() {
 
   return await signSubmitValidate(lucid, completedTx);
 }
-
-fundWallets();

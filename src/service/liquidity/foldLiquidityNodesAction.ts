@@ -48,15 +48,11 @@ export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator
     return;
   }
 
-  /**
-   * @todo
-   * Increase chunk from 2 to 8
-   */
   const unprocessedNodes = readableUTxOs.filter(({ datum }) => {
     return datum.commitment === 0n;
   })
 
-  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 2)
+  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 8)
 
   for (const [index, chunk] of nodes.entries()) {
     console.log(`processing chunk ${index}`);

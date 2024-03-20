@@ -9,7 +9,7 @@
             "type": "node",
             "request": "launch",
             "args": [
-                "emulate-liquidity"
+                "create-v1-pool:lp"
             ],
             "runtimeExecutable": "yarn",
             "runtimeArgs": [

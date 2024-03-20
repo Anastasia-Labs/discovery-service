@@ -6,6 +6,7 @@ import {
 } from "price-discovery-offchain";
 import { fromText, Lucid, UTxO, toUnit, Emulator } from "lucid-fork";
 
+import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" }
 import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
 import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
 import liquidityStake from "../../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
@@ -79,6 +80,7 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
       distributionFoldValidator: distributionFoldValidator.cborHex,
       tokenHolderPolicy: tokenHolderPolicy.cborHex,
       tokenHolderValidator: tokenHolderValidator.cborHex,
+      proxyTokenHolderValidator: proxyTokenHolderValidator.cborHex
     },
   });
 
