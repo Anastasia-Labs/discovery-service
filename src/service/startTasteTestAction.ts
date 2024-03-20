@@ -1,16 +1,14 @@
-import { Blockfrost, Lucid, Network, UTxO } from "@anastasia-labs/lucid-cardano-fork";
+import { Lucid } from "lucid-fork";
 
-import initTx from "../../init-tx.json" assert { type: "json" };
 import { loggerDD } from "../logs/datadog-service.js";
 import { selectLucidWallet } from "../utils/wallet.js";
 
-async function submitInitTx() {
-    const lucid = await selectLucidWallet(0);
-
+export async function startTasteTest(lucid: Lucid) {
+  const { default: initTx } = await import("../../init-tx.json", { assert: { type: "json" } } )
+  
+  await selectLucidWallet(lucid, 0);
   const initNodeHash = await lucid.provider.submitTx(initTx.signedCbor)
   await loggerDD(`Submitting: ${initTx.txHash}`);
   await lucid.awaitTx(initNodeHash);
   await loggerDD(`Done!`);
 }
-
-submitInitTx();

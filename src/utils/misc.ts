@@ -1,9 +1,11 @@
 import {
   Lucid,
+  TxComplete,
+} from "lucid-fork";
+import {
   ReadableUTxO,
   Result,
-  TxComplete,
-} from "price-discovery-offchain";
+} from "price-discovery-offchain"
 import { setTimeout } from "timers/promises";
 import { match } from "ts-pattern";
 

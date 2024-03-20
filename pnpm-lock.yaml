@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@anastasia-labs/lucid-cardano-fork':
-    specifier: ^0.10.7
-    version: 0.10.7
   '@datadog/datadog-api-client':
     specifier: ^1.16.0
     version: 1.16.0
@@ -20,9 +17,12 @@ dependencies:
   log4js:
     specifier: ^6.9.1
     version: 6.9.1
+  lucid-fork:
+    specifier: file:lucid.tgz
+    version: file:lucid.tgz
   price-discovery-offchain:
-    specifier: file:price-discovery-offchain-v0.0.12.tgz
-    version: file:price-discovery-offchain-v0.0.12.tgz
+    specifier: file:price-discovery-offchain-v0.0.13.tgz
+    version: file:price-discovery-offchain-v0.0.13.tgz
   ts-node:
     specifier: ^10.9.1
     version: 10.9.1(@types/node@20.4.5)(typescript@5.1.6)
@@ -42,18 +42,6 @@ devDependencies:
     version: 5.1.6
 
 packages:
-
-  /@anastasia-labs/lucid-cardano-fork@0.10.7:
-    resolution: {integrity: sha512-41MVPku0QzRpm1E3/Ynux3L1NhC2UpbPr+ODFl8FiUrnbuH3ymVEPRVfhNtFu9BFr0ZpWSUsujLT0kylqgCsHg==}
-    engines: {node: '>=14'}
-    dependencies:
-      '@peculiar/webcrypto': 1.4.3
-      node-fetch: 3.3.2
-      ws: 8.13.0
-    transitivePeerDependencies:
-      - bufferutil
-      - utf-8-validate
-    dev: false
 
   /@anastasia-labs/lucid-cardano-fork@0.10.8-rc.3:
     resolution: {integrity: sha512-H+iobPIU9XKmfIqVnjrIUaF0INLo8TudEFnNkwUHy+Y7uLHDr1z+LDx9JqzLfADMRgx/hXJJLm59eza4a6TzHA==}
@@ -942,10 +930,24 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  file:price-discovery-offchain-v0.0.12.tgz:
-    resolution: {integrity: sha512-Qmo0dVQVwjIM+fSy0Dg4IkreIVMJf+VgNPRTKMG8JKBX36bQjXqMZ5igX4PFT5uzuOrca2EnSeUbPLzYem+B6A==, tarball: file:price-discovery-offchain-v0.0.12.tgz}
+  file:lucid.tgz:
+    resolution: {integrity: sha512-TvxUFHvtLAFOKHNWxbuG1BIP/IHWjj7ZRGwf0B3KzoMcQqsw0ej/0BNZJ0VVHQM8gQu+goA+12+xY97ECgk2hw==, tarball: file:lucid.tgz}
+    name: lucid-cardano
+    version: 0.10.7
+    engines: {node: '>=14'}
+    dependencies:
+      '@peculiar/webcrypto': 1.4.3
+      node-fetch: 3.3.2
+      ws: 8.13.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+    dev: false
+
+  file:price-discovery-offchain-v0.0.13.tgz:
+    resolution: {integrity: sha512-f+WMRu2t/JnSOfhQc5DIzIB88BX9xW4LnV3Zq08DnN+ztjAxrrYAkqSXJl21TSE0acRlbuu5zOkpzfvP6AlwzQ==, tarball: file:price-discovery-offchain-v0.0.13.tgz}
     name: price-discovery-offchain
-    version: 0.0.12
+    version: 0.0.13
     dependencies:
       '@anastasia-labs/lucid-cardano-fork': 0.10.8-rc.3
     transitivePeerDependencies:

@@ -2,6 +2,18 @@ export interface DynamoTTEntry {
         "pk": {
           "S": string;
         },
+        "banner": {
+          "S": string;
+        },
+        "profile": {
+          "S": string;
+        },
+        "primary_color": {
+          "S": string;
+        },
+        "secondary_color": {
+          "S": string;
+        },
         "adaHandle": {
           "S": string;
         },

@@ -1,17 +1,29 @@
 {
   "pk": {
-    "S": "4a56a245a4cd28c1edd2434d1be91be584b2470fdcd0620fb3f948fd"
+    "S": "18fda07f5c471f38aab5bc2536ffb2a2d70673e44e66bcf2f0ec8d4b"
   },
   "adaHandle": {
     "S": "000de14074745f74657374"
   },
+  "banner": {
+    "S": ""
+  },
+  "primary_color": {
+    "S": "#2457f2"
+  },
+  "secondary_color": {
+    "S": "#dce0ef"
+  },
+  "profile": {
+    "S": ""
+  },
   "asset": {
     "M": {
       "AssetId": {
-        "S": "f4b67a9fc8df355660f95ec6503cdabf3de88a1c629930d577a0cf95.31486f7572"
+        "S": "9e67fe85b89bf641919cee95b7777502a3f89de4671ba91716f3c421.436865727279"
       },
       "AssetName": {
-        "S": "1Hour"
+        "S": "Cherry"
       },
       "Decimals": {
         "N": "6"
@@ -22,7 +34,7 @@
       "MintDate": {
         "M": {
           "Slot": {
-            "S": "43870322"
+            "S": "44164937"
           },
           "SlotOffset": {
             "N": "1666656000"
@@ -30,20 +42,20 @@
         }
       },
       "PolicyId": {
-        "S": "f4b67a9fc8df355660f95ec6503cdabf3de88a1c629930d577a0cf95"
+        "S": "9e67fe85b89bf641919cee95b7777502a3f89de4671ba91716f3c421"
       },
       "Ticker": {
-        "S": "1HOUR"
+        "S": "CHERR"
       },
       "TotalSupply": {
-        "S": "100000000"
+        "S": "6000000000000000"
       }
     }
   },
   "createdDate": {
     "M": {
       "Slot": {
-        "S": "43870322"
+        "S": "44164937"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -51,12 +63,12 @@
     }
   },
   "creationTxHash": {
-    "S": "f87936e74624540b7ba7ccd1a8702dda62365e965bf44f869b7ab1be5edefa66"
+    "S": "8365d8b7c03c445db61088351736e3fce3c7f3a47a3fa2a549d540e84ba35375"
   },
   "endDate": {
     "M": {
       "Slot": {
-        "S": "43873781"
+        "S": "44335539"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -83,7 +95,7 @@
   "lastCallDate": {
     "M": {
       "Slot": {
-        "S": "43787381"
+        "S": "44249139"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -93,7 +105,7 @@
   "openDate": {
     "M": {
       "Slot": {
-        "S": "43870322"
+        "S": "44164937"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -135,13 +147,13 @@
   "projectDetails": {
     "M": {
       "Description": {
-        "S": "An example project description goes here."
+        "S": "The Cherry Protocol is an example project description that goes here, allowing users to more easily see the details."
       },
       "Handle": {
         "S": "yes"
       },
       "Name": {
-        "S": "1 Hour Test"
+        "S": "Cherry Protocol"
       },
       "Socials": {
         "L": [
@@ -170,7 +182,7 @@
       "Team": {
         "M": {
           "Company": {
-            "S": "1Hour, Inc."
+            "S": "Cherry, Inc."
           },
           "Members": {
             "L": [
@@ -268,7 +280,7 @@
     }
   },
   "projectTokens": {
-    "N": "100000000"
+    "N": "6000000000000000"
   },
   "scripts": {
     "M": {
@@ -281,7 +293,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "f2d0a0f763d0629c870f8696c50d74dee86df6be7d56044de8b132bf"
+            "S": "73443503a7a94634d242ab7a457d739c0fc6ffd9f4662320c0a7cbd5"
           },
           "utxo": {
             "M": {
@@ -289,7 +301,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "8161dd2d1c6a87fc13f8ccb4ee269cb97e75c36cb4e5be776077f42371bb7c27"
+                "S": "03e90cf2c90a13f54fda6499f7b249534405d95f85b034fea0c872b689418371"
               }
             }
           }
@@ -304,7 +316,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "c4b95161dc0f5bbc71f5e8e34099a61a51fad670d03a360ec6663072"
+            "S": "379f5338ad66e537c836339cc89f7b4e9ed3aeae91aaa8549ae79545"
           },
           "utxo": {
             "M": {
@@ -312,7 +324,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "5d9cca9639fa283b5ca6692bb926114593bf3325fa581642f411724b3481efa5"
+                "S": "82e107a4b22880c65721eaf24b00f4a6f949c07c25bc40ad17b56932fa0a0ba6"
               }
             }
           }
@@ -327,7 +339,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "3e0375b9e75b099be823c8ffde58a453ffd9dd00cf6046133df4428e"
+            "S": "78623b3fd377913c5fc60eef37f3d1c74cb953bddf57ac30c0d6d5a5"
           },
           "utxo": {
             "M": {
@@ -335,7 +347,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "bfa4ff1d1678623667d91ab8acc08be4038d090b4832a8cdc01e578a2b854193"
+                "S": "a9e4bba1c0b0bcfb56a75dc0f95f96aa2e3867b0046236df2623b91c8229463b"
               }
             }
           }
@@ -350,7 +362,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "9817e3b671e3980c4ce98e5cc3ffe7c00d0c9649e41a5b5713715900"
+            "S": "b7a9b85eed92be87d46148a2dfa54dec36491bc788e2b20949ee6139"
           },
           "utxo": {
             "M": {
@@ -358,7 +370,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "3d94cc2b9d29d83f900f0847d2c64f822fb75d582fef5389284df5219a1be2d2"
+                "S": "5a5f18309fee3b19f58de24981236c68f570711c16e7b8ded77f4817255c5893"
               }
             }
           }
@@ -373,7 +385,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "1fa0b6285cda31d48113c59be5f71da9dca945765bfc2df4f22432e3"
+            "S": "aff8ca927c6f1ccd7e8f155e3575259d0c0bcd6013c540be33805637"
           },
           "utxo": {
             "M": {
@@ -381,7 +393,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "ee1b66cc96d15b209e0df164f8b3732a351e0b579f25a6857276e728ae9e2af7"
+                "S": "4638606f6a12b2346c5a7795f5ff3b777ef284e44384d319fec2e3a142f27766"
               }
             }
           }
@@ -396,7 +408,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "3e418e66fcae0e51630a513ba440d5ce5db73011dac7ec0739aefa53"
+            "S": "0833610d49a81191e9a06b25ca212572a742ddacb5b473f71acb80a7"
           },
           "utxo": {
             "M": {
@@ -404,7 +416,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "7398e5aef96536cc9848953bb0b8b50ed88e26b0d8bcc3bd88c6f8d150afc29c"
+                "S": "7c2e05aaf48f431d69a38e93f6e50b7ea8c6b773adf3cfc16868e1b7b67c54d3"
               }
             }
           }
@@ -419,7 +431,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "1ab7afda0a5c6a1887b1474dfc5f8d9ce8b16e24c87540038a54c2aa"
+            "S": "b245e126072c28aa886e5f747e8d9ca79fba5588d10b8d4dc51fd159"
           },
           "utxo": {
             "M": {
@@ -427,7 +439,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "dd1a6285119b8ae4a61a0b845f1c330e5f864ce8ee7673cc8d3c084dba9eccb7"
+                "S": "9d08acc74c8d4a088761af833fcfc2473fa01b64b3074922992e7d8145b5644f"
               }
             }
           }
@@ -442,7 +454,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "eb95c57848b06ecfbae5c92320c98077da6d89c414c70b2ec2eca209"
+            "S": "fa5433bd6447b3113931db12259afe3bc827d0fc17f8807c7d8dadcc"
           },
           "utxo": {
             "M": {
@@ -450,7 +462,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "27cfb9bbeb30d5e68f0ac5b9ca4a56dd7470ea465cb18349e6da823ab0496f0f"
+                "S": "b3e0eb2c4c24b22b010879a8c231a708702b48844a476957f692a817a5e26215"
               }
             }
           }
@@ -465,7 +477,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "3cc409bd83bf4fdbb3647cc58bf2c8643124e7bf972cec48f246c4b5"
+            "S": "90fa01958a42ff41239164d7140af45f8af24ae7d143a9767d2a1705"
           },
           "utxo": {
             "M": {
@@ -473,7 +485,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "708b2bc1f924c38f7e12094afdbb3ebc045dc4265071e9b1c0926c769e221687"
+                "S": "3e19213a89be1f1d08dedd583436cd6cff2d4251632d665139b6a907cfe9b781"
               }
             }
           }
@@ -482,7 +494,7 @@
     }
   },
   "slug": {
-    "S": "1-hour test"
+    "S": "cherry-protocol"
   },
   "type": {
     "S": "Liquidity"
@@ -503,7 +515,7 @@
           "ReleaseDate": {
             "M": {
               "Slot": {
-                "S": "52510322"
+                "S": "52804937"
               },
               "SlotOffset": {
                 "N": "1666656000"

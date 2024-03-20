@@ -1,24 +1,25 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { 
-    insertLqNode
+import {
+    modifyLqNode,
 } from "price-discovery-offchain"
-
-import applied from "../../../applied-scripts.json" assert { type: "json" };
-import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
+import { Lucid, Emulator } from "lucid-fork";
 import { setTimeout } from "timers/promises";
+
+import { selectLucidWallet } from "../../utils/wallet.js";
 import { MAX_WALLET_GROUP_COUNT, WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
 
-async function run() {
-    const lucid = await getLucidInstance();
+export const modifyLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator) => {
+    const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
 
     let loop = true;
-    let walletIdx = 5;
+    let walletIdx = WALLET_GROUP_START_INDEX;
     while (loop) {
         try {
-            await selectLucidWallet(walletIdx);
-            const tx = await insertLqNode(lucid, {
-                amountLovelace: 5_000_000,
+            await selectLucidWallet(lucid, walletIdx);
+            const tx = await modifyLqNode(lucid, {
+                currenTime: emulator?.now() ?? Date.now(),
+                amountLovelace: 1_000_000n,
                 scripts: {
                     nodePolicy: applied.scripts.liquidityPolicy,
                     nodeValidator: applied.scripts.liquidityValidator
@@ -30,17 +31,17 @@ async function run() {
                 return undefined;
             }
         
-            console.log("Depositing 5 ADA to TT with wallet: " + walletIdx)
+            console.log("Updating deposit with 1 ADA using wallet: " + walletIdx)
             const txComplete = await tx.data.sign().complete();
             const txHash = await txComplete.submit();
             console.log(`Submitting: ${txHash}`);
-            await lucid.awaitTx(txHash);
-            console.log('Done!');
-            
+    
             if (walletIdx === MAX_WALLET_GROUP_COUNT) {
                 loop = false;
+                console.log("Done!")
             } else {
                 walletIdx++;
+                await lucid.awaitTx(txHash);
             }
         } catch (e) {
             console.log("Failed to fund TT with wallet: " + walletIdx, (e as Error).message);
@@ -49,5 +50,3 @@ async function run() {
         }
     }
 }
-
-run();

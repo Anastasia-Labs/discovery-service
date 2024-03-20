@@ -1,4 +1,4 @@
-import { Blockfrost, Lucid, Network } from "price-discovery-offchain";
+import { Blockfrost, Lucid, Network } from "lucid-fork";
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../constants/network.js";
 
 let lucidInstance: Lucid;
@@ -14,8 +14,7 @@ export const getLucidInstance = async () => {
   return lucidInstance;
 }
 
-export const selectLucidWallet = async (index: number) => {
-  const lucid = await getLucidInstance();
+export const selectLucidWallet = async (lucid: Lucid, index: number) => {
   const { default: wallets } = await import("../../test/wallets.json", { assert: { type: "json" } })
   lucid.selectWalletFromSeed(wallets[index].seed as string);
 
