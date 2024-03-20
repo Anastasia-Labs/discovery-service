@@ -1,9 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { 
-    insertLqNode
-} from "price-discovery-offchain"
-import { Lucid, Emulator } from "lucid-fork";
+import { insertLqNode, Lucid, Emulator } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -45,7 +42,7 @@ export const insertLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulat
             console.log(`Submitting: ${txHash}`);
             await lucid.awaitTx(txHash);
             
-            if (walletIdx === MAX_WALLET_GROUP_COUNT) {
+            if (walletIdx === (emulator ? 49 : MAX_WALLET_GROUP_COUNT)) {
                 loop = false;
                 console.log('Done!');
             } else {

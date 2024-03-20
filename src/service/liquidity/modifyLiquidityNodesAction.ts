@@ -3,7 +3,7 @@ dotenv.config();
 import {
     modifyLqNode,
 } from "price-discovery-offchain"
-import { Lucid, Emulator } from "lucid-fork";
+import { Lucid, Emulator } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
 import { selectLucidWallet } from "../../utils/wallet.js";

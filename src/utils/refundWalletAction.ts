@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Lucid } from "lucid-fork";
+import { Lucid } from "price-discovery-offchain";
 
 import { selectLucidWallet } from "./wallet.js";
 import { lovelaceAtAddress } from "./misc.js";

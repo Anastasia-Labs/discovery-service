@@ -11,7 +11,7 @@ import {
   OutRef,
   toUnit,
   Emulator
-} from "lucid-fork";
+} from "price-discovery-offchain";
 
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
 import { loggerDD } from "../../logs/datadog-service.js";
@@ -254,8 +254,9 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
 
   const txHashes = await Promise.all(signedTxs.map(async signedTx => {
     const txHash = await signedTx.submit();
-    console.log(`Submitting: ${signedTx}`)
+    console.log(`Submitting: ${txHash}`)
     await lucid.awaitTx(txHash);
+    return txHash
   }))
 
   txHashes.forEach(hash => console.log(`Deployed Ref Script: ${hash}`))

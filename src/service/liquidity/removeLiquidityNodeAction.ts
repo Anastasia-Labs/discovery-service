@@ -3,7 +3,7 @@ dotenv.config();
 import { 
     removeLqNode
 } from "price-discovery-offchain"
-import { Lucid, Emulator } from "lucid-fork"
+import { Lucid, Emulator } from "price-discovery-offchain"
 
 import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { selectLucidWallet } from "../../utils/wallet.js";

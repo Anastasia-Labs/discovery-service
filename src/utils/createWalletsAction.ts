@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { writeFile } from "node:fs";
 import { execSync } from "node:child_process";
-import { generateSeedPhrase, Lucid } from "lucid-fork"
+import { generateSeedPhrase, Lucid } from "price-discovery-offchain"
 
 export const createWalletsAction = async (lucid: Lucid) => {
   const target = 50;

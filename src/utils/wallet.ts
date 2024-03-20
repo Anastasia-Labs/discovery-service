@@ -1,4 +1,4 @@
-import { Blockfrost, Lucid, Network } from "lucid-fork";
+import { Blockfrost, Lucid, Network } from "price-discovery-offchain";
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../constants/network.js";
 
 let lucidInstance: Lucid;

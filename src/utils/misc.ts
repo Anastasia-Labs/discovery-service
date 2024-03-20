@@ -1,7 +1,7 @@
 import {
   Lucid,
   TxComplete,
-} from "lucid-fork";
+} from "price-discovery-offchain";
 import {
   ReadableUTxO,
   Result,

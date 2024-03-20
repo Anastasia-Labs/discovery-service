@@ -7,7 +7,7 @@ import {
   initLqNode,
   initLqTokenHolder,
 } from "price-discovery-offchain";
-import { Lucid, UTxO } from "lucid-fork"
+import { Lucid, UTxO } from "price-discovery-offchain"
 import { writeFileSync } from 'fs';
 
 import { loggerDD } from "../../logs/datadog-service.js";

@@ -7,7 +7,7 @@ import {
 import { 
   Lucid,
   Emulator
-} from "lucid-fork"
+} from "price-discovery-offchain"
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";

@@ -4,7 +4,7 @@ dotenv.config();
 import {
   buildLiquidityScripts,
 } from "price-discovery-offchain";
-import { fromText, Lucid, UTxO, toUnit } from "lucid-fork";
+import { fromText, Lucid, UTxO, toUnit } from "price-discovery-offchain";
 import { writeFile } from "fs/promises";
 
 import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" }

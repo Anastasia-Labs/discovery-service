@@ -10,7 +10,7 @@ import {
   LiquiditySetNode,
   utxosAtScript,
 } from "price-discovery-offchain";
-import { Data, Lucid, UTxO, Emulator } from "lucid-fork"
+import { Data, Lucid, UTxO, Emulator } from "price-discovery-offchain"
 
 import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { loggerDD } from "../../logs/datadog-service.js";
@@ -18,6 +18,7 @@ import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator) => {
+  const { default: deployedScripts } = await import("../../../deployed-policy.json", { assert: { type: "json" } } );
   await selectLucidWallet(lucid, 0);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
@@ -52,7 +53,7 @@ export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator
     return datum.commitment === 0n;
   })
 
-  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 8)
+  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 30)
 
   for (const [index, chunk] of nodes.entries()) {
     console.log(`processing chunk ${index}`);
@@ -79,6 +80,11 @@ export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator
         foldPolicy: applied.scripts.collectFoldPolicy,
         foldValidator: applied.scripts.collectFoldValidator,
       },
+      refInputs: {
+        foldValidator: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.CollectFoldValidator]))?.[0] as UTxO,
+        liquidityValidator: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.TasteTestValidator]))?.[0] as UTxO,
+        collectStake: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.TasteTestStakeValidator]))?.[0] as UTxO
+      }
     };
 
     const multiFoldUnsigned = await multiLqFold(lucid, multiFoldConfig);

@@ -5,7 +5,7 @@ import {
     SpendToProxyConfig,
     utxosAtScript,
 } from "price-discovery-offchain";
-import { Lucid, Emulator } from "lucid-fork";
+import { Lucid, Emulator } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";

@@ -4,7 +4,7 @@ import {
   InitFoldConfig,
   initLqFold,
 } from "price-discovery-offchain";
-import { Emulator, Lucid } from "lucid-fork"
+import { Emulator, Lucid } from "price-discovery-offchain"
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";

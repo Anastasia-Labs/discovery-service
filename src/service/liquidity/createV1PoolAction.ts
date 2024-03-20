@@ -1,7 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { Emulator, Lucid } from "lucid-fork"
+import { Emulator, Lucid } from "price-discovery-offchain"
 import { createLiquidityV1Pool } from "price-discovery-offchain"
 import { selectLucidWallet } from "../../utils/wallet.js";
 
@@ -35,7 +35,8 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator, prox
             policyId: (process.env.V1_FACTORY_TOKEN!).split(".")[0],
             assetName: (process.env.V1_FACTORY_TOKEN!).split(".")[1]
         },
-        datums
+        datums,
+        emulator: Boolean(emulator)
     })
 
     if (unsignedTx.type == "error") {

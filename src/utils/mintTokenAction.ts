@@ -9,7 +9,7 @@ import {
   PolicyId,
   TxHash,
   Unit
-} from "lucid-fork";
+} from "price-discovery-offchain";
 import { selectLucidWallet } from "./wallet.js";
 
 export async function mintNFTAction(lucid: Lucid): Promise<{

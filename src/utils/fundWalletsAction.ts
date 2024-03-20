@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 dotenv.config();
-import { Lucid } from "lucid-fork";
+import { Lucid } from "price-discovery-offchain";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import { safeAsync, signSubmitValidate } from "./misc.js";

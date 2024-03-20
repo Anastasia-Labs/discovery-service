@@ -1,4 +1,4 @@
-import { Emulator, Lucid } from "lucid-fork"
+import { Emulator, Lucid } from "price-discovery-offchain"
 
 import wallets from "../../test/wallets.json" assert { type: "json" }
 import { mintNFTAction } from "./mintTokenAction.js";
@@ -8,7 +8,7 @@ import { setTimeout } from "timers/promises";
 import { initializeLiquidityAction } from "../service/liquidity/initializeLiquidityAction.js";
 import { startTasteTest } from "../service/startTasteTestAction.js";
 import { insertLiquidityNodesAction } from "../service/liquidity/insertLiquidityNodesAction.js";
-import { EMULATOR_DELAY, MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
+import { EMULATOR_DELAY } from "../constants/utils.js";
 import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidityNodesAction.js";
 import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
 import { initFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
@@ -18,7 +18,7 @@ import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
 
 const emulateLiquidity = async () => {
-    const restAccounts = [...wallets].slice(3, MAX_WALLET_GROUP_COUNT + 1).map(({ address }) => ({
+    const restAccounts = [...wallets].slice(3, 50).map(({ address }) => ({
         address,
         assets: {
             lovelace: 15_000_000n
@@ -73,7 +73,7 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
     
     console.log("\n\n\nEMULATOR: Deploying Liquidity Scripts...")
-    await deployLiquidityScriptsAction(lucidInstance);
+    await deployLiquidityScriptsAction(lucidInstance, emulator);
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 

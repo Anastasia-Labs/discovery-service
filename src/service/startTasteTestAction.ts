@@ -1,4 +1,4 @@
-import { Lucid } from "lucid-fork";
+import { Lucid } from "price-discovery-offchain";
 
 import { loggerDD } from "../logs/datadog-service.js";
 import { selectLucidWallet } from "../utils/wallet.js";

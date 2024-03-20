@@ -48,7 +48,6 @@
   },
   "dependencies": {
     "price-discovery-offchain": "file:price-discovery-offchain-v0.0.13.tgz",
-    "lucid-fork": "file:lucid.tgz",
     "@datadog/datadog-api-client": "^1.16.0",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
