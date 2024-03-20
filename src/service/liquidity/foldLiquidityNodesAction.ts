@@ -99,7 +99,9 @@ export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator
       await lucid.awaitTx(multiFoldHash);
 
       while (foldUtxo.txHash !== multiFoldHash) {
-        await setTimeout(3_000);
+        if (!emulator) {
+          await setTimeout(3_000);
+        }
         const [newFoldUtxo] = await utxosAtScript(
           lucid,
           applied.scripts.collectFoldValidator

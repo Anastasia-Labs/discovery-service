@@ -104,7 +104,7 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
   const signedCbor = Buffer.from(signedTransaction.txSigned.to_bytes()).toString("hex");
   const signedTxHash = signedTransaction.toHash();
 
-  await writeFileSync(
+  writeFileSync(
     `./init-tx.json`,
     JSON.stringify(
       {

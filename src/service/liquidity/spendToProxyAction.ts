@@ -40,9 +40,11 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     return;
   }
 
-  const spendToProxySigned = await spendToProxyUnsigned.data.sign().complete();
+  const spendToProxySigned = await spendToProxyUnsigned.data.txComplete.sign().complete();
   const spendToProxyHash = await spendToProxySigned.submit();
   console.log(`Submitting proxy transaction: ${spendToProxyHash}`);
   await lucid.awaitTx(spendToProxyHash);
   await loggerDD(`Done!`);
+
+  return spendToProxyUnsigned.data.datum;
 };

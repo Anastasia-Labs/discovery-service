@@ -17,6 +17,7 @@ import { initFoldServiceAction } from "../service/liquidity/initLiquidityFoldSer
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
+import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
 
 const emulateLiquidity = async () => {
     const restAccounts = [...wallets].slice(3, MAX_WALLET_GROUP_COUNT + 1).map(({ address }) => ({
@@ -45,12 +46,22 @@ const emulateLiquidity = async () => {
                 lovelace: 500_000_000n
             }
         },
-        ...restAccounts
+        ...restAccounts,
+        {
+            "address": "addr_test1wz93mczshjd4zpv84csc6q6hk3w0usmrksxgx8gwqahqpqgv4p5ty",
+            "assets": {
+                lovelace: 2_000_000n,
+                "947dd0cec86ce6106517fbcf74ce93530e1f60127be57f0a4bbc50c1666163746f7279": 1n
+            },
+            outputData: {
+                hash: "d2653ed85dac06c5b39554b78875d4f8cb6680a274a0f2cf6897f2b99e35b0da",
+            }
+        }
     ])
 
     const deadline = emulator.now() + EMULATOR_DELAY;
     const lucidInstance = await Lucid.new(emulator);
-    const DELAY = 1_000;
+    const DELAY = 0;
     
     lucidInstance.selectWalletFromSeed(wallets[1].seed);
     console.log("\n\n\nEMULATOR: Minting Project Token...")
@@ -110,7 +121,12 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Spending to Proxy Token Holder...")
-    await spendToProxyAction(lucidInstance, emulator);
+    const proxyDatum = await spendToProxyAction(lucidInstance, emulator);
+    console.log("Moving to next step...")
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Creating V1 Pool...")
+    await createV1PoolAction(lucidInstance, emulator, proxyDatum);
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 }
