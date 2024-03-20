@@ -1,27 +1,23 @@
 import dotenv from "dotenv";
 dotenv.config();
 import {
-  Blockfrost,
-  initRewardFold,
+  Emulator,
+  initLqRewardFold,
   InitRewardFoldConfig,
   Lucid,
-  Network,
 } from "price-discovery-offchain";
-import log4js from "log4js";
-log4js.configure("log4js.json");
-const logger = log4js.getLogger("app");
 
-import applied from "../../../applied-scripts.json" assert { type: "json" };
-import refScripts from "../../../deployed-policy.json" assert { type: "json" };
-import {loggerDD} from "../../logs/datadog-service.js";
-import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
-const run = async () => {
-  const lucid = await getLucidInstance();
+export const initLiquidityRewardServiceAction = async (lucid: Lucid, emulator?: Emulator, policyId?: string, assetName?: string) => {
+  const applied = await getAppliedScripts();
+  const deployed = await getDeployedScripts();
 
   const initRewardFoldConfig: InitRewardFoldConfig = {
-    projectCS: process.env.PROJECT_CS!,
-    projectTN: process.env.PROJECT_TN!,
+    currenTime: emulator?.now() ?? Date.now(),
+    projectCS: policyId ?? process.env.PROJECT_CS!,
+    projectTN: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString("hex"),
     scripts: {
       nodeValidator: applied.scripts.liquidityValidator,
       nodePolicy: applied.scripts.liquidityPolicy,
@@ -34,36 +30,34 @@ const run = async () => {
     },
     refScripts: {
       nodePolicy: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.TasteTestPolicy])
+        await lucid.utxosByOutRef([deployed.scriptsRef.TasteTestPolicy])
       )[0],
       nodeValidator: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.TasteTestValidator])
+        await lucid.utxosByOutRef([deployed.scriptsRef.TasteTestValidator])
       )[0],
       commitFoldPolicy: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.CollectFoldPolicy])
+        await lucid.utxosByOutRef([deployed.scriptsRef.CollectFoldPolicy])
       )[0],
       commitFoldValidator: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.CollectFoldValidator])
+        await lucid.utxosByOutRef([deployed.scriptsRef.CollectFoldValidator])
       )[0],
       rewardFoldPolicy: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.RewardFoldPolicy])
+        await lucid.utxosByOutRef([deployed.scriptsRef.RewardFoldPolicy])
       )[0],
       rewardFoldValidator: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.RewardFoldValidator])
+        await lucid.utxosByOutRef([deployed.scriptsRef.RewardFoldValidator])
       )[0],
       tokenHolderPolicy: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.TokenHolderPolicy])
+        await lucid.utxosByOutRef([deployed.scriptsRef.TokenHolderPolicy])
       )[0],
       tokenHolderValidator: (
-        await lucid.utxosByOutRef([refScripts.scriptsRef.TokenHolderValidator])
+        await lucid.utxosByOutRef([deployed.scriptsRef.TokenHolderValidator])
       )[0],
     },
   };
-  await loggerDD("running initRewardFold")
-  await loggerDD("selecting WALLET_PROJECT_0");
 
-  await selectLucidWallet(0);
-  const initRewardFoldUnsigned = await initRewardFold(
+  await selectLucidWallet(lucid, 0);
+  const initRewardFoldUnsigned = await initLqRewardFold(
     lucid,
     initRewardFoldConfig
   );
@@ -81,5 +75,3 @@ const run = async () => {
 //   await lucid.awaitTx(initRewardFoldHash);
 //   await loggerDD(`initRewardFold submitted TxHash: ${ initRewardFoldHash }`)
 };
-
-await run();

@@ -2,27 +2,27 @@
   "policy": "62b1e95e4cd73999fa48fd98d1e1385c9ece25d3e0b6909d92a0e6e6",
   "scriptsRef": {
     "TasteTestPolicy": {
-      "txHash": "d712374e5f870eb3d1bca0a01843aeaad2e706dfaaf0ed39f83707c5793e3941",
+      "txHash": "6957e63d16ad725f39d44028e813cbd9300f11c43b37728eef110b8957b1133c",
       "outputIndex": 0
     },
     "TasteTestValidator": {
-      "txHash": "ea461a21187129fbd577b3dfd2f3b20d1e9833ebcc836a8481566fb0ac06676e",
+      "txHash": "cfd84d6ac8ea65f145f2d19d8e1032fea498b56a3092bd8042d650297d2f1169",
       "outputIndex": 0
     },
     "CollectFoldPolicy": {
-      "txHash": "1cf424bab6b1f04b5702720a83469ce11afe7af09856c94ff7ea7cb83e08f471",
+      "txHash": "79a97673d3ee3d322734512c7a849a810d529144581232ba9ea1979069eeedf4",
       "outputIndex": 0
     },
     "CollectFoldValidator": {
-      "txHash": "ac4e91b3f38d038c920d6a8b0eb1bf29a74f8c8ed433937089d287ef2e78c833",
+      "txHash": "afcd862c8824f8663e95b9bffd3356272c5cef35594bcdbb9bcb9597d65bfeea",
       "outputIndex": 0
     },
     "RewardFoldPolicy": {
-      "txHash": "8c126e7c85f8889d4c244b35c186d4e08b4dfe4db3c51491d2d984da1caa96c0",
+      "txHash": "857db48b2929459a73232403375295b43c6c4c6065df877d4e67e12a748157df",
       "outputIndex": 0
     },
     "RewardFoldValidator": {
-      "txHash": "2a93a9c642231391cec4c309f1b28d2b4093402b65b3f6de316fea09051f6639",
+      "txHash": "3fc05251c7925087fb02b2a3d7c2683a9936188852d440096fbf73e2e390be0f",
       "outputIndex": 0
     },
     "TokenHolderPolicy": {
@@ -30,11 +30,11 @@
       "outputIndex": 0
     },
     "TokenHolderValidator": {
-      "txHash": "e59903ac947f1f509d771aa0287dd08a322671c92191481d483c3262305add4b",
+      "txHash": "35c7f8720faf240194a8ba47a93c0eedbc77fb298f1b67a78d5242616bc3354e",
       "outputIndex": 0
     },
     "TasteTestStakeValidator": {
-      "txHash": "bc6cf4dcc7834864456827a3b24f80f94c07136b7605b56c045cd1f32e3abf64",
+      "txHash": "f0fc56300a6c25eb0bbdbd5e92217dc4ddc2c1b822691f7f84b4b7d9ba6bdb8e",
       "outputIndex": 0
     }
   }

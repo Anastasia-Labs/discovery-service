@@ -9,11 +9,12 @@ import { Lucid, Emulator } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts, getDeployedScripts, getProxyTokenHolderScript } from "../../utils/files.js";
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
-  const { default: proxyTokenHolder } = await import("../../compiledLiquidity/proxyTokenHolderV1.json", { assert: { type: "json" } });
-  const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } });
-  const { default: deployed } = await import("../../../deployed-policy.json", { assert: { type: "json" } });
+  const proxyTokenHolder = await getProxyTokenHolderScript();
+  const applied = await getAppliedScripts();
+  const deployed = await getDeployedScripts();
   
   const liquidityTokenHolderInputs = await utxosAtScript(
     lucid,

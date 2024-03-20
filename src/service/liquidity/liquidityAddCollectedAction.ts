@@ -11,10 +11,11 @@ import {
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
 export const liquidityAddCollectedAction = async (lucid: Lucid, emulator?: Emulator) => {
-  const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })  
-  const { default: deployed } = await import("../../../deployed-policy.json", { assert: { type: "json" } })
+  const applied = await getAppliedScripts();
+  const deployed = await getDeployedScripts();
 
   const addCollectedConfig: AddCollectedConfig = {
     currenTime: emulator?.now() ?? Date.now(),

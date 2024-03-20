@@ -12,10 +12,11 @@ import { writeFileSync } from 'fs';
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts } from "../../utils/files.js";
 
 export const initializeLiquidityAction = async (lucid: Lucid) => {
   await selectLucidWallet(lucid, 2);
-  const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
+  const applied = await getAppliedScripts();
 
   const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
     type: "PlutusV2",

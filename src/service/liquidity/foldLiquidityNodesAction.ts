@@ -53,7 +53,7 @@ export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator
     return datum.commitment === 0n;
   })
 
-  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 30)
+  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 15)
 
   for (const [index, chunk] of nodes.entries()) {
     console.log(`processing chunk ${index}`);
@@ -80,11 +80,11 @@ export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator
         foldPolicy: applied.scripts.collectFoldPolicy,
         foldValidator: applied.scripts.collectFoldValidator,
       },
-      refInputs: {
-        foldValidator: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.CollectFoldValidator]))?.[0] as UTxO,
-        liquidityValidator: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.TasteTestValidator]))?.[0] as UTxO,
-        collectStake: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.TasteTestStakeValidator]))?.[0] as UTxO
-      }
+      // refInputs: {
+      //   foldValidator: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.CollectFoldValidator]))?.[0] as UTxO,
+      //   liquidityValidator: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.TasteTestValidator]))?.[0] as UTxO,
+      //   collectStake: (await lucid.provider.getUtxosByOutRef([deployedScripts.scriptsRef.TasteTestStakeValidator]))?.[0] as UTxO
+      // }
     };
 
     const multiFoldUnsigned = await multiLqFold(lucid, multiFoldConfig);

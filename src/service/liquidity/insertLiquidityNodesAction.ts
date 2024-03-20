@@ -5,10 +5,11 @@ import { setTimeout } from "timers/promises";
 
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { MAX_WALLET_GROUP_COUNT, WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
 export const insertLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator) => {
-    const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
-    const { default: deployed } = await import("../../../deployed-policy.json", { assert: { type: "json" } })
+    const applied = await getAppliedScripts();
+    const deployed = await getDeployedScripts();
 
     const refNodePolicy = await lucid.provider.getUtxosByOutRef([deployed.scriptsRef.TasteTestPolicy]);
     const refNodeValidator = await lucid.provider.getUtxosByOutRef([deployed.scriptsRef.TasteTestValidator]);

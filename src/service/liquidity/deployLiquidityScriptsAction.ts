@@ -1,7 +1,8 @@
 import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
 dotenv.config();
-import { writeFile } from "fs/promises";
+import fs, { readFileSync, writeFileSync } from "fs";
+import { readFile, writeFile } from "fs/promises";
 import {
   deployRefScripts
 } from "price-discovery-offchain";
@@ -17,9 +18,10 @@ import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type:
 import { loggerDD } from "../../logs/datadog-service.js";
 import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts } from "../../utils/files.js";
 
 export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emulator) => {
-  const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
+  const applied = await getAppliedScripts();
 
   await selectLucidWallet(lucid, 2);
   const deployWalletAddress = await lucid.wallet.address();
@@ -292,16 +294,20 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     };
   }
 
-  await writeFile(
+  const data = JSON.stringify(
+        {
+          policy: deploy9.data.deployPolicyId,
+          scriptsRef: scriptsRef,
+        },
+        undefined,
+        2
+      );
+
+      console.log(data)
+
+  writeFileSync(
     `./deployed-policy.json`,
-    JSON.stringify(
-      {
-        policy: deploy9.data.deployPolicyId,
-        scriptsRef: scriptsRef,
-      },
-      undefined,
-      2
-    )
+    data
   );
 
   console.log(

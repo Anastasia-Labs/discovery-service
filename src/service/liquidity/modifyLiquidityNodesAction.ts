@@ -8,9 +8,10 @@ import { setTimeout } from "timers/promises";
 
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { MAX_WALLET_GROUP_COUNT, WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
+import { getAppliedScripts } from "../../utils/files.js";
 
 export const modifyLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator) => {
-    const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
+    const applied = await getAppliedScripts();
 
     let loop = true;
     let walletIdx = WALLET_GROUP_START_INDEX;

@@ -8,9 +8,10 @@ import { Emulator, Lucid } from "price-discovery-offchain"
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts } from "../../utils/files.js";
 
 export const initFoldServiceAction = async (lucid: Lucid, emulator?: Emulator) => {
-  const { default: applied } = await import("../../../applied-scripts.json", { assert: { type: "json" } })
+  const applied = await getAppliedScripts();
 
   const initFoldConfig: InitFoldConfig = {
     currenTime: emulator?.now() ?? Date.now(),

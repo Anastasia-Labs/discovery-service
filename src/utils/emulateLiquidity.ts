@@ -16,6 +16,7 @@ import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNode
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
+import { initLiquidityRewardServiceAction } from "../service/liquidity/initLiquidityRewardServiceAction.js";
 
 const emulateLiquidity = async () => {
     const restAccounts = [...wallets].slice(3, 50).map(({ address }) => ({
@@ -97,10 +98,10 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 
-    console.log("\n\n\nEMULATOR: Removing the Last Deposit...")
-    await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
-    console.log("Moving to next step...")
-    await setTimeout(DELAY);
+    // console.log("\n\n\nEMULATOR: Removing the Last Deposit...")
+    // await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
+    // console.log("Moving to next step...")
+    // await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Initializing Fold UTXO...")
     emulator.awaitBlock(150); // Ensure TT is done.
@@ -125,6 +126,11 @@ const emulateLiquidity = async () => {
 
     console.log("\n\n\nEMULATOR: Creating V1 Pool...")
     await createV1PoolAction(lucidInstance, emulator, proxyDatum, policyId, name);
+    console.log("Moving to next step...")
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Initializing Reward Fold...")
+    await initLiquidityRewardServiceAction(lucidInstance, emulator, policyId, name);
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 }

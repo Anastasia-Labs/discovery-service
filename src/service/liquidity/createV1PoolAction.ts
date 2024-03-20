@@ -4,10 +4,12 @@ dotenv.config();
 import { Emulator, Lucid } from "price-discovery-offchain"
 import { createLiquidityV1Pool } from "price-discovery-offchain"
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts, getProxyTokenHolderScript } from "../../utils/files.js";
 
 export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator, proxyDatum?: string, policyId?: string, assetName?: string) => {
     await selectLucidWallet(lucid, 0);
-    const { default: proxyTokenHolderV1Validator } = await import("../../compiledLiquidity/proxyTokenHolderV1.json", { assert: { type: "json" }})
+    const proxyTokenHolderV1Validator = await getProxyTokenHolderScript();
+    const applied = await getAppliedScripts();
 
     const datums: { [key: string]: string } = {};
     if (emulator) {
@@ -24,9 +26,11 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator, prox
         scripts: {
             proxyTokenHolderScript: proxyTokenHolderV1Validator.cborHex,
             v1PoolPolicyScript: process.env.V1_POOL_POLICY_SCRIPT!,
-            v1FactoryValidatorScript: process.env.V1_POOL_FACTORY_VALIDATOR!
+            v1FactoryValidatorScript: process.env.V1_POOL_FACTORY_VALIDATOR!,
+            tokenHolderPolicy: applied.scripts.tokenHolderPolicy
         },
         v1PoolAddress: process.env.POOL_ADDRESS!,
+        v1PoolPolicyId: process.env.POOL_POLICY_ID!,
         projectToken: {
             assetName: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString("hex"),
             policyId: policyId ?? process.env.PROJECT_CS!
