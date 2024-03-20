@@ -44,7 +44,6 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator, prox
       }
 
     const signedTx = await unsignedTx.data.sign().complete();
-    console.log(Buffer.from(signedTx.txSigned.to_bytes()).toString("hex"))
     const txHash = await signedTx.submit();
     console.log(`Submitting: ${txHash}`);
     await lucid.awaitTx(txHash);

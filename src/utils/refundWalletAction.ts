@@ -1,10 +1,12 @@
 import dotenv from "dotenv";
 dotenv.config();
+import { Lucid } from "lucid-fork";
+
 import { selectLucidWallet } from "./wallet.js";
 import { lovelaceAtAddress } from "./misc.js";
 
-export const refund = async () => {
-  const lucid = await selectLucidWallet(0);
+export const refundWalletsAction = async (lucid: Lucid) => {
+  await selectLucidWallet(lucid, 0);
   const balance = await lovelaceAtAddress(lucid)
   
   const tx = await lucid
@@ -15,7 +17,7 @@ export const refund = async () => {
   
   console.log(`Refunded seed wallet of ${balance - 500_000n} lovelace:  ${txHash}`);
 
-  await selectLucidWallet(2);
+  await selectLucidWallet(lucid, 2);
   const newBalance = await lovelaceAtAddress(lucid);
   const newTx = await lucid
     .newTx()
@@ -25,5 +27,3 @@ export const refund = async () => {
 
   console.log(`Refunded deploy wallet of ${newBalance - 500_000n} lovelace:  ${newTxHash}`);
 }
-
-refund();

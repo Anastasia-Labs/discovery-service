@@ -4,7 +4,8 @@ dotenv.config();
 import {
   buildLiquidityScripts,
 } from "price-discovery-offchain";
-import { fromText, Lucid, UTxO, toUnit, Emulator } from "lucid-fork";
+import { fromText, Lucid, UTxO, toUnit } from "lucid-fork";
+import { writeFile } from "fs/promises";
 
 import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" }
 import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
@@ -18,8 +19,6 @@ import tokenHolderPolicy from "../../compiledLiquidity/liquidityTokenHolderMint.
 import tokenHolderValidator from "../../compiledLiquidity/liquidityTokenHolderValidator.json" assert { type: "json" };
 
 import { selectLucidWallet } from "../../utils/wallet.js";
-import { writeFile } from "fs/promises";
-import { EMULATOR_DELAY } from "../../constants/utils.js";
 
 export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline?: number, policyId?: string, name?: string) => {
   const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) => wallet.getUtxos());

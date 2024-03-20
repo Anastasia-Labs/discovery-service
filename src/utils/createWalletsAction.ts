@@ -3,15 +3,9 @@ import dotenv from "dotenv";
 dotenv.config();
 import { writeFile } from "node:fs";
 import { execSync } from "node:child_process";
-import {
-  generateSeedPhrase
-} from "price-discovery-offchain";
+import { generateSeedPhrase, Lucid } from "lucid-fork"
 
-import { getLucidInstance } from "./wallet.js";
-
-const run = async () => {
-  const lucid = await getLucidInstance();
-  
+export const createWalletsAction = async (lucid: Lucid) => {
   const target = 50;
   const wallets = [];
   const path = "./test/wallets.json";
@@ -44,5 +38,3 @@ const run = async () => {
 
   console.log(`Fund this wallet address (seed wallet): ${wallets[0].address}`);
 }
-
-run();
