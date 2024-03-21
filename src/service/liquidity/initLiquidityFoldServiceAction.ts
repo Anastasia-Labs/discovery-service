@@ -1,16 +1,16 @@
 import dotenv from "dotenv";
 dotenv.config();
-import {
-  InitFoldConfig,
-  initLqFold,
-} from "price-discovery-offchain";
-import { Emulator, Lucid } from "price-discovery-offchain"
+import { InitFoldConfig, initLqFold } from "price-discovery-offchain";
+import { Emulator, Lucid } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts } from "../../utils/files.js";
 
-export const initLiquidityFoldServiceAction = async (lucid: Lucid, emulator?: Emulator) => {
+export const initLiquidityFoldServiceAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
   const applied = await getAppliedScripts();
 
   const initFoldConfig: InitFoldConfig = {
@@ -20,7 +20,7 @@ export const initLiquidityFoldServiceAction = async (lucid: Lucid, emulator?: Em
       nodePolicy: applied.scripts.liquidityPolicy,
       foldPolicy: applied.scripts.collectFoldPolicy,
       foldValidator: applied.scripts.collectFoldValidator,
-    }
+    },
   };
 
   await selectLucidWallet(lucid, 0);

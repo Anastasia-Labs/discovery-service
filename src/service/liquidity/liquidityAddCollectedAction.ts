@@ -4,14 +4,17 @@ import {
   addCollected,
   AddCollectedConfig,
   Lucid,
-  Emulator
+  Emulator,
 } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
-export const liquidityAddCollectedAction = async (lucid: Lucid, emulator?: Emulator) => {
+export const liquidityAddCollectedAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
 
@@ -23,8 +26,8 @@ export const liquidityAddCollectedAction = async (lucid: Lucid, emulator?: Emula
     },
     refScripts: {
       tokenHolderPolicy: deployed.scriptsRef.TokenHolderPolicy,
-      tokenHolderValidator: deployed.scriptsRef.TokenHolderValidator
-    }
+      tokenHolderValidator: deployed.scriptsRef.TokenHolderValidator,
+    },
   };
 
   await selectLucidWallet(lucid, 0);

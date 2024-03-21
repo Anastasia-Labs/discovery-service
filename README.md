@@ -15,12 +15,14 @@
 13. Your Taste Test is live!
 
 ## Funding a Taste Test
+
 1. Once a Taste Test has started, you can test funding it.
 2. Run `yarn insert-nodes` or `yarn insert-nodes:lp`.
 3. (**Optional**) Run `yarn modify-nodes` or `yarn modify-nodes:lp` to update each position by 1 ADA.
 4. (**Optional**) Run `yarn remove-nodes` or `yarn remove-node:lp` to withdraw just the last position.
 
 ## Closing a Taste Test
+
 1. Once a Taste Test has closed, you can now fold the UTxOs.
 2. Run `yarn init-fold` or `yarn init-fold:lp`.
 3. Run `yarn fold-nodes` or `yarn fold-nodes:lp`.

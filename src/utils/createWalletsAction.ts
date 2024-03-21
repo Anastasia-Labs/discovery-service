@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { writeFile } from "node:fs";
 import { execSync } from "node:child_process";
-import { generateSeedPhrase, Lucid } from "price-discovery-offchain"
+import { generateSeedPhrase, Lucid } from "price-discovery-offchain";
 
 export const createWalletsAction = async (lucid: Lucid) => {
   const target = 50;
@@ -12,17 +12,17 @@ export const createWalletsAction = async (lucid: Lucid) => {
 
   const { value } = await inquirer.prompt<{ value: string }>([
     {
-      type: 'input',
-      name: 'value',
-      message: 'Do you want to apply refunds first? y/n (default: n)',
-    }
+      type: "input",
+      name: "value",
+      message: "Do you want to apply refunds first? y/n (default: n)",
+    },
   ]);
 
   if ("y" === value) {
     execSync(`yarn refund-wallets`);
     console.log(`Done! Now creating new wallets...`);
   }
-  
+
   for (let i = 0; i < target; i++) {
     const seed = generateSeedPhrase();
     const wallet = {
@@ -31,10 +31,10 @@ export const createWalletsAction = async (lucid: Lucid) => {
     };
     wallets.push(wallet);
   }
-  
+
   writeFile(path, JSON.stringify(wallets, undefined, 2), (error) => {
     error ? console.log(error) : console.log(`Wallets saved at ${path} `);
   });
 
   console.log(`Fund this wallet address (seed wallet): ${wallets[0].address}`);
-}
+};

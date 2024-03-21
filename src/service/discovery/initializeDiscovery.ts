@@ -61,7 +61,7 @@ const run = async () => {
   await selectLucidWallet(1);
   const initTokenHolderUnsigned = await initTokenHolder(
     lucid,
-    initTokenHolderConfig
+    initTokenHolderConfig,
   );
 
   if (initTokenHolderUnsigned.type == "error") {

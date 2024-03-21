@@ -3,4 +3,3 @@ import { getLucidInstance } from "../utils/wallet.js";
 
 const lucid = await getLucidInstance();
 buildLiquidityScriptsAction(lucid);
-  

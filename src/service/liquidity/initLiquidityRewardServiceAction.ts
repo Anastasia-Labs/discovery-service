@@ -10,14 +10,21 @@ import {
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
-export const initLiquidityRewardServiceAction = async (lucid: Lucid, emulator?: Emulator, policyId?: string, assetName?: string) => {
+export const initLiquidityRewardServiceAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+  policyId?: string,
+  assetName?: string,
+) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
 
   const initRewardFoldConfig: InitRewardFoldConfig = {
     currenTime: emulator?.now() ?? Date.now(),
     projectCS: policyId ?? process.env.PROJECT_CS!,
-    projectTN: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString("hex"),
+    projectTN: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString(
+      "hex",
+    ),
     scripts: {
       nodeValidator: applied.scripts.liquidityValidator,
       nodePolicy: applied.scripts.liquidityPolicy,
@@ -59,7 +66,7 @@ export const initLiquidityRewardServiceAction = async (lucid: Lucid, emulator?: 
   await selectLucidWallet(lucid, 0);
   const initRewardFoldUnsigned = await initLqRewardFold(
     lucid,
-    initRewardFoldConfig
+    initRewardFoldConfig,
   );
 
   if (initRewardFoldUnsigned.type == "error") {
@@ -70,8 +77,12 @@ export const initLiquidityRewardServiceAction = async (lucid: Lucid, emulator?: 
   const initRewardFoldSigned = await initRewardFoldUnsigned.data
     .sign()
     .complete();
-    console.log(Buffer.from(initRewardFoldSigned.txSigned.body().to_bytes()).toString("hex"))
-//   const initRewardFoldHash = await initRewardFoldSigned.submit();
-//   await lucid.awaitTx(initRewardFoldHash);
-//   await loggerDD(`initRewardFold submitted TxHash: ${ initRewardFoldHash }`)
+  console.log(
+    Buffer.from(initRewardFoldSigned.txSigned.body().to_bytes()).toString(
+      "hex",
+    ),
+  );
+  //   const initRewardFoldHash = await initRewardFoldSigned.submit();
+  //   await lucid.awaitTx(initRewardFoldHash);
+  //   await loggerDD(`initRewardFold submitted TxHash: ${ initRewardFoldHash }`)
 };

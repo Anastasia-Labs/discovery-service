@@ -36,7 +36,7 @@
     "refund-wallets": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/refundWallets.ts",
     "mint-token": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/mintToken.ts",
     "build-dynamo": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/generateDBEntry.ts",
-    
+    "get-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/getScriptData.ts",
     "emulate-liquidity": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts"
   },
   "author": "",
@@ -44,14 +44,15 @@
   "devDependencies": {
     "@types/inquirer": "^9.0.4",
     "@types/node": "^20.4.5",
+    "prettier": "^3.2.5",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "price-discovery-offchain": "file:price-discovery-offchain-v0.0.13.tgz",
     "@datadog/datadog-api-client": "^1.16.0",
     "dotenv": "^16.3.1",
     "inquirer": "^9.2.11",
     "log4js": "^6.9.1",
+    "price-discovery-offchain": "file:price-discovery-offchain-v0.0.13.tgz",
     "ts-node": "^10.9.1",
     "ts-pattern": "^5.0.5"
   }

@@ -1,13 +1,11 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import {
-  buildLiquidityScripts,
-} from "price-discovery-offchain";
+import { buildLiquidityScripts } from "price-discovery-offchain";
 import { fromText, Lucid, UTxO, toUnit } from "price-discovery-offchain";
 import { writeFile } from "fs/promises";
 
-import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" }
+import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" };
 import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
 import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
 import liquidityStake from "../../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
@@ -20,23 +18,33 @@ import tokenHolderValidator from "../../compiledLiquidity/liquidityTokenHolderVa
 
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline?: number, policyId?: string, name?: string) => {
-  const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) => wallet.getUtxos());
-  const [wallet1Address, project1Utxos] = await selectLucidWallet(lucid, 1).then(async ({ wallet }): Promise<[string, UTxO[]]> => {
-    return [
-      await wallet.address(),
-      await wallet.getUtxos()
-    ]
+export const buildLiquidityScriptsAction = async (
+  lucid: Lucid,
+  emulatorDeadline?: number,
+  policyId?: string,
+  name?: string,
+) => {
+  const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) =>
+    wallet.getUtxos(),
+  );
+  const [wallet1Address, project1Utxos] = await selectLucidWallet(
+    lucid,
+    1,
+  ).then(async ({ wallet }): Promise<[string, UTxO[]]> => {
+    return [await wallet.address(), await wallet.getUtxos()];
   });
 
   //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
-  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!
+  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
 
   const checkProjectToken = project1Utxos.find((utxo) => {
     return (
       utxo.assets[
-        toUnit(policyId ?? process.env.PROJECT_CS!, fromText(name ?? process.env.PROJECT_TN!))
+        toUnit(
+          policyId ?? process.env.PROJECT_CS!,
+          fromText(name ?? process.env.PROJECT_TN!),
+        )
       ] === BigInt(process.env.PROJECT_AMNT!)
     );
   });
@@ -44,10 +52,8 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
   if (!checkProjectToken) {
     console.log("WALLET_PROJECT_1 project token missing");
     console.log(
-      `Send project ${
-        Number(process.env.PROJECT_AMNT!)
-      } token to: `,
-      wallet1Address
+      `Send project ${Number(process.env.PROJECT_AMNT!)} token to: `,
+      wallet1Address,
     );
     return;
   }
@@ -66,6 +72,9 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
       projectLpPolicyId: process.env.POOL_POLICY_ID!,
       projectAddr: beneficiaryAddress,
     },
+    proxyTokenHolderValidator: {
+      poolPolicyId: process.env.POOL_POLICY_ID!,
+    },
     projectTokenHolder: {
       initUTXO: project1Utxos[0],
     },
@@ -79,7 +88,7 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
       distributionFoldValidator: distributionFoldValidator.cborHex,
       tokenHolderPolicy: tokenHolderPolicy.cborHex,
       tokenHolderValidator: tokenHolderValidator.cborHex,
-      proxyTokenHolderValidator: proxyTokenHolderValidator.cborHex
+      proxyTokenHolderValidator: proxyTokenHolderValidator.cborHex,
     },
   });
 
@@ -91,7 +100,7 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
     discoveryPolicy: {
       initOutRef: {
         txHash: project0Utxos[0].txHash,
-        outputIndex: project0Utxos[0].outputIndex
+        outputIndex: project0Utxos[0].outputIndex,
       },
       deadline: deadline,
       penaltyAddress: beneficiaryAddress,
@@ -104,7 +113,7 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
     projectTokenHolder: {
       initOutRef: {
         txHash: project1Utxos[0].txHash,
-        outputIndex: project1Utxos[0].outputIndex
+        outputIndex: project1Utxos[0].outputIndex,
       },
     },
   };
@@ -119,8 +128,8 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid, emulatorDeadline
         ...parameters,
       },
       undefined,
-      2
-    )
+      2,
+    ),
   );
 
   console.log(`Scripts have been saved , version ${currenTime}\n`);

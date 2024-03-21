@@ -25,7 +25,7 @@ const run = async () => {
   const readableUTxOs = await parseUTxOsAtScript(
     lucid,
     applied.scripts.discoveryValidator,
-    "Direct"
+    "Direct",
   );
   const head = readableUTxOs.find((utxo) => {
     return utxo.datum.key == null;
@@ -34,16 +34,16 @@ const run = async () => {
     console.log("error head");
     return;
   }
-  const nodes = chunkArray(sortByKeys(readableUTxOs, head.datum.next), 8)
-  console.log("nodes", nodes)
+  const nodes = chunkArray(sortByKeys(readableUTxOs, head.datum.next), 8);
+  console.log("nodes", nodes);
 
   for (const [index, chunk] of nodes.entries()) {
     // offset wallet & blockchain sync
     await setTimeout(20_000);
     console.log(`processing chunk ${index}`);
-    console.log(chunk)
+    console.log(chunk);
     const sortedInputs = sortByOrefWithIndex(chunk);
-    console.log(sortedInputs)
+    console.log(sortedInputs);
 
     const multiFoldConfig: MultiFoldConfig = {
       nodeRefInputs: sortedInputs.map((data) => {

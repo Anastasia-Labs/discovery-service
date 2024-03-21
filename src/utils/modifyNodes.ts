@@ -12,11 +12,11 @@ import {
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
-import { signSubmitValidate  } from "./misc.js";
+import { signSubmitValidate } from "./misc.js";
 
 const lucid = await Lucid.new(
   new Blockfrost(process.env.API_URL!, process.env.API_KEY),
-  process.env.NETWORK as Network
+  process.env.NETWORK as Network,
 );
 
 // lucid.selectWalletFromSeed(process.env.WALLET_PROJECT_0!);
@@ -51,7 +51,7 @@ for (const wallet of wallets) {
     };
 
     const insertNodeUnsigned = await modifyNode(lucid, modifyNodeConfig);
-    const isValid = await signSubmitValidate(lucid, insertNodeUnsigned)
+    const isValid = await signSubmitValidate(lucid, insertNodeUnsigned);
     if (isValid) break;
     retries++;
   }

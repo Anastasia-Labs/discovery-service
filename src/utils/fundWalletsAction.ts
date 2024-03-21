@@ -15,7 +15,7 @@ export async function fundWalletsAction(lucid: Lucid) {
   for (const [index, wallet] of wallets.entries()) {
     // Skip our seeded wallet.
     if (index === 0) {
-      console.log("Found our seeded wallet!")
+      console.log("Found our seeded wallet!");
       continue;
     }
 
@@ -27,7 +27,7 @@ export async function fundWalletsAction(lucid: Lucid) {
 
     // We need at least 500 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log("Sending 500 ADA to our deploy script wallet.")
+      console.log("Sending 500 ADA to our deploy script wallet.");
       tx.payToAddress(wallet.address, { lovelace: 500_000_000n });
       continue;
     }
@@ -36,13 +36,11 @@ export async function fundWalletsAction(lucid: Lucid) {
       break;
     }
 
-    console.log("Sending 15 ADA to wallet: " + index)
+    console.log("Sending 15 ADA to wallet: " + index);
     tx.payToAddress(wallet.address, { lovelace: 15_000_000n });
   }
 
-  const completedTx = await safeAsync(async () =>
-    tx.complete()
-  );
+  const completedTx = await safeAsync(async () => tx.complete());
 
   return await signSubmitValidate(lucid, completedTx);
 }

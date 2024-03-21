@@ -8,7 +8,7 @@ import {
   MintingPolicy,
   PolicyId,
   TxHash,
-  Unit
+  Unit,
 } from "price-discovery-offchain";
 import { selectLucidWallet } from "./wallet.js";
 
@@ -29,23 +29,19 @@ export async function mintNFTAction(lucid: Lucid): Promise<{
     await lucid.wallet.address(),
   );
 
-  const mintingPolicy: MintingPolicy = lucid.utils.nativeScriptFromJson(
+  const mintingPolicy: MintingPolicy = lucid.utils.nativeScriptFromJson({
+    type: "all",
+    scripts: [
+      { type: "sig", keyHash: paymentCredential?.hash! },
       {
-          type: "all",
-          scripts: [
-          { type: "sig", keyHash: paymentCredential?.hash! },
-          {
-              type: "before",
-              slot: lucid.utils.unixTimeToSlot(Date.now() + 1000000),
-          },
-          ],
+        type: "before",
+        slot: lucid.utils.unixTimeToSlot(Date.now() + 1000000),
       },
-  );
+    ],
+  });
 
-  const policyId: PolicyId = lucid.utils.mintingPolicyToId(
-      mintingPolicy,
-  );
-  
+  const policyId: PolicyId = lucid.utils.mintingPolicyToId(mintingPolicy);
+
   const unit: Unit = policyId + fromText(process.env.PROJECT_TN!);
 
   const tx = await lucid
@@ -57,12 +53,14 @@ export async function mintNFTAction(lucid: Lucid): Promise<{
 
   const signedTx = await tx.sign().complete();
   const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`)
+  console.log(`Submitting: ${txHash}`);
   await lucid.awaitTx(txHash);
 
-  console.log(`Done! Minted token ${process.env.PROJECT_TN} under policy ID (${policyId}).`)
+  console.log(
+    `Done! Minted token ${process.env.PROJECT_TN} under policy ID (${policyId}).`,
+  );
   return {
     policyId,
-    name: process.env.PROJECT_TN!
+    name: process.env.PROJECT_TN!,
   };
 }

@@ -13,7 +13,7 @@ const logger = log4js.getLogger("app");
 
 import applied from "../../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../../deployed-policy.json" assert { type: "json" };
-import {loggerDD} from "../../logs/datadog-service.js";
+import { loggerDD } from "../../logs/datadog-service.js";
 import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
 const run = async () => {
@@ -59,13 +59,13 @@ const run = async () => {
       )[0],
     },
   };
-  await loggerDD("running initRewardFold")
+  await loggerDD("running initRewardFold");
   await loggerDD("selecting WALLET_PROJECT_0");
 
   await selectLucidWallet(0);
   const initRewardFoldUnsigned = await initRewardFold(
     lucid,
-    initRewardFoldConfig
+    initRewardFoldConfig,
   );
 
   if (initRewardFoldUnsigned.type == "error") {
@@ -78,7 +78,7 @@ const run = async () => {
     .complete();
   const initRewardFoldHash = await initRewardFoldSigned.submit();
   await lucid.awaitTx(initRewardFoldHash);
-  await loggerDD(`initRewardFold submitted TxHash: ${ initRewardFoldHash }`)
+  await loggerDD(`initRewardFold submitted TxHash: ${initRewardFoldHash}`);
 };
 
 await run();

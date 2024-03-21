@@ -32,7 +32,7 @@ const run = async () => {
 
   const nodeUTxOs = await utxosAtScript(
     lucid,
-    applied.scripts.discoveryValidator
+    applied.scripts.discoveryValidator,
   );
   console.log("nodes at discoveryValidator: ", nodeUTxOs.length);
   console.log("time to process (seconds): ", nodeUTxOs.length * 40);
@@ -44,7 +44,7 @@ const run = async () => {
   while (true) {
     await setTimeout(20_000);
     rewardUTxOs = await utxosAtScript(lucid, applied.scripts.rewardValidator);
-    console.log(rewardUTxOs)
+    console.log(rewardUTxOs);
     if (rewardUTxOs.length == 0) break;
 
     let retries = 0;
@@ -52,7 +52,7 @@ const run = async () => {
       if (retries > 0) {
         rewardUTxOs = await utxosAtScript(
           lucid,
-          applied.scripts.rewardValidator
+          applied.scripts.rewardValidator,
         );
         if (rewardUTxOs.length == 0) break;
         console.log(`retrying ${retries}`);
@@ -94,7 +94,7 @@ const run = async () => {
       const rewardFoldUnsigned = await rewardFold(lucid, rewardFoldConfig);
 
       const isValid = await signSubmitValidate(lucid, rewardFoldUnsigned);
-      if (isValid) break
+      if (isValid) break;
       retries++;
     }
   }

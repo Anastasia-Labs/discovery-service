@@ -1,11 +1,5 @@
-import {
-  Lucid,
-  TxComplete,
-} from "price-discovery-offchain";
-import {
-  ReadableUTxO,
-  Result,
-} from "price-discovery-offchain"
+import { Lucid, TxComplete } from "price-discovery-offchain";
+import { ReadableUTxO, Result } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 import { match } from "ts-pattern";
 
@@ -18,7 +12,7 @@ export const lovelaceAtAddress = async (lucid: Lucid, address?: string) => {
 
 export async function timeoutAsync<T>(
   asyncFunction: () => Promise<T>,
-  timeoutMs: number
+  timeoutMs: number,
 ): Promise<Result<T>> {
   const race = await Promise.race([
     asyncFunction(),
@@ -30,7 +24,7 @@ export async function timeoutAsync<T>(
 }
 
 export async function safeAsync<T>(
-  asyncFunction: () => Promise<T>
+  asyncFunction: () => Promise<T>,
 ): Promise<Result<T>> {
   try {
     const data = await asyncFunction();
@@ -46,7 +40,7 @@ export async function safeAsync<T>(
 //the below structure allows for modular error handling and it adds type safety for async functions and timeouts async functions
 export async function signSubmitValidate(
   lucid: Lucid,
-  txComplete: Result<TxComplete>
+  txComplete: Result<TxComplete>,
 ): Promise<boolean> {
   const tx = match(txComplete)
     .with({ type: "ok" }, (tx) => tx.data)
@@ -73,7 +67,7 @@ export async function signSubmitValidate(
   if (!submitted) return false;
 
   const awaited = match(
-    await timeoutAsync(async () => lucid.awaitTx(submitted), 120_000)
+    await timeoutAsync(async () => lucid.awaitTx(submitted), 120_000),
   )
     .with({ type: "ok" }, () => {
       console.log(`txSubmitted txHash: ${submitted}`);
@@ -101,7 +95,7 @@ export const sortByKeys = (utxos: ReadableUTxO[], firstKey: string | null) => {
     (result, current) => {
       if (current.datum.next == null) return result;
 
-      if (result[result.length -1].datum.next == null) {
+      if (result[result.length - 1].datum.next == null) {
         return result;
       }
 
@@ -112,7 +106,7 @@ export const sortByKeys = (utxos: ReadableUTxO[], firstKey: string | null) => {
       result.push(item);
       return result;
     },
-    [firstNode] as ReadableUTxO[]
+    [firstNode] as ReadableUTxO[],
   );
 };
 
@@ -159,6 +153,6 @@ export const sortByOrefWithIndex = (utxos: ReadableUTxO[]) => {
       result.push(item);
       return result;
     },
-    [firstNodeIndex]
+    [firstNodeIndex],
   );
 };

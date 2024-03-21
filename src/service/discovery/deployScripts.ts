@@ -31,9 +31,11 @@ const run = async () => {
   await selectLucidWallet(2);
   const walletProject2Funds = await lovelaceAtAddress(lucid);
   if (walletProject2Funds < 200_000_000n) {
-    console.log(`Not enough funds ${walletProject2Funds}, ${await lucid.wallet.address()}`);
+    console.log(
+      `Not enough funds ${walletProject2Funds}, ${await lucid.wallet.address()}`,
+    );
     await loggerDD(`Not enough funds ${walletProject2Funds}`);
-    return
+    return;
   }
 
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
@@ -206,7 +208,7 @@ const run = async () => {
         type: "PlutusV2",
         script: alwaysFailValidator.cborHex,
       }),
-      toUnit(deployPolicyId, fromText(name))
+      toUnit(deployPolicyId, fromText(name)),
     );
     scriptsRef[name] = {
       txHash: validatorUTxO.txHash,
@@ -222,16 +224,16 @@ const run = async () => {
         scriptsRef: scriptsRef,
       },
       undefined,
-      2
+      2,
     ),
     (error) => {
       error
         ? console.log(error)
         : console.log(
             `Deploy policy has been saved \n
-            policy: ${deploy9.data.deployPolicyId}`
+            policy: ${deploy9.data.deployPolicyId}`,
           );
-    }
+    },
   );
 };
 await run();

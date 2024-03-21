@@ -1,2 +1,2 @@
-export const PREVIEW_OFFSET = "1666656000"
-export const MAINNET_OFFSET = "1591566291"
+export const PREVIEW_OFFSET = "1666656000";
+export const MAINNET_OFFSET = "1591566291";

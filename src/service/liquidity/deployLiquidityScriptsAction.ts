@@ -3,15 +3,13 @@ import dotenv from "dotenv";
 dotenv.config();
 import fs, { readFileSync, writeFileSync } from "fs";
 import { readFile, writeFile } from "fs/promises";
-import {
-  deployRefScripts
-} from "price-discovery-offchain";
+import { deployRefScripts } from "price-discovery-offchain";
 import {
   fromText,
   Lucid,
   OutRef,
   toUnit,
-  Emulator
+  Emulator,
 } from "price-discovery-offchain";
 
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
@@ -20,16 +18,21 @@ import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts } from "../../utils/files.js";
 
-export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emulator) => {
+export const deployLiquidityScriptsAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
   const applied = await getAppliedScripts();
 
   await selectLucidWallet(lucid, 2);
   const deployWalletAddress = await lucid.wallet.address();
   const deployWalletFunds = await lovelaceAtAddress(lucid);
   if (deployWalletFunds < 400_000_000n) {
-    console.log(`Not enough funds ${deployWalletFunds}, ${deployWalletAddress}`);
+    console.log(
+      `Not enough funds ${deployWalletFunds}, ${deployWalletAddress}`,
+    );
     await loggerDD(`Not enough funds ${deployWalletFunds}`);
-    return
+    return;
   }
 
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
@@ -37,28 +40,27 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
   const splitTx = lucid.newTx();
   if ((await lucid.wallet.getUtxos()).length < 2) {
     [...new Array(10).keys()].forEach(() => {
-      splitTx.payToAddress(
-        deployWalletAddress,
-        {
-          lovelace: (500_000_000n / 10n) - 1_000_000n
-        }
-      )
+      splitTx.payToAddress(deployWalletAddress, {
+        lovelace: 500_000_000n / 10n - 1_000_000n,
+      });
     });
-    const hash = await (await (await splitTx.complete()).sign().complete()).submit()
-    lucid.awaitTx(hash)
+    const hash = await (
+      await (await splitTx.complete()).sign().complete()
+    ).submit();
+    lucid.awaitTx(hash);
     if (!emulator) {
-      console.log("Submitting fragmentation: " + hash)
+      console.log("Submitting fragmentation: " + hash);
       await setTimeout(20_000);
     }
   }
 
-  const spendingUtxos = await lucid.provider.getUtxos(deployWalletAddress)
+  const spendingUtxos = await lucid.provider.getUtxos(deployWalletAddress);
   const deploy1 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityPolicy,
     name: "TasteTestPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[0]
+    spendingInput: spendingUtxos[0],
   });
   if (deploy1.type == "error") {
     console.log(deploy1.error);
@@ -78,7 +80,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "TasteTestValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[1]
+    spendingInput: spendingUtxos[1],
   });
   if (deploy2.type == "error") {
     console.log(deploy2.error);
@@ -98,7 +100,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "CollectFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[2]
+    spendingInput: spendingUtxos[2],
   });
   if (deploy3.type == "error") {
     console.log(deploy3.error);
@@ -118,7 +120,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "CollectFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[3]
+    spendingInput: spendingUtxos[3],
   });
   if (deploy4.type == "error") {
     console.log(deploy4.error);
@@ -138,7 +140,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "RewardFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[4]
+    spendingInput: spendingUtxos[4],
   });
   if (deploy5.type == "error") {
     console.log(deploy5.error);
@@ -158,7 +160,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "RewardFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[5]
+    spendingInput: spendingUtxos[5],
   });
   if (deploy6.type == "error") {
     console.log(deploy6.error);
@@ -178,7 +180,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "TokenHolderPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[6]
+    spendingInput: spendingUtxos[6],
   });
   if (deploy7.type == "error") {
     console.log(deploy7.error);
@@ -198,7 +200,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "TokenHolderValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[7]
+    spendingInput: spendingUtxos[7],
   });
   if (deploy8.type == "error") {
     console.log(deploy8.error);
@@ -218,10 +220,22 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     name: "TasteTestStakeValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[8]
+    spendingInput: spendingUtxos[8],
   });
   if (deploy9.type == "error") {
     console.log(deploy9.error);
+    return;
+  }
+
+  const deploy10 = await deployRefScripts(lucid, {
+    script: applied.scripts.rewardStake,
+    name: "RewardStake",
+    alwaysFails: alwaysFailValidator.cborHex,
+    currenTime: deployTime,
+    spendingInput: spendingUtxos[9],
+  });
+  if (deploy10.type == "error") {
+    console.log(deploy10.error);
     return;
   }
 
@@ -233,35 +247,40 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
   //   console.log("Could not deploy 9")
   // }
 
-  const signedTxs = await Promise.all([
-    deploy1.data.tx,
-    deploy2.data.tx,
-    deploy3.data.tx,
-    deploy4.data.tx,
-    deploy5.data.tx,
-    deploy6.data.tx,
-    deploy7.data.tx,
-    deploy8.data.tx,
-    deploy9.data.tx
-  ].map(async (tx, index) => {
-    const txComplete = await tx.complete({
-      coinSelection: false,
-      change: {
-        address: deployWalletAddress
-      }
-    });
-    console.log(`Completed deploy group ${index}`)
-    return await txComplete.sign().complete();
-  }))
+  const signedTxs = await Promise.all(
+    [
+      deploy1.data.tx,
+      deploy2.data.tx,
+      deploy3.data.tx,
+      deploy4.data.tx,
+      deploy5.data.tx,
+      deploy6.data.tx,
+      deploy7.data.tx,
+      deploy8.data.tx,
+      deploy9.data.tx,
+      deploy10.data.tx,
+    ].map(async (tx, index) => {
+      const txComplete = await tx.complete({
+        coinSelection: false,
+        change: {
+          address: deployWalletAddress,
+        },
+      });
+      console.log(`Completed deploy group ${index}`);
+      return await txComplete.sign().complete();
+    }),
+  );
 
-  const txHashes = await Promise.all(signedTxs.map(async signedTx => {
-    const txHash = await signedTx.submit();
-    console.log(`Submitting: ${txHash}`)
-    await lucid.awaitTx(txHash);
-    return txHash
-  }))
+  const txHashes = await Promise.all(
+    signedTxs.map(async (signedTx) => {
+      const txHash = await signedTx.submit();
+      console.log(`Submitting: ${txHash}`);
+      await lucid.awaitTx(txHash);
+      return txHash;
+    }),
+  );
 
-  txHashes.forEach(hash => console.log(`Deployed Ref Script: ${hash}`))
+  txHashes.forEach((hash) => console.log(`Deployed Ref Script: ${hash}`));
 
   //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;
@@ -276,6 +295,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
     "TokenHolderPolicy",
     "TokenHolderValidator",
     "TasteTestStakeValidator",
+    "RewardStake",
   ];
 
   const scriptsRef: Record<string, OutRef> = {};
@@ -286,7 +306,7 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
         type: "PlutusV2",
         script: alwaysFailValidator.cborHex,
       }),
-      toUnit(deployPolicyId, fromText(name))
+      toUnit(deployPolicyId, fromText(name)),
     );
     scriptsRef[name] = {
       txHash: validatorUTxO.txHash,
@@ -295,22 +315,19 @@ export const deployLiquidityScriptsAction = async (lucid: Lucid, emulator?: Emul
   }
 
   const data = JSON.stringify(
-        {
-          policy: deploy9.data.deployPolicyId,
-          scriptsRef: scriptsRef,
-        },
-        undefined,
-        2
-      );
-
-      console.log(data)
-
-  writeFileSync(
-    `./deployed-policy.json`,
-    data
+    {
+      policy: deploy9.data.deployPolicyId,
+      scriptsRef: scriptsRef,
+    },
+    undefined,
+    2,
   );
 
+  console.log(data);
+
+  writeFileSync(`./deployed-policy.json`, data);
+
   console.log(
-    `Deployed scripts have been saved with policy: ${deploy9.data.deployPolicyId}`
+    `Deployed scripts have been saved with policy: ${deploy9.data.deployPolicyId}`,
   );
 };

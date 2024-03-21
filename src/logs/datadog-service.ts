@@ -30,7 +30,7 @@ export const loggerDD = async (message: string) => {
     ],
     contentEncoding: "deflate",
   };
-  console.log("Sending Datadog log:", params.body[0].message)
+  console.log("Sending Datadog log:", params.body[0].message);
 
   await apiInstance.submitLog(params);
 };

@@ -1,29 +1,30 @@
-import { setTimeout } from "timers/promises";
-import dotenv from "dotenv";
-dotenv.config();
 import {
-  chunkArray,
-  liquidityFoldNodes,
-  MultiFoldConfig,
-  parseUTxOsAtScript,
+  Data,
+  Emulator,
   LiquidityFoldDatum,
   LiquiditySetNode,
+  Lucid,
+  RewardLiquidityFoldConfig,
+  UTxO,
+  chunkArray,
+  liquidityFoldRewards,
+  parseUTxOsAtScript,
   utxosAtScript,
 } from "price-discovery-offchain";
-import { Data, Lucid, UTxO, Emulator } from "price-discovery-offchain";
+import { setTimeout } from "timers/promises";
 
 import { loggerDD } from "../../logs/datadog-service.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
-export const foldLiquidityNodesAction = async (
+export const foldLiquidityRewardsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
+  await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
-  await selectLucidWallet(lucid, 0);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
@@ -34,17 +35,16 @@ export const foldLiquidityNodesAction = async (
   let foldUtxo: UTxO;
   const foldUtxoRes = await utxosAtScript(
     lucid,
-    applied.scripts.collectFoldValidator,
+    applied.scripts.rewardFoldValidator,
   );
   foldUtxo = foldUtxoRes[0];
 
   if (!foldUtxo) {
-    throw new Error("We don't have a fold utxo! Run `init-fold:lp`");
+    throw new Error("We don't have a fold utxo! Run `init-reward:lp`");
   }
 
   const head = readableUTxOs.find((utxo) => {
     const foldDatum = Data.from(foldUtxo.datum as string, LiquidityFoldDatum);
-
     return utxo.datum.key == foldDatum.currNode.next;
   });
 
@@ -53,6 +53,10 @@ export const foldLiquidityNodesAction = async (
     return;
   }
 
+  /**
+   * @todo
+   * ask philip
+   */
   const unprocessedNodes = readableUTxOs.filter(({ datum }) => {
     return datum.commitment === 0n;
   });
@@ -70,7 +74,7 @@ export const foldLiquidityNodesAction = async (
       throw Error("Could not find a UTxO that had at least 2 ADA in it.");
     }
 
-    const multiFoldConfig: MultiFoldConfig = {
+    const rewardFoldConfig: RewardLiquidityFoldConfig = {
       currenTime: emulator?.now() ?? Date.now(),
       nodeRefInputs: sortedInputs.map((data) => {
         return data.value.outRef;
@@ -81,15 +85,15 @@ export const foldLiquidityNodesAction = async (
       feeInput,
       changeAddress,
       scripts: {
+        rewardStake: applied.scripts.rewardStake,
         liquidityValidator: applied.scripts.liquidityValidator,
-        collectStake: applied.scripts.collectStake,
-        foldPolicy: applied.scripts.collectFoldPolicy,
-        foldValidator: applied.scripts.collectFoldValidator,
+        rewardFoldValidator: applied.scripts.rewardFoldValidator,
+        rewardFoldPolicy: applied.scripts.rewardFoldPolicy,
       },
       refInputs: {
-        foldValidator: (
+        rewardStake: (
           await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.CollectFoldValidator,
+            deployed.scriptsRef.RewardStake,
           ])
         )?.[0] as UTxO,
         liquidityValidator: (
@@ -97,15 +101,26 @@ export const foldLiquidityNodesAction = async (
             deployed.scriptsRef.TasteTestValidator,
           ])
         )?.[0] as UTxO,
-        collectStake: (
+        rewardFoldValidator: (
           await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestStakeValidator,
+            deployed.scriptsRef.RewardFoldValidator,
+          ])
+        )?.[0] as UTxO,
+        rewardFoldPolicy: (
+          await lucid.provider.getUtxosByOutRef([
+            deployed.scriptsRef.RewardFoldPolicy,
           ])
         )?.[0] as UTxO,
       },
+      projectAddress: "",
+      projectCS: "",
+      projectTN: "",
     };
 
-    const multiFoldUnsigned = await liquidityFoldNodes(lucid, multiFoldConfig);
+    const multiFoldUnsigned = await liquidityFoldRewards(
+      lucid,
+      rewardFoldConfig,
+    );
 
     if (multiFoldUnsigned.type == "error") {
       console.log(multiFoldUnsigned.error);

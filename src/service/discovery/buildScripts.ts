@@ -1,11 +1,7 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { writeFile } from "node:fs";
-import {
-  buildScripts,
-  fromText,
-  toUnit,
-} from "price-discovery-offchain";
+import { buildScripts, fromText, toUnit } from "price-discovery-offchain";
 import discoveryValidator from "../../compiled/discoveryValidator.json" assert { type: "json" };
 import discoveryPolicy from "../../compiled/discoveryMinting.json" assert { type: "json" };
 import discoveryStake from "../../compiled/discoveryStakeValidator.json" assert { type: "json" };
@@ -24,13 +20,11 @@ const run = async () => {
 
   //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
-  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!
+  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
   const project0Utxos = await wallet0.wallet.getUtxos();
   const project1Utxos = await wallet1.wallet.getUtxos();
 
-  const checkProjectToken = (
-    project1Utxos
-  ).find((utxo) => {
+  const checkProjectToken = project1Utxos.find((utxo) => {
     return (
       utxo.assets[
         toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!))
@@ -44,8 +38,7 @@ const run = async () => {
       `Send project ${
         Number(process.env.PROJECT_AMNT!) / 1_000_000
       } token to: `,
-      await wallet1
-        .wallet.address()
+      await wallet1.wallet.address(),
     );
     return;
   }
@@ -90,7 +83,7 @@ const run = async () => {
     discoveryPolicy: {
       initOutRef: {
         txHash: project0Utxos[0].txHash,
-        outputIndex: project0Utxos[0].outputIndex
+        outputIndex: project0Utxos[0].outputIndex,
       },
       deadline: deadline,
       penaltyAddress: beneficiaryAddress,
@@ -103,7 +96,7 @@ const run = async () => {
     projectTokenHolder: {
       initOutRef: {
         txHash: project1Utxos[0].txHash,
-        outputIndex: project1Utxos[0].outputIndex
+        outputIndex: project1Utxos[0].outputIndex,
       },
     },
   };
@@ -118,13 +111,13 @@ const run = async () => {
         ...parameters,
       },
       undefined,
-      2
+      2,
     ),
     (error) => {
       error
         ? console.log(error)
         : console.log(`Scripts have been saved , version ${currenTime}\n`);
-    }
+    },
   );
 };
 await run();
