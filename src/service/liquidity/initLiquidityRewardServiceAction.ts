@@ -3,6 +3,7 @@ import { Emulator, initLqRewardFold, Lucid } from "price-discovery-offchain";
 dotenv.config();
 
 import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
+import { loggerDD } from "../../logs/datadog-service.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -65,12 +66,8 @@ export const initLiquidityRewardServiceAction = async (
   const initRewardFoldSigned = await initRewardFoldUnsigned.data
     .sign()
     .complete();
-  console.log(
-    Buffer.from(initRewardFoldSigned.txSigned.body().to_bytes()).toString(
-      "hex",
-    ),
-  );
-  //   const initRewardFoldHash = await initRewardFoldSigned.submit();
-  //   await lucid.awaitTx(initRewardFoldHash);
-  //   await loggerDD(`initRewardFold submitted TxHash: ${ initRewardFoldHash }`)
+  const initRewardFoldHash = await initRewardFoldSigned.submit();
+  await loggerDD(`Submitting: ${initRewardFoldHash}`);
+  await lucid.awaitTx(initRewardFoldHash);
+  await loggerDD("Done!");
 };

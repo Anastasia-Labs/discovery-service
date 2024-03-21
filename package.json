@@ -37,7 +37,7 @@
     "mint-token": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/mintToken.ts",
     "build-dynamo": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/generateDBEntry.ts",
     "get-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/getScriptData.ts",
-    "emulate-liquidity": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts"
+    "emulate-liquidity": "NODE_ENV=emulator NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts"
   },
   "author": "",
   "license": "ISC",

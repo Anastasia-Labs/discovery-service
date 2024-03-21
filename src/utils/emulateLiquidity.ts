@@ -6,11 +6,12 @@ import {
 import { setTimeout } from "timers/promises";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
-import { EMULATOR_DELAY } from "../constants/utils.js";
+import { DEPLOY_WALLET_ADA, EMULATOR_DELAY } from "../constants/utils.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
 import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
 import { deployLiquidityScriptsAction } from "../service/liquidity/deployLiquidityScriptsAction.js";
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
+import { foldLiquidityRewardsAction } from "../service/liquidity/foldLiquidityRewardsAction.js";
 import { initLiquidityFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
 import { initLiquidityRewardServiceAction } from "../service/liquidity/initLiquidityRewardServiceAction.js";
 import { initializeLiquidityAction } from "../service/liquidity/initializeLiquidityAction.js";
@@ -47,7 +48,7 @@ const emulateLiquidity = async () => {
       {
         address: wallets[2].address,
         assets: {
-          lovelace: 500_000_000n,
+          lovelace: DEPLOY_WALLET_ADA,
         },
       },
       ...restAccounts,
@@ -157,6 +158,11 @@ const emulateLiquidity = async () => {
     name,
     data?.newProxyDatum,
   );
+  console.log("Moving to next step...");
+  await setTimeout(DELAY);
+
+  console.log("\n\n\nEMULATOR: Distributing Rewards...");
+  await foldLiquidityRewardsAction(lucidInstance, emulator, data?.lpToken);
   console.log("Moving to next step...");
   await setTimeout(DELAY);
 };

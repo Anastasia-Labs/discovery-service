@@ -1,15 +1,17 @@
 import {
   Data,
   Emulator,
-  LiquidityFoldDatum,
+  LiquidityRewardFoldDatum,
   LiquiditySetNode,
   Lucid,
+  MintingPolicy,
   RewardLiquidityFoldConfig,
   UTxO,
   chunkArray,
   liquidityFoldRewards,
   parseUTxOsAtScript,
-  utxosAtScript,
+  rFold,
+  toUnit,
 } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
@@ -21,6 +23,7 @@ import { selectLucidWallet } from "../../utils/wallet.js";
 export const foldLiquidityRewardsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
+  lpTokenAssetId?: string,
 ) => {
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
@@ -32,23 +35,27 @@ export const foldLiquidityRewardsAction = async (
     "Liquidity",
   );
 
-  let foldUtxo: UTxO;
-  const foldUtxoRes = await utxosAtScript(
-    lucid,
-    applied.scripts.rewardFoldValidator,
-  );
-  foldUtxo = foldUtxoRes[0];
+  const rewardFoldPolicy: MintingPolicy = {
+    type: "PlutusV2",
+    script: applied.scripts.rewardFoldPolicy,
+  };
+  const rewardFoldPolicyId = lucid.utils.mintingPolicyToId(rewardFoldPolicy);
+
+  let foldUtxo = await lucid.utxoByUnit(toUnit(rewardFoldPolicyId, rFold));
 
   if (!foldUtxo) {
     throw new Error("We don't have a fold utxo! Run `init-reward:lp`");
   }
 
-  const head = readableUTxOs.find((utxo) => {
-    const foldDatum = Data.from(foldUtxo.datum as string, LiquidityFoldDatum);
-    return utxo.datum.key == foldDatum.currNode.next;
+  const foldDatum = Data.from(
+    foldUtxo.datum as string,
+    LiquidityRewardFoldDatum,
+  );
+  const firstNode = readableUTxOs.find((utxo) => {
+    return utxo.datum.key === foldDatum.currNode.next;
   });
 
-  if (!head) {
+  if (!firstNode) {
     console.log("error head");
     return;
   }
@@ -57,11 +64,14 @@ export const foldLiquidityRewardsAction = async (
    * @todo
    * ask philip
    */
-  const unprocessedNodes = readableUTxOs.filter(({ datum }) => {
-    return datum.commitment === 0n;
+  const unprocessedNodes = readableUTxOs.filter(({ assets }) => {
+    return !assets[lpTokenAssetId ?? process.env.PROJECT_POOL_LP_TOKEN!];
   });
 
-  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 25);
+  const nodes = chunkArray(
+    sortByKeys(unprocessedNodes, firstNode.datum.key),
+    25,
+  );
 
   for (const [index, chunk] of nodes.entries()) {
     console.log(`processing chunk ${index}`);
@@ -112,9 +122,7 @@ export const foldLiquidityRewardsAction = async (
           ])
         )?.[0] as UTxO,
       },
-      projectAddress: "",
-      projectCS: "",
-      projectTN: "",
+      lpTokenAssetId: lpTokenAssetId ?? process.env.PROJECT_POOL_LP_TOKEN!,
     };
 
     const multiFoldUnsigned = await liquidityFoldRewards(
@@ -137,9 +145,9 @@ export const foldLiquidityRewardsAction = async (
         if (!emulator) {
           await setTimeout(3_000);
         }
-        const [newFoldUtxo] = await utxosAtScript(
-          lucid,
-          applied.scripts.collectFoldValidator,
+
+        const newFoldUtxo = await lucid.utxoByUnit(
+          toUnit(rewardFoldPolicyId, rFold),
         );
 
         foldUtxo = newFoldUtxo;

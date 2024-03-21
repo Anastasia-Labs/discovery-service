@@ -1,22 +1,25 @@
-import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
-dotenv.config();
-import fs, { readFileSync, writeFileSync } from "fs";
-import { readFile, writeFile } from "fs/promises";
-import { deployRefScripts } from "price-discovery-offchain";
+import { writeFileSync } from "fs";
 import {
-  fromText,
+  Emulator,
   Lucid,
   OutRef,
+  deployRefScripts,
+  fromText,
   toUnit,
-  Emulator,
 } from "price-discovery-offchain";
+import { setTimeout } from "timers/promises";
+dotenv.config();
 
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
+import {
+  DEPLOY_WALLET_ADA,
+  MIN_ADA_DEPLOY_WALLET,
+} from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
+import { getAppliedScripts } from "../../utils/files.js";
 import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
-import { getAppliedScripts } from "../../utils/files.js";
 
 export const deployLiquidityScriptsAction = async (
   lucid: Lucid,
@@ -27,7 +30,7 @@ export const deployLiquidityScriptsAction = async (
   await selectLucidWallet(lucid, 2);
   const deployWalletAddress = await lucid.wallet.address();
   const deployWalletFunds = await lovelaceAtAddress(lucid);
-  if (deployWalletFunds < 400_000_000n) {
+  if (deployWalletFunds < MIN_ADA_DEPLOY_WALLET) {
     console.log(
       `Not enough funds ${deployWalletFunds}, ${deployWalletAddress}`,
     );
@@ -41,7 +44,7 @@ export const deployLiquidityScriptsAction = async (
   if ((await lucid.wallet.getUtxos()).length < 2) {
     [...new Array(10).keys()].forEach(() => {
       splitTx.payToAddress(deployWalletAddress, {
-        lovelace: 500_000_000n / 10n - 1_000_000n,
+        lovelace: DEPLOY_WALLET_ADA / 10n - 1_000_000n,
       });
     });
     const hash = await (
