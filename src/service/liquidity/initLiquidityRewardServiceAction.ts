@@ -1,58 +1,46 @@
 import dotenv from "dotenv";
+import { Emulator, initLqRewardFold, Lucid } from "price-discovery-offchain";
 dotenv.config();
-import {
-  Emulator,
-  initLqRewardFold,
-  InitRewardFoldConfig,
-  Lucid,
-} from "price-discovery-offchain";
 
-import { selectLucidWallet } from "../../utils/wallet.js";
+import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
+import { getDatumsObject } from "../../utils/emulator.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initLiquidityRewardServiceAction = async (
   lucid: Lucid,
   emulator?: Emulator,
   policyId?: string,
   assetName?: string,
+  newProxyDatum?: string,
 ) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
 
-  const initRewardFoldConfig: InitRewardFoldConfig = {
+  const datums = getDatumsObject(lucid, emulator);
+  if (newProxyDatum) {
+    const hash = lucid.utils.datumToHash(newProxyDatum);
+    datums[hash] = newProxyDatum;
+  }
+
+  const initRewardFoldConfig: InitLiquidityRewardFoldConfig = {
     currenTime: emulator?.now() ?? Date.now(),
     projectCS: policyId ?? process.env.PROJECT_CS!,
     projectTN: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString(
       "hex",
     ),
+    datums,
     scripts: {
-      nodeValidator: applied.scripts.liquidityValidator,
-      nodePolicy: applied.scripts.liquidityPolicy,
-      foldPolicy: applied.scripts.collectFoldPolicy,
-      foldValidator: applied.scripts.collectFoldValidator,
+      liquidityValidator: applied.scripts.liquidityValidator,
+      liquidityPolicy: applied.scripts.liquidityPolicy,
       rewardFoldPolicy: applied.scripts.rewardFoldPolicy,
       rewardFoldValidator: applied.scripts.rewardFoldValidator,
       tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
       tokenHolderValidator: applied.scripts.tokenHolderValidator,
     },
     refScripts: {
-      nodePolicy: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.TasteTestPolicy])
-      )[0],
-      nodeValidator: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.TasteTestValidator])
-      )[0],
-      commitFoldPolicy: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.CollectFoldPolicy])
-      )[0],
-      commitFoldValidator: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.CollectFoldValidator])
-      )[0],
       rewardFoldPolicy: (
         await lucid.utxosByOutRef([deployed.scriptsRef.RewardFoldPolicy])
-      )[0],
-      rewardFoldValidator: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.RewardFoldValidator])
       )[0],
       tokenHolderPolicy: (
         await lucid.utxosByOutRef([deployed.scriptsRef.TokenHolderPolicy])

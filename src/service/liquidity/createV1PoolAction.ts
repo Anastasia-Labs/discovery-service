@@ -6,11 +6,9 @@ import {
   Lucid,
   createLiquidityV1Pool,
 } from "price-discovery-offchain";
+import { getDatumsObject } from "../../utils/emulator.js";
+import { getAppliedScripts } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
-import {
-  getAppliedScripts,
-  getProxyTokenHolderScript,
-} from "../../utils/files.js";
 
 export const createV1PoolAction = async (
   lucid: Lucid,
@@ -19,15 +17,10 @@ export const createV1PoolAction = async (
   policyId?: string,
   assetName?: string,
 ) => {
-  const proxyTokenHolderV1Validator = await getProxyTokenHolderScript();
   const applied = await getAppliedScripts();
   await selectLucidWallet(lucid, 0);
 
-  const datums: { [key: string]: string } = {};
-  if (emulator) {
-    datums["d2653ed85dac06c5b39554b78875d4f8cb6680a274a0f2cf6897f2b99e35b0da"] =
-      "d8799f4121d8798041009f581cbb0d2cc0d7f7b80d3c0d7a7ac441f3865ffd297613c67f06951eb7faffff";
-  }
+  const datums = getDatumsObject(lucid, emulator);
 
   if (proxyDatum) {
     const hash = lucid.utils.datumToHash(proxyDatum);
@@ -37,7 +30,7 @@ export const createV1PoolAction = async (
   const unsignedTx = await createLiquidityV1Pool(lucid, {
     currenTime: emulator?.now() ?? Date.now(),
     scripts: {
-      proxyTokenHolderScript: proxyTokenHolderV1Validator.cborHex,
+      proxyTokenHolderScript: applied.scripts.proxyTokenHolderValidator,
       v1PoolPolicyScript: process.env.V1_POOL_POLICY_SCRIPT!,
       v1FactoryValidatorScript: process.env.V1_POOL_FACTORY_VALIDATOR!,
       tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
@@ -63,8 +56,13 @@ export const createV1PoolAction = async (
     return;
   }
 
-  const signedTx = await unsignedTx.data.sign().complete();
+  const signedTx = await unsignedTx.data.tx.sign().complete();
   const txHash = await signedTx.submit();
   console.log(`Submitting: ${txHash}`);
   await lucid.awaitTx(txHash);
+
+  return {
+    lpToken: unsignedTx.data.lpTokenAsset,
+    newProxyDatum: unsignedTx.data.newProxyDatum,
+  };
 };

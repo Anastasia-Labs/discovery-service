@@ -1,22 +1,17 @@
 import dotenv from "dotenv";
-dotenv.config();
 import {
+  Emulator,
+  Lucid,
   spendToProxy,
   SpendToProxyConfig,
-  utxosAtScript,
 } from "price-discovery-offchain";
-import { Lucid, Emulator } from "price-discovery-offchain";
+dotenv.config();
 
 import { loggerDD } from "../../logs/datadog-service.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
-import {
-  getAppliedScripts,
-  getDeployedScripts,
-  getProxyTokenHolderScript,
-} from "../../utils/files.js";
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
-  const proxyTokenHolder = await getProxyTokenHolderScript();
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
 
@@ -24,7 +19,7 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     currenTime: emulator?.now() ?? Date.now(),
     scripts: {
       tokenHolderValidator: applied.scripts.tokenHolderValidator,
-      proxyTokenHolderV1Validator: proxyTokenHolder.cborHex,
+      proxyTokenHolderValidator: applied.scripts.proxyTokenHolderValidator,
     },
     refScripts: {
       liquidityTokenHolderPolicy: deployed.scriptsRef.TokenHolderPolicy,
