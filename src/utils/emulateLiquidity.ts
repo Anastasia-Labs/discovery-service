@@ -6,8 +6,12 @@ import {
 import { setTimeout } from "timers/promises";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
-import { DEPLOY_WALLET_ADA, EMULATOR_DELAY } from "../constants/utils.js";
+import {
+  DEPLOY_WALLET_ADA,
+  EMULATOR_TT_END_DELAY,
+} from "../constants/utils.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
+import { claimLiquidityNodeAction } from "../service/liquidity/claimLiquidityNodeAction.js";
 import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
 import { deployLiquidityScriptsAction } from "../service/liquidity/deployLiquidityScriptsAction.js";
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
@@ -24,7 +28,7 @@ import { startTasteTest } from "../service/startTasteTestAction.js";
 import { mintNFTAction } from "./mintTokenAction.js";
 
 const emulateLiquidity = async () => {
-  const restAccounts = [...wallets].slice(3, 50).map(({ address }) => ({
+  const restAccounts = [...wallets].slice(3).map(({ address }) => ({
     address,
     assets: {
       lovelace: 15_000_000n,
@@ -73,7 +77,7 @@ const emulateLiquidity = async () => {
     },
   );
 
-  const deadline = emulator.now() + EMULATOR_DELAY;
+  const deadline = emulator.now() + EMULATOR_TT_END_DELAY;
   const lucidInstance = await Lucid.new(emulator);
   const DELAY = 0;
 
@@ -163,6 +167,11 @@ const emulateLiquidity = async () => {
 
   console.log("\n\n\nEMULATOR: Distributing Rewards...");
   await foldLiquidityRewardsAction(lucidInstance, emulator, data?.lpToken);
+  console.log("Moving to next step...");
+  await setTimeout(DELAY);
+
+  console.log("\n\n\nEMULATOR: Claiming a Reward...");
+  await claimLiquidityNodeAction(lucidInstance, emulator);
   console.log("Moving to next step...");
   await setTimeout(DELAY);
 };

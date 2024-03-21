@@ -1,14 +1,14 @@
 import dotenv from "dotenv";
-dotenv.config();
-import { insertLqNode, Lucid, Emulator } from "price-discovery-offchain";
+import { Emulator, Lucid, insertLqNode } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
+dotenv.config();
 
-import { selectLucidWallet } from "../../utils/wallet.js";
 import {
   MAX_WALLET_GROUP_COUNT,
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const insertLiquidityNodesAction = async (
   lucid: Lucid,
@@ -30,7 +30,7 @@ export const insertLiquidityNodesAction = async (
     try {
       await selectLucidWallet(lucid, walletIdx);
       const tx = await insertLqNode(lucid, {
-        currenTime: emulator ? emulator.now() : Date.now(),
+        currenTime: emulator?.now() ?? Date.now(),
         amountLovelace: 5_000_000n,
         scripts: {
           nodePolicy: applied.scripts.liquidityPolicy,
@@ -53,7 +53,7 @@ export const insertLiquidityNodesAction = async (
       console.log(`Submitting: ${txHash}`);
       await lucid.awaitTx(txHash);
 
-      if (walletIdx === (emulator ? 49 : MAX_WALLET_GROUP_COUNT)) {
+      if (walletIdx === MAX_WALLET_GROUP_COUNT) {
         loop = false;
         console.log("Done!");
       } else {
