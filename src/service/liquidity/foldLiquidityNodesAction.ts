@@ -12,13 +12,13 @@ import {
 } from "price-discovery-offchain";
 import { Data, Lucid, UTxO, Emulator } from "price-discovery-offchain"
 
-import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { loggerDD } from "../../logs/datadog-service.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+import { getAppliedScripts } from "../../utils/files.js";
 
 export const foldLiquidityNodesAction = async (lucid: Lucid, emulator?: Emulator) => {
-  const { default: deployedScripts } = await import("../../../deployed-policy.json", { assert: { type: "json" } } );
+  const applied = await getAppliedScripts();
   await selectLucidWallet(lucid, 0);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(

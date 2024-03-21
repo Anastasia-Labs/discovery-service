@@ -11,7 +11,7 @@ import { insertLiquidityNodesAction } from "../service/liquidity/insertLiquidity
 import { EMULATOR_DELAY } from "../constants/utils.js";
 import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidityNodesAction.js";
 import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
-import { initFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
+import { initLiquidityFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
@@ -98,14 +98,14 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Removing the Last Deposit...")
-    // await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
-    // console.log("Moving to next step...")
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Removing the Last Deposit...")
+    await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
+    console.log("Moving to next step...")
+    await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Initializing Fold UTXO...")
     emulator.awaitBlock(150); // Ensure TT is done.
-    await initFoldServiceAction(lucidInstance, emulator);
+    await initLiquidityFoldServiceAction(lucidInstance, emulator);
     console.log("Moving to next step...")
     await setTimeout(DELAY);
 

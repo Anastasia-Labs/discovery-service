@@ -16,7 +16,7 @@ export const getDeployedScripts = async (): Promise<typeof deployedSchema> => {
 }
 
 export const getProxyTokenHolderScript = async (): Promise<typeof proxyTokenHolderSchema> => {
-    const fileContents = await readFile(`./compiledLiquidity/proxyTokenHolderV1.json`, { encoding: "utf-8" });
+    const fileContents = await readFile(`./src/compiledLiquidity/proxyTokenHolderV1.json`, { encoding: "utf-8" });
     const data = JSON.parse(fileContents);
     return data;
 }

@@ -10,7 +10,7 @@ import { loggerDD } from "../../logs/datadog-service.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts } from "../../utils/files.js";
 
-export const initFoldServiceAction = async (lucid: Lucid, emulator?: Emulator) => {
+export const initLiquidityFoldServiceAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
 
   const initFoldConfig: InitFoldConfig = {

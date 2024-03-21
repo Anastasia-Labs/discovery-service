@@ -1,15 +1,14 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { Emulator, Lucid } from "price-discovery-offchain"
-import { createLiquidityV1Pool } from "price-discovery-offchain"
+import { Emulator, Lucid, createLiquidityV1Pool } from "price-discovery-offchain"
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts, getProxyTokenHolderScript } from "../../utils/files.js";
 
 export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator, proxyDatum?: string, policyId?: string, assetName?: string) => {
-    await selectLucidWallet(lucid, 0);
     const proxyTokenHolderV1Validator = await getProxyTokenHolderScript();
     const applied = await getAppliedScripts();
+    await selectLucidWallet(lucid, 0);
 
     const datums: { [key: string]: string } = {};
     if (emulator) {

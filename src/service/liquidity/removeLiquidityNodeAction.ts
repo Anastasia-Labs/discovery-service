@@ -5,11 +5,12 @@ import {
 } from "price-discovery-offchain"
 import { Lucid, Emulator } from "price-discovery-offchain"
 
-import applied from "../../../applied-scripts.json" assert { type: "json" };
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { MAX_WALLET_GROUP_COUNT } from "../../constants/utils.js";
+import { getAppliedScripts } from "../../utils/files.js";
 
 export const removeLiquidityNodeAction = async (lucid: Lucid, emulator?: Emulator, emulatorDeadline?: number) => {
+    const applied = await getAppliedScripts();
     await selectLucidWallet(lucid, MAX_WALLET_GROUP_COUNT - 1);
 
     const tx = await removeLqNode(lucid, {
