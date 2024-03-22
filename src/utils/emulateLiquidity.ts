@@ -1,8 +1,4 @@
-import {
-  Emulator,
-  Lucid,
-  PROTOCOL_PARAMETERS_DEFAULT,
-} from "price-discovery-offchain";
+import { Emulator, Lucid } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
@@ -69,12 +65,12 @@ const emulateLiquidity = async () => {
         },
       },
     ],
-    {
-      ...PROTOCOL_PARAMETERS_DEFAULT,
-      maxTxSize: 20_000_000_000,
-      maxTxExMem: 20_000_000_000n,
-      maxTxExSteps: 20_000_000_000n,
-    },
+    // {
+    //   ...PROTOCOL_PARAMETERS_DEFAULT,
+    //   maxTxSize: 20_000_000_000,
+    //   maxTxExMem: 20_000_000_000n,
+    //   maxTxExSteps: 20_000_000_000n,
+    // },
   );
 
   const deadline = emulator.now() + EMULATOR_TT_END_DELAY;
@@ -163,7 +159,7 @@ const emulateLiquidity = async () => {
     await claimLiquidityNodeAction(lucidInstance, emulator);
     await setTimeout(DELAY);
   } catch (e) {
-    console.log("Something went wrong. Aborting.");
+    console.log("Something went wrong. Error:", e);
     return;
   }
 

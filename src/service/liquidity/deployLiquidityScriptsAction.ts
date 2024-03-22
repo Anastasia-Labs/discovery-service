@@ -269,11 +269,13 @@ export const deployLiquidityScriptsAction = async (
           address: deployWalletAddress,
         },
       });
+      const completed = await txComplete.sign().complete();
       console.log(`Completed deploy group ${index}`);
-      return await txComplete.sign().complete();
+      return completed;
     }),
   );
 
+  console.log("test");
   const txHashes = await Promise.all(
     signedTxs.map(async (signedTx) => {
       const txHash = await signedTx.submit();
