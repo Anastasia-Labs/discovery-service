@@ -46,7 +46,6 @@ export const foldLiquidityRewardsAction = async (
   const rewardFoldPolicyId = lucid.utils.mintingPolicyToId(rewardFoldPolicy);
 
   const rewardFoldToken = toUnit(rewardFoldPolicyId, rFold);
-  console.log(rewardFoldToken);
   let rewardFoldUtxo = await lucid.utxoByUnit(rewardFoldToken);
 
   if (!rewardFoldUtxo) {
