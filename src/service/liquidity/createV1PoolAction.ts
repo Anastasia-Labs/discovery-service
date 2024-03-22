@@ -7,25 +7,20 @@ import {
   createLiquidityV1Pool,
 } from "price-discovery-offchain";
 import { getDatumsObject } from "../../utils/emulator.js";
-import { getAppliedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getTasteTestVariables,
+  updateTasteTestVariables,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const createV1PoolAction = async (
-  lucid: Lucid,
-  emulator?: Emulator,
-  proxyDatum?: string,
-  policyId?: string,
-  assetName?: string,
-) => {
+export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
+  const { projectTokenAssetName, projectTokenPolicyId } =
+    await getTasteTestVariables();
   await selectLucidWallet(lucid, 0);
 
-  const datums = getDatumsObject(lucid, emulator);
-
-  if (proxyDatum) {
-    const hash = lucid.utils.datumToHash(proxyDatum);
-    datums[hash] = proxyDatum;
-  }
+  const datums = getDatumsObject(emulator);
 
   const unsignedTx = await createLiquidityV1Pool(lucid, {
     currenTime: emulator?.now() ?? Date.now(),
@@ -38,10 +33,8 @@ export const createV1PoolAction = async (
     v1PoolAddress: process.env.POOL_ADDRESS!,
     v1PoolPolicyId: process.env.POOL_POLICY_ID!,
     projectToken: {
-      assetName: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString(
-        "hex",
-      ),
-      policyId: policyId ?? process.env.PROJECT_CS!,
+      assetName: projectTokenAssetName,
+      policyId: projectTokenPolicyId,
     },
     v1FactoryToken: {
       policyId: process.env.V1_FACTORY_TOKEN!.split(".")[0],
@@ -61,8 +54,7 @@ export const createV1PoolAction = async (
   console.log(`Submitting: ${txHash}`);
   await lucid.awaitTx(txHash);
 
-  return {
-    lpToken: unsignedTx.data.lpTokenAsset,
-    newProxyDatum: unsignedTx.data.newProxyDatum,
-  };
+  await updateTasteTestVariables({
+    lpTokenAssetName: unsignedTx.data.poolLpTokenName,
+  });
 };

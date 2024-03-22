@@ -1,29 +1,34 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import { buildLiquidityScripts } from "price-discovery-offchain";
-import { fromText, Lucid, UTxO, toUnit } from "price-discovery-offchain";
 import { writeFile } from "fs/promises";
+import {
+  Lucid,
+  UTxO,
+  buildLiquidityScripts,
+  toUnit,
+} from "price-discovery-offchain";
 
-import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" };
-import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
-import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
-import liquidityStake from "../../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
+import distributionFoldValidator from "../../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };
+import distributionFoldPolicy from "../../compiledLiquidity/distributionRewardFoldMint.json" assert { type: "json" };
 import collectionFoldPolicy from "../../compiledLiquidity/liquidityFoldMint.json" assert { type: "json" };
 import collectionFoldValidator from "../../compiledLiquidity/liquidityFoldValidator.json" assert { type: "json" };
-import distributionFoldPolicy from "../../compiledLiquidity/distributionRewardFoldMint.json" assert { type: "json" };
-import distributionFoldValidator from "../../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };
+import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
+import liquidityStake from "../../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
 import tokenHolderPolicy from "../../compiledLiquidity/liquidityTokenHolderMint.json" assert { type: "json" };
 import tokenHolderValidator from "../../compiledLiquidity/liquidityTokenHolderValidator.json" assert { type: "json" };
+import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
+import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" };
 
+import { getTasteTestVariables } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const buildLiquidityScriptsAction = async (
   lucid: Lucid,
   emulatorDeadline?: number,
-  policyId?: string,
-  name?: string,
 ) => {
+  const { projectTokenPolicyId, projectTokenAssetName } =
+    await getTasteTestVariables();
   const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) =>
     wallet.getUtxos(),
   );
@@ -34,18 +39,12 @@ export const buildLiquidityScriptsAction = async (
     return [await wallet.address(), await wallet.getUtxos()];
   });
 
-  //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
-  //
   const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
 
   const checkProjectToken = project1Utxos.find((utxo) => {
     return (
-      utxo.assets[
-        toUnit(
-          policyId ?? process.env.PROJECT_CS!,
-          fromText(name ?? process.env.PROJECT_TN!),
-        )
-      ] === BigInt(process.env.PROJECT_AMNT!)
+      utxo.assets[toUnit(projectTokenPolicyId, projectTokenAssetName)] ===
+      BigInt(process.env.PROJECT_AMNT!)
     );
   });
 
@@ -68,7 +67,7 @@ export const buildLiquidityScriptsAction = async (
       penaltyAddress: beneficiaryAddress,
     },
     rewardFoldValidator: {
-      projectCS: policyId ?? process.env.PROJECT_CS!,
+      projectCS: projectTokenPolicyId,
       projectLpPolicyId: process.env.POOL_POLICY_ID!,
       projectAddr: beneficiaryAddress,
     },
@@ -106,8 +105,8 @@ export const buildLiquidityScriptsAction = async (
       penaltyAddress: beneficiaryAddress,
     },
     rewardValidator: {
-      projectCS: policyId ?? process.env.PROJECT_CS!,
-      projectTN: name ?? process.env.PROJECT_TN!,
+      projectCS: projectTokenPolicyId,
+      projectTN: projectTokenAssetName,
       projectAddr: beneficiaryAddress,
     },
     projectTokenHolder: {

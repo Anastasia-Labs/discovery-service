@@ -1,6 +1,9 @@
-import { readFile } from "fs/promises";
+import { readFile, writeFile } from "fs/promises";
+import isEqual from "lodash/isEqual.js";
+
 import appliedSchema from "../../applied-scripts.json" assert { type: "json" };
 import deployedSchema from "../../deployed-policy.json" assert { type: "json" };
+import ttVariablesSchema from "../../taste-test-variables.json" assert { type: "json" };
 
 export const getAppliedScripts = async (): Promise<typeof appliedSchema> => {
   const fileContents = await readFile(`./applied-scripts.json`, {
@@ -16,4 +19,42 @@ export const getDeployedScripts = async (): Promise<typeof deployedSchema> => {
   });
   const data = JSON.parse(fileContents);
   return data;
+};
+
+export const getTasteTestVariables = async (): Promise<
+  typeof ttVariablesSchema
+> => {
+  const fileContents = await readFile(`./taste-test-variables.json`, {
+    encoding: "utf-8",
+  });
+  const data = JSON.parse(fileContents);
+  return data;
+};
+
+export const updateTasteTestVariables = async (
+  values: Partial<typeof ttVariablesSchema>,
+): Promise<true> => {
+  const fileContents = await readFile(`./taste-test-variables.json`, "utf-8");
+  const data = JSON.parse(fileContents);
+
+  const newData: typeof ttVariablesSchema = {
+    ...data,
+    ...values,
+  };
+
+  await writeFile(
+    `./taste-test-variables.json`,
+    JSON.stringify(newData, null, 2),
+    "utf-8",
+  );
+
+  const refreshedData = JSON.parse(
+    await readFile(`./taste-test-variables.json`, "utf-8"),
+  );
+
+  if (!isEqual(newData, refreshedData)) {
+    throw new Error("Did not update taste test variable!");
+  }
+
+  return true;
 };

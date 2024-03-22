@@ -5,31 +5,28 @@ dotenv.config();
 import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getDatumsObject } from "../../utils/emulator.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getDeployedScripts,
+  getTasteTestVariables,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initLiquidityRewardServiceAction = async (
   lucid: Lucid,
   emulator?: Emulator,
-  policyId?: string,
-  assetName?: string,
-  newProxyDatum?: string,
 ) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
+  const { projectTokenAssetName, projectTokenPolicyId } =
+    await getTasteTestVariables();
 
-  const datums = getDatumsObject(lucid, emulator);
-  if (newProxyDatum) {
-    const hash = lucid.utils.datumToHash(newProxyDatum);
-    datums[hash] = newProxyDatum;
-  }
+  const datums = getDatumsObject(emulator);
 
   const initRewardFoldConfig: InitLiquidityRewardFoldConfig = {
     currenTime: emulator?.now() ?? Date.now(),
-    projectCS: policyId ?? process.env.PROJECT_CS!,
-    projectTN: Buffer.from(assetName ?? process.env.PROJECT_TN!).toString(
-      "hex",
-    ),
+    projectCS: projectTokenPolicyId,
+    projectTN: projectTokenAssetName,
     datums,
     scripts: {
       liquidityValidator: applied.scripts.liquidityValidator,

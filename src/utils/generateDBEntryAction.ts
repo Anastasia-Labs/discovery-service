@@ -1,23 +1,27 @@
 import dotenv from "dotenv";
-dotenv.config();
 import { writeFile } from "fs";
+dotenv.config();
 
-import { DynamoTTEntry } from "../@types/db.js";
+import { Lucid, Script } from "price-discovery-offchain";
 import appliedScripts from "../../applied-scripts.json" assert { type: "json" };
 import deployedPolicy from "../../deployed-policy.json" assert { type: "json" };
 import tx from "../../init-tx.json" assert { type: "json" };
+import { DynamoTTEntry } from "../@types/db.js";
 import { PREVIEW_OFFSET } from "../constants/network.js";
+import { getTasteTestVariables } from "./files.js";
 import {
   fetchFromBlockfrost,
   posixToSlot,
   selectLucidWallet,
 } from "./wallet.js";
-import { Script } from "@anastasia-labs/lucid-cardano-fork";
 
 const TWENTY_FOUR_HOURS_POSIX = 1000 * 60 * 60 * 24;
 
-async function generateDBEntry() {
-  const lucid = await selectLucidWallet(0);
+export const generateDBEntry = async (lucid: Lucid) => {
+  const { projectTokenAssetName, projectTokenPolicyId } =
+    await getTasteTestVariables();
+  await selectLucidWallet(lucid, 0);
+
   const scriptRefUtxos = await lucid.utxosByOutRef([
     deployedPolicy.scriptsRef.CollectFoldPolicy,
     deployedPolicy.scriptsRef.CollectFoldValidator,
@@ -72,10 +76,10 @@ async function generateDBEntry() {
     asset: {
       M: {
         AssetId: {
-          S: `${process.env.PROJECT_CS}.${Buffer.from(process.env.PROJECT_TN as string).toString("hex")}`,
+          S: `${projectTokenPolicyId}.${projectTokenAssetName}`,
         },
         AssetName: {
-          S: process.env.PROJECT_TN as string,
+          S: Buffer.from(projectTokenAssetName, "hex").toString("utf-8"),
         },
         Decimals: {
           N: process.env.PROJECT_TN_DECIMALS as string,
@@ -94,10 +98,13 @@ async function generateDBEntry() {
           },
         },
         PolicyId: {
-          S: process.env.PROJECT_CS as string,
+          S: projectTokenPolicyId,
         },
         Ticker: {
-          S: (process.env.PROJECT_TN as string).slice(0, 5).toUpperCase(),
+          S: Buffer.from(projectTokenAssetName, "hex")
+            .toString("utf-8")
+            .slice(0, 5)
+            .toUpperCase(),
         },
         TotalSupply: {
           S: process.env.PROJECT_AMNT as string,
@@ -589,6 +596,6 @@ async function generateDBEntry() {
       error ? console.log(error) : console.log(`DynamoDB template saved!`);
     },
   );
-}
+};
 
 generateDBEntry();

@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import inquirer from "inquirer";
 dotenv.config();
 
 import {
@@ -7,23 +6,13 @@ import {
   Lucid,
   MintingPolicy,
   PolicyId,
-  TxHash,
-  Unit,
+  toUnit,
 } from "price-discovery-offchain";
+import { updateTasteTestVariables } from "./files.js";
 import { selectLucidWallet } from "./wallet.js";
 
-export async function mintNFTAction(lucid: Lucid): Promise<{
-  policyId: string;
-  name: string;
-}> {
+export async function mintNFTAction(lucid: Lucid) {
   await selectLucidWallet(lucid, 1);
-  // const { value } = await inquirer.prompt<{ value: string }>([
-  //   {
-  //     type: 'input',
-  //     name: 'value',
-  //     message: 'What do you want to name your token? (no spaces, one word)',
-  //   }
-  // ]);
 
   const { paymentCredential } = lucid.utils.getAddressDetails(
     await lucid.wallet.address(),
@@ -41,8 +30,11 @@ export async function mintNFTAction(lucid: Lucid): Promise<{
   });
 
   const policyId: PolicyId = lucid.utils.mintingPolicyToId(mintingPolicy);
+  const assetName = fromText(
+    process.env.NODE_ENV === "emulator" ? "TTEmulator" : "TTPreview",
+  );
 
-  const unit: Unit = policyId + fromText(process.env.PROJECT_TN!);
+  const unit = toUnit(policyId, assetName);
 
   const tx = await lucid
     .newTx()
@@ -56,11 +48,10 @@ export async function mintNFTAction(lucid: Lucid): Promise<{
   console.log(`Submitting: ${txHash}`);
   await lucid.awaitTx(txHash);
 
-  console.log(
-    `Done! Minted token ${process.env.PROJECT_TN} under policy ID (${policyId}).`,
-  );
-  return {
-    policyId,
-    name: process.env.PROJECT_TN!,
-  };
+  await updateTasteTestVariables({
+    projectTokenPolicyId: policyId,
+    projectTokenAssetName: assetName,
+  });
+
+  console.log(`Done! Saved minted asset data to taste-test-variables.json.`);
 }

@@ -16,15 +16,19 @@ import {
 import { setTimeout } from "timers/promises";
 
 import { loggerDD } from "../../logs/datadog-service.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getDeployedScripts,
+  getTasteTestVariables,
+} from "../../utils/files.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const foldLiquidityRewardsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
-  lpTokenAssetId?: string,
 ) => {
+  const { lpTokenAssetName } = await getTasteTestVariables();
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
@@ -60,12 +64,9 @@ export const foldLiquidityRewardsAction = async (
     return;
   }
 
-  /**
-   * @todo
-   * ask philip
-   */
+  const lpTokenAssetId = toUnit(process.env.POOL_POLICY_ID!, lpTokenAssetName);
   const unprocessedNodes = readableUTxOs.filter(({ assets }) => {
-    return !assets[lpTokenAssetId ?? process.env.PROJECT_POOL_LP_TOKEN!];
+    return !assets[lpTokenAssetId];
   });
 
   const nodes = chunkArray(
@@ -122,7 +123,7 @@ export const foldLiquidityRewardsAction = async (
           ])
         )?.[0] as UTxO,
       },
-      lpTokenAssetId: lpTokenAssetId ?? process.env.PROJECT_POOL_LP_TOKEN!,
+      lpTokenAssetId,
     };
 
     const multiFoldUnsigned = await liquidityFoldRewards(

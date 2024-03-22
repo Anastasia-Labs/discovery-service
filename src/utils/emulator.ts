@@ -1,6 +1,6 @@
-import { Emulator, Lucid } from "price-discovery-offchain";
+import { Emulator } from "price-discovery-offchain";
 
-export const getDatumsObject = (lucid: Lucid, emulator?: Emulator) => {
+export const getDatumsObject = (emulator?: Emulator) => {
   const datums: { [key: string]: string } = {};
   if (emulator) {
     datums["d2653ed85dac06c5b39554b78875d4f8cb6680a274a0f2cf6897f2b99e35b0da"] =
