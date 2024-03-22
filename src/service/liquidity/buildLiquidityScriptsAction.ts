@@ -58,7 +58,11 @@ export const buildLiquidityScriptsAction = async (
   }
 
   const deadline = Number(emulatorDeadline ?? process.env.DEADLINE);
-  console.log("Deadline UTC", deadline, new Date(deadline).toUTCString());
+  console.log(
+    "Deadline UTC",
+    deadline,
+    `${new Date(deadline).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(deadline).toLocaleTimeString()}`,
+  );
 
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {

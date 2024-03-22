@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
-dotenv.config();
 import { Lucid } from "price-discovery-offchain";
+dotenv.config();
 
-import { selectLucidWallet } from "./wallet.js";
 import { lovelaceAtAddress } from "./misc.js";
+import { selectLucidWallet } from "./wallet.js";
 
 export const refundWalletsAction = async (lucid: Lucid) => {
   await selectLucidWallet(lucid, 0);
@@ -13,7 +13,7 @@ export const refundWalletsAction = async (lucid: Lucid) => {
     .newTx()
     .payToAddress(
       "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s",
-      { lovelace: balance - 500_000n },
+      { lovelace: balance - 2_000_000n },
     )
     .complete();
   const txHash = await (await tx.sign().complete()).submit();
@@ -28,12 +28,12 @@ export const refundWalletsAction = async (lucid: Lucid) => {
     .newTx()
     .payToAddress(
       "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s",
-      { lovelace: newBalance - 500_000n },
+      { lovelace: newBalance - 2_000_000n },
     )
     .complete();
   const newTxHash = await (await newTx.sign().complete()).submit();
 
   console.log(
-    `Refunded deploy wallet of ${newBalance - 500_000n} lovelace:  ${newTxHash}`,
+    `Refunded deploy wallet of ${newBalance - 1_000_000n} lovelace:  ${newTxHash}`,
   );
 };

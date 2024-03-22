@@ -65,6 +65,7 @@ const emulateLiquidity = async () => {
         },
       },
     ],
+    // ONLY TURN ON WHEN USING SCRIPTS WITH TRACING.
     // {
     //   ...PROTOCOL_PARAMETERS_DEFAULT,
     //   maxTxSize: 20_000_000_000,

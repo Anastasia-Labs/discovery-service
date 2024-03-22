@@ -1,9 +1,9 @@
-import inquirer from "inquirer";
 import dotenv from "dotenv";
-dotenv.config();
+import inquirer from "inquirer";
 import { writeFile } from "node:fs";
-import { execSync } from "node:child_process";
 import { generateSeedPhrase, Lucid } from "price-discovery-offchain";
+import { refundWalletsAction } from "./refundWalletAction.js";
+dotenv.config();
 
 export const createWalletsAction = async (lucid: Lucid) => {
   const target = 50;
@@ -19,7 +19,7 @@ export const createWalletsAction = async (lucid: Lucid) => {
   ]);
 
   if ("y" === value) {
-    execSync(`yarn refund-wallets`);
+    await refundWalletsAction(lucid);
     console.log(`Done! Now creating new wallets...`);
   }
 

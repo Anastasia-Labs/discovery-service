@@ -1,6 +1,6 @@
 {
   "pk": {
-    "S": "18fda07f5c471f38aab5bc2536ffb2a2d70673e44e66bcf2f0ec8d4b"
+    "S": "77d1b873c379632d42d26a9e871400d545c289a72777944dc5fc4af7"
   },
   "adaHandle": {
     "S": "000de14074745f74657374"
@@ -20,10 +20,10 @@
   "asset": {
     "M": {
       "AssetId": {
-        "S": "9e67fe85b89bf641919cee95b7777502a3f89de4671ba91716f3c421.436865727279"
+        "S": "85ae5898062cd5267349deae4d91852491bd820313c4a4d66f382f6c.545450726576696577"
       },
       "AssetName": {
-        "S": "Cherry"
+        "S": "TTPreview"
       },
       "Decimals": {
         "N": "6"
@@ -34,7 +34,7 @@
       "MintDate": {
         "M": {
           "Slot": {
-            "S": "44164937"
+            "S": "44431549"
           },
           "SlotOffset": {
             "N": "1666656000"
@@ -42,10 +42,10 @@
         }
       },
       "PolicyId": {
-        "S": "9e67fe85b89bf641919cee95b7777502a3f89de4671ba91716f3c421"
+        "S": "85ae5898062cd5267349deae4d91852491bd820313c4a4d66f382f6c"
       },
       "Ticker": {
-        "S": "CHERR"
+        "S": "TTPRE"
       },
       "TotalSupply": {
         "S": "6000000000000000"
@@ -55,7 +55,7 @@
   "createdDate": {
     "M": {
       "Slot": {
-        "S": "44164937"
+        "S": "44431549"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -63,12 +63,12 @@
     }
   },
   "creationTxHash": {
-    "S": "8365d8b7c03c445db61088351736e3fce3c7f3a47a3fa2a549d540e84ba35375"
+    "S": "f5904422c3e22646d7b04c76a3ab3eb2ded28915f5ec64c415f7bcf026e106ef"
   },
   "endDate": {
     "M": {
       "Slot": {
-        "S": "44335539"
+        "S": "44435133"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -95,7 +95,7 @@
   "lastCallDate": {
     "M": {
       "Slot": {
-        "S": "44249139"
+        "S": "44348733"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -105,7 +105,7 @@
   "openDate": {
     "M": {
       "Slot": {
-        "S": "44164937"
+        "S": "44431549"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -147,13 +147,13 @@
   "projectDetails": {
     "M": {
       "Description": {
-        "S": "The Cherry Protocol is an example project description that goes here, allowing users to more easily see the details."
+        "S": "The Preview Test is an example project description that goes here, allowing users to more easily see the details."
       },
       "Handle": {
         "S": "yes"
       },
       "Name": {
-        "S": "Cherry Protocol"
+        "S": "Preview Test"
       },
       "Socials": {
         "L": [
@@ -182,7 +182,7 @@
       "Team": {
         "M": {
           "Company": {
-            "S": "Cherry, Inc."
+            "S": "undefined, Inc."
           },
           "Members": {
             "L": [
@@ -293,7 +293,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "73443503a7a94634d242ab7a457d739c0fc6ffd9f4662320c0a7cbd5"
+            "S": "c8915dc9bbef44e1ac4d9b5f622042cd5884c168c4168bf9d4a612e6"
           },
           "utxo": {
             "M": {
@@ -301,7 +301,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "03e90cf2c90a13f54fda6499f7b249534405d95f85b034fea0c872b689418371"
+                "S": "474fc74a337f65a08c52327aba73bb524abdc3e2229a537bdd954ae7f9481d52"
               }
             }
           }
@@ -316,7 +316,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "379f5338ad66e537c836339cc89f7b4e9ed3aeae91aaa8549ae79545"
+            "S": "ec6be06a87138149bdff7532cad04d1399f8420c3b4c37cca2a31a6a"
           },
           "utxo": {
             "M": {
@@ -324,7 +324,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "82e107a4b22880c65721eaf24b00f4a6f949c07c25bc40ad17b56932fa0a0ba6"
+                "S": "030103fc811c88c258e3b0dc296631be3616a325a9a06afe8200f6f8c86f86d7"
               }
             }
           }
@@ -339,7 +339,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "78623b3fd377913c5fc60eef37f3d1c74cb953bddf57ac30c0d6d5a5"
+            "S": "2245bed2e8a0ebdae41d2a74cee12d387fb8ff6e22b1c6c397255349"
           },
           "utxo": {
             "M": {
@@ -347,7 +347,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "a9e4bba1c0b0bcfb56a75dc0f95f96aa2e3867b0046236df2623b91c8229463b"
+                "S": "4452bc1d15a53c44d128bd15061fa5f96fc4a6c9bbbec7be949daf37b3cd4bbe"
               }
             }
           }
@@ -362,7 +362,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "b7a9b85eed92be87d46148a2dfa54dec36491bc788e2b20949ee6139"
+            "S": "f80a2a7ac911b4f5ec2c09684c3e80b9d0f3126ba67f485a46a5aafb"
           },
           "utxo": {
             "M": {
@@ -370,7 +370,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "5a5f18309fee3b19f58de24981236c68f570711c16e7b8ded77f4817255c5893"
+                "S": "e612193808085ad996ff0539b6d135d0a2ec4e1404105058788a775314d68157"
               }
             }
           }
@@ -385,7 +385,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "aff8ca927c6f1ccd7e8f155e3575259d0c0bcd6013c540be33805637"
+            "S": "9b1e52b0613ec859c3ad7896bec3f3a07c87dd32cfd3a6f4f7519544"
           },
           "utxo": {
             "M": {
@@ -393,7 +393,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "4638606f6a12b2346c5a7795f5ff3b777ef284e44384d319fec2e3a142f27766"
+                "S": "cf1aa0d2ef2ef0631ba1248684ea38918237dbb4b2dec2a3505fa81c4df4c7e6"
               }
             }
           }
@@ -408,7 +408,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "0833610d49a81191e9a06b25ca212572a742ddacb5b473f71acb80a7"
+            "S": "30dc991b80ab6b7acdd922720b23e8709e537ae640c109294f8b16bb"
           },
           "utxo": {
             "M": {
@@ -416,7 +416,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "7c2e05aaf48f431d69a38e93f6e50b7ea8c6b773adf3cfc16868e1b7b67c54d3"
+                "S": "cf048521db22e878127f53b1845d0ecc2119368afbbdfdccae9d2aa74de5e5df"
               }
             }
           }
@@ -431,7 +431,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "b245e126072c28aa886e5f747e8d9ca79fba5588d10b8d4dc51fd159"
+            "S": "6b4be1ec0a1bcae91496607118780234eec7837e8c05efef712406e2"
           },
           "utxo": {
             "M": {
@@ -439,7 +439,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "9d08acc74c8d4a088761af833fcfc2473fa01b64b3074922992e7d8145b5644f"
+                "S": "d37a9d114324d54539d4e3a5d185ff57f2330c0a89e35fd7ab41e83f2c0e2ec4"
               }
             }
           }
@@ -454,7 +454,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "fa5433bd6447b3113931db12259afe3bc827d0fc17f8807c7d8dadcc"
+            "S": "0aac7cc6d73b74df354eb158ce8fac2d186fb8747ebc043d8f0f60b6"
           },
           "utxo": {
             "M": {
@@ -462,7 +462,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "b3e0eb2c4c24b22b010879a8c231a708702b48844a476957f692a817a5e26215"
+                "S": "30ff00899cc94261afc0d032694f377276a0dc57b5349739f4db9564331e8521"
               }
             }
           }
@@ -477,7 +477,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "90fa01958a42ff41239164d7140af45f8af24ae7d143a9767d2a1705"
+            "S": "32fa4298095733f3d54731e1b7ae5316e15a4273b1a7d2fb74540d44"
           },
           "utxo": {
             "M": {
@@ -485,7 +485,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "3e19213a89be1f1d08dedd583436cd6cff2d4251632d665139b6a907cfe9b781"
+                "S": "a20591a457c802cb59486ee67f414557de2918a02cc772efa76812d713a1c3c0"
               }
             }
           }
@@ -494,7 +494,7 @@
     }
   },
   "slug": {
-    "S": "cherry-protocol"
+    "S": "preview-test"
   },
   "type": {
     "S": "Liquidity"
@@ -515,7 +515,7 @@
           "ReleaseDate": {
             "M": {
               "Slot": {
-                "S": "52804937"
+                "S": "53071549"
               },
               "SlotOffset": {
                 "N": "1666656000"

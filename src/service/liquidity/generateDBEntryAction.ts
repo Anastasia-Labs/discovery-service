@@ -3,21 +3,21 @@ import { writeFile } from "fs";
 dotenv.config();
 
 import { Lucid, Script } from "price-discovery-offchain";
-import appliedScripts from "../../applied-scripts.json" assert { type: "json" };
-import deployedPolicy from "../../deployed-policy.json" assert { type: "json" };
-import tx from "../../init-tx.json" assert { type: "json" };
-import { DynamoTTEntry } from "../@types/db.js";
-import { PREVIEW_OFFSET } from "../constants/network.js";
-import { getTasteTestVariables } from "./files.js";
+import appliedScripts from "../../../applied-scripts.json" assert { type: "json" };
+import deployedPolicy from "../../../deployed-policy.json" assert { type: "json" };
+import tx from "../../../init-tx.json" assert { type: "json" };
+import { DynamoTTEntry } from "../../@types/db.js";
+import { PREVIEW_OFFSET } from "../../constants/network.js";
+import { getTasteTestVariables } from "../../utils/files.js";
 import {
   fetchFromBlockfrost,
   posixToSlot,
   selectLucidWallet,
-} from "./wallet.js";
+} from "../../utils/wallet.js";
 
 const TWENTY_FOUR_HOURS_POSIX = 1000 * 60 * 60 * 24;
 
-export const generateDBEntry = async (lucid: Lucid) => {
+export const generateDBEntryAction = async (lucid: Lucid) => {
   const { projectTokenAssetName, projectTokenPolicyId } =
     await getTasteTestVariables();
   await selectLucidWallet(lucid, 0);
@@ -597,5 +597,3 @@ export const generateDBEntry = async (lucid: Lucid) => {
     },
   );
 };
-
-generateDBEntry();

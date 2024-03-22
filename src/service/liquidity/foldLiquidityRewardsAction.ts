@@ -45,14 +45,16 @@ export const foldLiquidityRewardsAction = async (
   };
   const rewardFoldPolicyId = lucid.utils.mintingPolicyToId(rewardFoldPolicy);
 
-  let foldUtxo = await lucid.utxoByUnit(toUnit(rewardFoldPolicyId, rFold));
+  const rewardFoldToken = toUnit(rewardFoldPolicyId, rFold);
+  console.log(rewardFoldToken);
+  let rewardFoldUtxo = await lucid.utxoByUnit(rewardFoldToken);
 
-  if (!foldUtxo) {
+  if (!rewardFoldUtxo) {
     throw new Error("We don't have a fold utxo! Run `init-reward:lp`");
   }
 
   const foldDatum = Data.from(
-    foldUtxo.datum as string,
+    rewardFoldUtxo.datum as string,
     LiquidityRewardFoldDatum,
   );
   const firstNode = readableUTxOs.find((utxo) => {
@@ -86,6 +88,7 @@ export const foldLiquidityRewardsAction = async (
     }
 
     const rewardFoldConfig: RewardLiquidityFoldConfig = {
+      // disableNativeUplc: emulator ? false : true,
       currenTime: emulator?.now() ?? Date.now(),
       nodeRefInputs: sortedInputs.map((data) => {
         return data.value.outRef;
@@ -142,7 +145,7 @@ export const foldLiquidityRewardsAction = async (
       await loggerDD(`Submitting: ${multiFoldHash}`);
       await lucid.awaitTx(multiFoldHash);
 
-      while (foldUtxo.txHash !== multiFoldHash) {
+      while (rewardFoldUtxo.txHash !== multiFoldHash) {
         if (!emulator) {
           await setTimeout(3_000);
         }
@@ -151,7 +154,7 @@ export const foldLiquidityRewardsAction = async (
           toUnit(rewardFoldPolicyId, rFold),
         );
 
-        foldUtxo = newFoldUtxo;
+        rewardFoldUtxo = newFoldUtxo;
       }
     } catch (e) {
       await loggerDD(

@@ -4,6 +4,7 @@ import {
   Emulator,
   Lucid,
   OutRef,
+  UTxO,
   deployRefScripts,
   fromText,
   toUnit,
@@ -57,7 +58,16 @@ export const deployLiquidityScriptsAction = async (
     }
   }
 
-  const spendingUtxos = await lucid.provider.getUtxos(deployWalletAddress);
+  let spendingUtxos: UTxO[] =
+    await lucid.provider.getUtxos(deployWalletAddress);
+
+  if (!emulator) {
+    while (spendingUtxos.length < 10) {
+      spendingUtxos = await lucid.provider.getUtxos(deployWalletAddress);
+      await setTimeout(3_000);
+    }
+  }
+
   const deploy1 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityPolicy,
     name: "TasteTestPolicy",
@@ -275,11 +285,10 @@ export const deployLiquidityScriptsAction = async (
     }),
   );
 
-  console.log("test");
   const txHashes = await Promise.all(
-    signedTxs.map(async (signedTx) => {
+    signedTxs.map(async (signedTx, index) => {
       const txHash = await signedTx.submit();
-      console.log(`Submitting: ${txHash}`);
+      console.log(`Submitting Ref Script: ${index}...`);
       await lucid.awaitTx(txHash);
       return txHash;
     }),
