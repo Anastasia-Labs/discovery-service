@@ -280,7 +280,7 @@ export const deployLiquidityScriptsAction = async (
         },
       });
       const completed = await txComplete.sign().complete();
-      console.log(`Completed deploy group ${index}`);
+      console.log(`Completed building reference input #${index}`);
       return completed;
     }),
   );
@@ -288,13 +288,13 @@ export const deployLiquidityScriptsAction = async (
   const txHashes = await Promise.all(
     signedTxs.map(async (signedTx, index) => {
       const txHash = await signedTx.submit();
-      console.log(`Submitting Ref Script: ${index}...`);
+      console.log(`Submitting reference input #${index}...`);
       await lucid.awaitTx(txHash);
       return txHash;
     }),
   );
 
-  txHashes.forEach((hash) => console.log(`Deployed Ref Script: ${hash}`));
+  txHashes.forEach((hash) => console.log(`Deployed Reference Input: ${hash}`));
 
   //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;
