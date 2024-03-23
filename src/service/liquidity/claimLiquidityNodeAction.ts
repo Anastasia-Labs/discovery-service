@@ -11,7 +11,7 @@ export const claimLiquidityNodeAction = async (
 ) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
-  await selectLucidWallet(lucid, 5);
+  await selectLucidWallet(lucid, 4);
 
   const tx = await claimLiquidityNode(lucid, {
     currenTime: emulator?.now() ?? Date.now(),

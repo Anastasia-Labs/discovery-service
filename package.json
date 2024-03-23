@@ -19,7 +19,7 @@
     "create-v1-pool:lp": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/initCreateLiquidityV1Pool.ts",
     "init-reward:lp": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/initLiquidityRewardService.ts",
     "fold-reward:lp": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/foldLiquidityRewards.ts",
-    "claim-node:lp": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/claimLiquidityRewards.ts",
+    "claim-reward:lp": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/claimLiquidityRewards.ts",
     "get-addresses": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/getAddresses.ts",
     "build-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/service/discovery/buildScripts.ts",
     "deploy-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/service/discovery/deployScripts.ts",

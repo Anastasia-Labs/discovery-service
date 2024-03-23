@@ -72,7 +72,7 @@ export const foldLiquidityRewardsAction = async (
 
   const nodes = chunkArray(
     sortByKeys(unprocessedNodes, firstNode.datum.key),
-    25,
+    1,
   );
 
   for (const [index, chunk] of nodes.entries()) {
@@ -126,6 +126,7 @@ export const foldLiquidityRewardsAction = async (
         )?.[0] as UTxO,
       },
       lpTokenAssetId,
+      disableNativeUplc: false,
     };
 
     const multiFoldUnsigned = await liquidityFoldRewards(

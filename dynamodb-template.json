@@ -1,6 +1,6 @@
 {
   "pk": {
-    "S": "56bd5a010b97c0e30dadbb1988e530953c6746f7f23f503fd64574a9"
+    "S": "3444a5c1843b11b61de6a8474b42959e5e99c6e247ed97ab9e743c0b"
   },
   "adaHandle": {
     "S": "000de14074745f74657374"
@@ -20,7 +20,7 @@
   "asset": {
     "M": {
       "AssetId": {
-        "S": "408df0fc971f48d7b6a5262303ca1006fbea288dacb5faa5fc3ba547.545450726576696577"
+        "S": "99e7cd5c0aca25bc3e90be7e318326a188f913a07bbfe09b3bace0d4.545450726576696577"
       },
       "AssetName": {
         "S": "TTPreview"
@@ -34,7 +34,7 @@
       "MintDate": {
         "M": {
           "Slot": {
-            "S": "44465626"
+            "S": "44512439"
           },
           "SlotOffset": {
             "N": "1666656000"
@@ -42,20 +42,20 @@
         }
       },
       "PolicyId": {
-        "S": "408df0fc971f48d7b6a5262303ca1006fbea288dacb5faa5fc3ba547"
+        "S": "99e7cd5c0aca25bc3e90be7e318326a188f913a07bbfe09b3bace0d4"
       },
       "Ticker": {
         "S": "TTPRE"
       },
       "TotalSupply": {
-        "S": "6000000000000000"
+        "S": "10001000000000"
       }
     }
   },
   "createdDate": {
     "M": {
       "Slot": {
-        "S": "44465626"
+        "S": "44512439"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -63,12 +63,12 @@
     }
   },
   "creationTxHash": {
-    "S": "0eae1c689df3b4e7c3d883f6827ef802e00c0dffd610eda3223341bf0f78df88"
+    "S": "0eb856e304057c69a43c4d727aaa7b89ea4b7a6557ae91d2e20e2e8f5dd6c0d8"
   },
   "endDate": {
     "M": {
       "Slot": {
-        "S": "44476673"
+        "S": "44514461"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -95,7 +95,7 @@
   "lastCallDate": {
     "M": {
       "Slot": {
-        "S": "44390273"
+        "S": "44428061"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -105,7 +105,7 @@
   "openDate": {
     "M": {
       "Slot": {
-        "S": "44465626"
+        "S": "44512439"
       },
       "SlotOffset": {
         "N": "1666656000"
@@ -280,7 +280,7 @@
     }
   },
   "projectTokens": {
-    "N": "6000000000000000"
+    "N": "10001000000000"
   },
   "scripts": {
     "M": {
@@ -293,7 +293,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "fafac1ec9f6a7a0c9a30b7c704b5703fad0b0b6d75c3dee9fcde8e1c"
+            "S": "2e2b3a9037088e03e1fe2c72632649156cc27cee570bf791011cc938"
           },
           "utxo": {
             "M": {
@@ -301,7 +301,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "77fd40e797a716ae028c1b1d8deb7d3cebc1afc6ff3c0b34b55e3cd89096befe"
+                "S": "5901fba2c11ed5f08142c5c4dea58ba7a962cdf5d63e2d3e8165547ed58b6457"
               }
             }
           }
@@ -316,7 +316,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "d122559ffdd6abc5e9f42ec1a5150bfb64ad15ae09d0b0ea419f769b"
+            "S": "c678ec7ef7a06c0bc7af211c2019a660aa4e4c60e4100abd94136136"
           },
           "utxo": {
             "M": {
@@ -324,7 +324,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "dd72c9facbc404b452ed5f8d2d5973fc47275f8e02a7348a51a5839b541d0176"
+                "S": "c4d7420000bfda18251c5fe2ab77d95ed1da7b99ab5ca7f8f9b5a7554c9853e7"
               }
             }
           }
@@ -339,7 +339,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "7837d145734caac11059eb8863f9a6be4a1f56bfcdf37da559a1a4a2"
+            "S": "6b0145b0615081bd7953f481a05053b82b33ddda7bdaf1c60fc91523"
           },
           "utxo": {
             "M": {
@@ -347,7 +347,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "213530b16d9f84713fef25a6b12ee415a8418f29507897e3f7fc92cf66e31bb3"
+                "S": "1a8b2de27c848636953de28e921ce544882445c94778f6c45f1e45ca5d98fe07"
               }
             }
           }
@@ -362,7 +362,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "799dfd325471f5f4057e3514a5aac00fb727e8fa237708b5496d2c43"
+            "S": "9651c785b61b71d3a158dfa9e25aaf4f9ecc4ef7741070e029ae8767"
           },
           "utxo": {
             "M": {
@@ -370,7 +370,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "28ba8f75cef884b452afeb87eb58000430d5f2696a603d25849d2d8e7fa533ab"
+                "S": "3a6a740bb634d0f959f791039e5e0104d783abfdcb4b75ca1b38a94431996186"
               }
             }
           }
@@ -385,7 +385,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "2db404eaa4b793f7fd326832068e3868ccab2548a76aa83748e33003"
+            "S": "54f54e4d8a05cf4a8041354794b64bf2552dfd292c73899b763008c5"
           },
           "utxo": {
             "M": {
@@ -393,7 +393,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "0a9b25e613417fdf603679bb8201fca1ee24c062cf23e0651ba16a6a6d6c3d2d"
+                "S": "b749540c264d11319727f86ad869bdeea8eeac41816084c2911d5cc82b0cf86a"
               }
             }
           }
@@ -408,7 +408,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "b2d5c1e4f6cf5f50c4198e5ac67d77b77c44713c8bfb5d6ccf5ce0f1"
+            "S": "deeb63136daf7102d6bb59ca87bc46f8ed93738a478fab19d627455b"
           },
           "utxo": {
             "M": {
@@ -416,7 +416,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "b1be01c45e53fecf3b03145df92719a66f14193b6dc64a8f6af43ced25164489"
+                "S": "22e406b8aed5101781d4d8b69216375b5e2918d22f5863dd12bbe32abdabdb4a"
               }
             }
           }
@@ -431,7 +431,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "0ce72f34719804c777d9da7d619ca28a774ce521065ffeca46fd9817"
+            "S": "5a02f88bdbb3d41508432eb08ecc2450ca05975caf353668e3c3fb77"
           },
           "utxo": {
             "M": {
@@ -439,7 +439,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "ac2f4f5b3f3ec488e8f552ad39785016d6dead145fd84aaa50c1c7df1ac00545"
+                "S": "cc6ed3a2e92bf405fb1e2741eee2bae2408324e06814ca26d0bafb63da618e80"
               }
             }
           }
@@ -454,7 +454,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "b5a073cb09feebb9d53bc81af6177b9a85083d17a2387694d853bb88"
+            "S": "7d520a2e53ed3bf34d89fb7915f62dfe3cc411237b6c33404507cf53"
           },
           "utxo": {
             "M": {
@@ -462,7 +462,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "5e17e5db585c47e8fa1e4f532c2eccc31a18a994ab321eb84cdd4d692353beec"
+                "S": "97ea13a015623ea4cd890d77619769ba54870d0c2a0da9119393c6af48cc9043"
               }
             }
           }
@@ -477,7 +477,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "c0d25e4e534716e71a58243a227f4801bcaae40ac0c826321b52c0eb"
+            "S": "8203cebfe7bab29e8ce9bac2e27dc3cfdd3f1d98c71ffe4b26628090"
           },
           "utxo": {
             "M": {
@@ -485,7 +485,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "adf25257746a1ff87b82759f3a37f3f869d1d3771e13eb46dae4981c3f142088"
+                "S": "3c6f3727fa6119157fb0cfbc7161b908fd9d5e612b510fdb2d87bde8fb62d484"
               }
             }
           }
@@ -515,7 +515,7 @@
           "ReleaseDate": {
             "M": {
               "Slot": {
-                "S": "53105626"
+                "S": "53152439"
               },
               "SlotOffset": {
                 "N": "1666656000"

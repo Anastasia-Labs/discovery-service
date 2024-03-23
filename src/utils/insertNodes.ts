@@ -1,6 +1,4 @@
-import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
-dotenv.config();
 import {
   Blockfrost,
   insertNode,
@@ -9,10 +7,12 @@ import {
   Network,
   utxosAtScript,
 } from "price-discovery-offchain";
-import wallets from "../../test/wallets.json" assert { type: "json" };
+import { setTimeout } from "timers/promises";
 import applied from "../../applied-scripts.json" assert { type: "json" };
 import refScripts from "../../deployed-policy.json" assert { type: "json" };
+import wallets from "../../test/wallets.json" assert { type: "json" };
 import { signSubmitValidate } from "./misc.js";
+dotenv.config();
 
 const lucid = await Lucid.new(
   new Blockfrost(process.env.API_URL!, process.env.API_KEY),
