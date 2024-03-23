@@ -1,21 +1,28 @@
 import dotenv from "dotenv";
-dotenv.config();
-import { modifyLqNode } from "price-discovery-offchain";
-import { Lucid, Emulator } from "price-discovery-offchain";
+import { Emulator, Lucid, modifyLqNode } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
+dotenv.config();
 
-import { selectLucidWallet } from "../../utils/wallet.js";
 import {
   MAX_WALLET_GROUP_COUNT,
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
-import { getAppliedScripts } from "../../utils/files.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const modifyLiquidityNodesAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
+  const deployed = await getDeployedScripts();
+
+  const refNodePolicy = await lucid.provider.getUtxosByOutRef([
+    deployed.scriptsRef.TasteTestPolicy,
+  ]);
+  const refNodeValidator = await lucid.provider.getUtxosByOutRef([
+    deployed.scriptsRef.TasteTestValidator,
+  ]);
 
   let loop = true;
   let walletIdx = WALLET_GROUP_START_INDEX;
@@ -28,6 +35,10 @@ export const modifyLiquidityNodesAction = async (
         scripts: {
           nodePolicy: applied.scripts.liquidityPolicy,
           nodeValidator: applied.scripts.liquidityValidator,
+        },
+        refScripts: {
+          nodePolicy: refNodePolicy?.[0],
+          nodeValidator: refNodeValidator?.[0],
         },
       });
 

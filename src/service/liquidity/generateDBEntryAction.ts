@@ -179,7 +179,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: process.env.BENEFICIARY_ADDRESS as string,
         },
         foldFee: {
-          N: "1000000",
+          N: "2000000",
         },
         poolPolicyId: {
           S: process.env.POOL_POLICY_ID!,
