@@ -120,6 +120,9 @@
       "foldFee": {
         "N": "1000000"
       },
+      "poolPolicyId": {
+        "S": "4086577ed57c514f8e29b78f42ef4f379363355a3b65b9a032ee30c9"
+      },
       "minUTXO": {
         "N": "3000000"
       },

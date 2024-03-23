@@ -181,6 +181,9 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
         foldFee: {
           N: "1000000",
         },
+        poolPolicyId: {
+          S: process.env.POOL_POLICY_ID!,
+        },
         minUTXO: {
           N: "3000000",
         },

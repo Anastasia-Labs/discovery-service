@@ -115,6 +115,9 @@ export interface DynamoTTEntry {
       beneficiaryAddress: {
         S: string;
       };
+      poolPolicyId: {
+        S: string;
+      };
       foldFee: {
         N: string;
       };
