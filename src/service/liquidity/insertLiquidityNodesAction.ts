@@ -31,7 +31,8 @@ export const insertLiquidityNodesAction = async (
       await selectLucidWallet(lucid, walletIdx);
       const tx = await insertLqNode(lucid, {
         currenTime: emulator?.now() ?? Date.now(),
-        amountLovelace: 5_000_000n,
+        amountLovelace:
+          process.env.NODE_ENV === "emulator" ? 1_005_000_000n : 5_000_000n,
         scripts: {
           nodePolicy: applied.scripts.liquidityPolicy,
           nodeValidator: applied.scripts.liquidityValidator,
@@ -47,7 +48,9 @@ export const insertLiquidityNodesAction = async (
         return undefined;
       }
 
-      console.log("Depositing 5 ADA to TT with wallet: " + walletIdx);
+      console.log(
+        `Depositing ${process.env.NODE_ENV === "emulator" ? "1,005" : "5"} ADA to TT with wallet: ${walletIdx}`,
+      );
       const txComplete = await tx.data.sign().complete();
       const txHash = await txComplete.submit();
       console.log(`Submitting: ${txHash}`);

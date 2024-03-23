@@ -1,6 +1,7 @@
 import { Emulator, Lucid } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
+import { PROTOCOL_PARAMETERS_DEFAULT } from "price-discovery-offchain";
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   DEPLOY_WALLET_ADA,
@@ -27,7 +28,7 @@ const emulateLiquidity = async () => {
   const restAccounts = [...wallets].slice(3).map(({ address }) => ({
     address,
     assets: {
-      lovelace: 15_000_000n,
+      lovelace: 1_500_000_000n,
     },
   }));
 
@@ -66,12 +67,12 @@ const emulateLiquidity = async () => {
       },
     ],
     // ONLY TURN ON WHEN USING SCRIPTS WITH TRACING.
-    // {
-    //   ...PROTOCOL_PARAMETERS_DEFAULT,
-    //   maxTxSize: 20_000_000_000,
-    //   maxTxExMem: 20_000_000_000n,
-    //   maxTxExSteps: 20_000_000_000n,
-    // },
+    {
+      ...PROTOCOL_PARAMETERS_DEFAULT,
+      maxTxSize: 20_000_000_000,
+      maxTxExMem: 20_000_000_000n,
+      maxTxExSteps: 20_000_000_000n,
+    },
   );
 
   const deadline = emulator.now() + EMULATOR_TT_END_DELAY;

@@ -337,8 +337,6 @@ export const deployLiquidityScriptsAction = async (
     2,
   );
 
-  console.log(data);
-
   writeFileSync(`./deployed-policy.json`, data);
 
   console.log(

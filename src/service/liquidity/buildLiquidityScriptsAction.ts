@@ -39,8 +39,6 @@ export const buildLiquidityScriptsAction = async (
     return [await wallet.address(), await wallet.getUtxos()];
   });
 
-  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
-
   const checkProjectToken = project1Utxos.find((utxo) => {
     return (
       utxo.assets[toUnit(projectTokenPolicyId, projectTokenAssetName)] ===
@@ -68,12 +66,12 @@ export const buildLiquidityScriptsAction = async (
     liquidityPolicy: {
       initUTXO: project0Utxos[0],
       deadline: deadline,
-      penaltyAddress: beneficiaryAddress,
+      penaltyAddress: process.env.BENEFICIARY_ADDRESS!,
     },
     rewardFoldValidator: {
       projectCS: projectTokenPolicyId,
       projectLpPolicyId: process.env.POOL_POLICY_ID!,
-      projectAddr: beneficiaryAddress,
+      projectAddr: process.env.PROJECT_ADDRESS!,
     },
     proxyTokenHolderValidator: {
       poolPolicyId: process.env.POOL_POLICY_ID!,
@@ -106,12 +104,12 @@ export const buildLiquidityScriptsAction = async (
         outputIndex: project0Utxos[0].outputIndex,
       },
       deadline: deadline,
-      penaltyAddress: beneficiaryAddress,
+      penaltyAddress: process.env.BENEFICIARY_ADDRESS!,
     },
     rewardValidator: {
       projectCS: projectTokenPolicyId,
       projectTN: projectTokenAssetName,
-      projectAddr: beneficiaryAddress,
+      projectAddr: process.env.PROJECT_ADDRESS!,
     },
     projectTokenHolder: {
       initOutRef: {

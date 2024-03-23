@@ -18,15 +18,20 @@ export const initLiquidityRewardServiceAction = async (
 ) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
-  const { projectTokenAssetName, projectTokenPolicyId } =
+  const { projectTokenAssetName, projectTokenPolicyId, lpTokenAssetName } =
     await getTasteTestVariables();
 
   const datums = getDatumsObject(emulator);
 
   const initRewardFoldConfig: InitLiquidityRewardFoldConfig = {
     currenTime: emulator?.now() ?? Date.now(),
-    projectCS: projectTokenPolicyId,
-    projectTN: projectTokenAssetName,
+    project: {
+      policyId: projectTokenPolicyId,
+      tokenName: projectTokenAssetName,
+      address: process.env.PROJECT_ADDRESS!,
+      lpTokenAssetName: lpTokenAssetName,
+      lpTokenPolicyId: process.env.POOL_POLICY_ID!,
+    },
     datums,
     scripts: {
       liquidityValidator: applied.scripts.liquidityValidator,

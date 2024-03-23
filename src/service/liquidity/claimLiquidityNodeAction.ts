@@ -15,6 +15,7 @@ export const claimLiquidityNodeAction = async (
 
   const tx = await claimLiquidityNode(lucid, {
     currenTime: emulator?.now() ?? Date.now(),
+    burnToken: false,
     scripts: {
       liquidityPolicy: applied.scripts.liquidityPolicy,
       liquidityValidator: applied.scripts.liquidityValidator,
