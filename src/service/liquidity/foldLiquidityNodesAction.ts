@@ -58,10 +58,13 @@ export const foldLiquidityNodesAction = async (
     return datum.commitment === 0n;
   });
 
-  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 25);
+  const chunks = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 25);
 
-  for (const [index, chunk] of nodes.entries()) {
-    console.log(`processing chunk ${index}`);
+  console.log(`Found a total of ${chunks.length} chunks to process.`);
+  for (const [index, chunk] of chunks.entries()) {
+    console.log(
+      `Processing chunk at index #${index}, out of ${chunks.length} chunks...`,
+    );
     const sortedInputs = sortByOrefWithIndex(chunk);
 
     const feeInput = (await lucid.wallet.getUtxos()).find(

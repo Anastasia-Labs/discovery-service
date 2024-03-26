@@ -70,13 +70,16 @@ export const foldLiquidityRewardsAction = async (
     return !assets[lpTokenAssetId];
   });
 
-  const nodes = chunkArray(
+  const chunks = chunkArray(
     sortByKeys(unprocessedNodes, firstNode.datum.key),
-    1,
+    25,
   );
 
-  for (const [index, chunk] of nodes.entries()) {
-    console.log(`processing chunk ${index}`);
+  console.log(`Found a total of ${chunks.length} chunks to process.`);
+  for (const [index, chunk] of chunks.entries()) {
+    console.log(
+      `Processing chunk at index #${index} out of ${chunks.length} chunks...`,
+    );
     const sortedInputs = sortByOrefWithIndex(chunk);
 
     const feeInput = (await lucid.wallet.getUtxos()).find(
