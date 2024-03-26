@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
 import { Emulator, initLqRewardFold, Lucid } from "price-discovery-offchain";
-dotenv.config();
+import "../../utils/env.js";
 
 import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
 import { loggerDD } from "../../logs/datadog-service.js";

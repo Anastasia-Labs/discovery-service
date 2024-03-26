@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import "./env.js";
+
 import { Lucid, toUnit } from "price-discovery-offchain";
-dotenv.config();
 
 import { getTasteTestVariables } from "./files.js";
 import { lovelaceAtAddress } from "./misc.js";

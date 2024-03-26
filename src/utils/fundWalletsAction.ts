@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import "./env.js";
+
 import { Lucid } from "price-discovery-offchain";
-dotenv.config();
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";

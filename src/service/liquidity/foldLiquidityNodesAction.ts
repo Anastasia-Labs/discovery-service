@@ -1,4 +1,3 @@
-import dotenv from "dotenv";
 import {
   Data,
   Emulator,
@@ -13,7 +12,7 @@ import {
   utxosAtScript,
 } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
-dotenv.config();
+import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";

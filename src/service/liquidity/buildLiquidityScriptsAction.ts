@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "../../utils/env.js";
 
 import { writeFile } from "fs/promises";
 import {

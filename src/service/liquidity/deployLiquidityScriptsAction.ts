@@ -1,4 +1,5 @@
-import dotenv from "dotenv";
+import "../../utils/env.js";
+
 import { writeFileSync } from "fs";
 import {
   Emulator,
@@ -10,7 +11,6 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
-dotenv.config();
 
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
 import {

@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "./env.js";
 
 import {
   fromText,
@@ -30,15 +29,13 @@ export async function mintNFTAction(lucid: Lucid) {
   });
 
   const policyId: PolicyId = lucid.utils.mintingPolicyToId(mintingPolicy);
-  const assetName = fromText(
-    process.env.NODE_ENV === "emulator" ? "TTEmulator" : "TTPreview",
-  );
+  const assetName = fromText(process.env.PROJECT_TN!);
 
   const unit = toUnit(policyId, assetName);
 
   const tx = await lucid
     .newTx()
-    .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT as string) })
+    .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT!) })
     .validTo(Date.now() + 100000)
     .attachMintingPolicy(mintingPolicy)
     .complete();

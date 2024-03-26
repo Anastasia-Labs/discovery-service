@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
 import { writeFile } from "fs";
-dotenv.config();
+import "../../utils/env.js";
 
 import { Lucid, Script } from "price-discovery-offchain";
 import appliedScripts from "../../../applied-scripts.json" assert { type: "json" };

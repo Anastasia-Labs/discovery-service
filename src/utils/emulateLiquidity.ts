@@ -5,6 +5,7 @@ import {
   ProtocolParameters,
 } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
+import "./env.js";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import {

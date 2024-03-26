@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "./env.js";
 
 // Optimized
 import distributionFoldValidator from "../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };

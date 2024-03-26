@@ -1,6 +1,5 @@
-import dotenv from "dotenv";
 import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
-dotenv.config();
+import "../../utils/env.js";
 
 import { MAX_WALLET_GROUP_COUNT } from "../../constants/utils.js";
 import { getAppliedScripts } from "../../utils/files.js";

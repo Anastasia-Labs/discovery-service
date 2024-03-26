@@ -14,6 +14,7 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
+import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import {

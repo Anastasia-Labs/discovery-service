@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "../../utils/env.js";
 
 import { writeFileSync } from "fs";
 import {

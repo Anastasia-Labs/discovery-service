@@ -1,11 +1,10 @@
-import dotenv from "dotenv";
 import {
   Emulator,
   InitFoldConfig,
   Lucid,
   initLqFold,
 } from "price-discovery-offchain";
-dotenv.config();
+import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts } from "../../utils/files.js";

@@ -1,7 +1,6 @@
-import dotenv from "dotenv";
 import { Emulator, Lucid, insertLqNode } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
-dotenv.config();
+import "../../utils/env.js";
 
 import {
   MAX_WALLET_GROUP_COUNT,

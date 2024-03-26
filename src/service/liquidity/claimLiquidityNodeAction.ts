@@ -1,6 +1,6 @@
-import dotenv from "dotenv";
+import "../../utils/env.js";
+
 import { Emulator, Lucid, claimLiquidityNode } from "price-discovery-offchain";
-dotenv.config();
 
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";

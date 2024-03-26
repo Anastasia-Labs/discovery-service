@@ -1,9 +1,9 @@
-import dotenv from "dotenv";
+import "./env.js";
+
 import inquirer from "inquirer";
 import { writeFile } from "node:fs";
 import { generateSeedPhrase, Lucid } from "price-discovery-offchain";
 import { refundWalletsAction } from "./refundWalletAction.js";
-dotenv.config();
 
 export const createWalletsAction = async (lucid: Lucid) => {
   const target = 50;

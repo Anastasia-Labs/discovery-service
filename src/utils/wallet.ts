@@ -1,6 +1,7 @@
-import dotenv from "dotenv";
-dotenv.config();
+import "./env.js";
+
 import { Blockfrost, Lucid, Network } from "price-discovery-offchain";
+
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../constants/network.js";
 
 let lucidInstance: Lucid;
