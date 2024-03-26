@@ -36,9 +36,15 @@ export const liquidityAddCollectedAction = async (
     throw addCollectedUnsigned.error;
   }
 
-  const addCollectedSigned = await addCollectedUnsigned.data.sign().complete();
-  const addCollectedHash = await addCollectedSigned.submit();
-  console.log(`Submitted: ${addCollectedHash}`);
-  await lucid.awaitTx(addCollectedHash);
-  await loggerDD(`Done!`);
+  if (process.env.DRY_RUN!) {
+    console.log(addCollectedUnsigned.data.toString());
+  } else {
+    const addCollectedSigned = await addCollectedUnsigned.data
+      .sign()
+      .complete();
+    const addCollectedHash = await addCollectedSigned.submit();
+    console.log(`Submitted: ${addCollectedHash}`);
+    await lucid.awaitTx(addCollectedHash);
+    await loggerDD(`Done!`);
+  }
 };

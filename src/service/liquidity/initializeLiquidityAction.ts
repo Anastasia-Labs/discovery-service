@@ -3,22 +3,16 @@ import "../../utils/env.js";
 import { writeFileSync } from "fs";
 import {
   InitNodeConfig,
-  InitTokenHolderConfig,
   Lucid,
   UTxO,
   initLqNode,
-  initLqTokenHolder,
 } from "price-discovery-offchain";
 
-import inquirer from "inquirer";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const initializeLiquidityAction = async (
-  lucid: Lucid,
-  externalTokenProvider?: boolean,
-) => {
+export const initializeLiquidityAction = async (lucid: Lucid) => {
   await selectLucidWallet(lucid, 2);
   const applied = await getAppliedScripts();
 
@@ -48,73 +42,6 @@ export const initializeLiquidityAction = async (
     await lucid.awaitTx(registerStakeHash);
   }
 
-  const tokenHolderUtxo = await lucid.utxosByOutRef([
-    applied.projectTokenHolder.initOutRef,
-  ]);
-  const initUtxo = tokenHolderUtxo.find(
-    ({ outputIndex }) =>
-      outputIndex === applied.projectTokenHolder.initOutRef.outputIndex,
-  ) as UTxO;
-
-  if (!initUtxo) {
-    throw new Error(
-      "Aborting. Could not find an initUTXO to initialize the token holder with!",
-    );
-  }
-
-  let collectFrom: UTxO[] | undefined;
-  if (externalTokenProvider) {
-    const [address, tokenAsset] = await inquirer.prompt([
-      {
-        message: "What is the user's wallet address?",
-      },
-      {
-        message: "What is the token asset ID?",
-      },
-    ]);
-
-    if (!address || !tokenAsset) {
-      throw new Error("Can not initialize token holder with empty values.");
-    }
-
-    collectFrom = await lucid.provider.getUtxosWithUnit(address, tokenAsset);
-  } else {
-    // Collect from our own wallet.
-    await selectLucidWallet(lucid, 1);
-  }
-
-  const initTokenHolderConfig: InitTokenHolderConfig = {
-    initUTXO: initUtxo,
-    projectCS: applied.rewardValidator.projectCS,
-    projectTN: applied.rewardValidator.projectTN,
-    projectAmount: Number(process.env.PROJECT_AMNT),
-    scripts: {
-      tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
-      tokenHolderValidator: applied.scripts.tokenHolderValidator,
-    },
-  };
-
-  const initTokenHolderUnsigned = await initLqTokenHolder(
-    lucid,
-    initTokenHolderConfig,
-  );
-
-  if (initTokenHolderUnsigned.type === "error") {
-    throw initTokenHolderUnsigned.error;
-  }
-
-  if (externalTokenProvider) {
-    // print file
-  } else {
-    const initTokenHolderSigned = await initTokenHolderUnsigned.data
-      .sign()
-      .complete();
-    const initTokenHolderHash = await initTokenHolderSigned.submit();
-    await loggerDD(`Submitting TokenHolder: ${initTokenHolderHash}`);
-    await lucid.awaitTx(initTokenHolderHash);
-  }
-
-  // // //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {
     initUTXO: (
       await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])

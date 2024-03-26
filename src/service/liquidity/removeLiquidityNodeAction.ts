@@ -27,9 +27,13 @@ export const removeLiquidityNodeAction = async (
     throw tx.error;
   }
 
-  const txComplete = await tx.data.sign().complete();
-  const txHash = await txComplete.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
-  console.log("Done!");
+  if (process.env.DRY_RUN!) {
+    console.log(tx.data.toString());
+  } else {
+    const txComplete = await tx.data.sign().complete();
+    const txHash = await txComplete.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
+    console.log("Done!");
+  }
 };

@@ -33,9 +33,13 @@ export const initLiquidityFoldServiceAction = async (
     throw initFoldUnsigned.error;
   }
 
-  const initFoldSigned = await initFoldUnsigned.data.sign().complete();
-  const initFoldHash = await initFoldSigned.submit();
-  console.log(`Submitting: ${initFoldHash}`);
-  await lucid.awaitTx(initFoldHash);
-  await loggerDD(`Done!`);
+  if (process.env.DRY_RUN!) {
+    console.log(initFoldUnsigned.data.toString());
+  } else {
+    const initFoldSigned = await initFoldUnsigned.data.sign().complete();
+    const initFoldHash = await initFoldSigned.submit();
+    console.log(`Submitting: ${initFoldHash}`);
+    await lucid.awaitTx(initFoldHash);
+    await loggerDD(`Done!`);
+  }
 };

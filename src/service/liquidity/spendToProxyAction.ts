@@ -34,13 +34,17 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     throw spendToProxyUnsigned.error;
   }
 
-  const spendToProxySigned = await spendToProxyUnsigned.data.txComplete
-    .sign()
-    .complete();
-  const spendToProxyHash = await spendToProxySigned.submit();
-  console.log(`Submitting proxy transaction: ${spendToProxyHash}`);
-  await lucid.awaitTx(spendToProxyHash);
-  await loggerDD(`Done!`);
+  if (process.env.DRY_RUN!) {
+    console.log(spendToProxyUnsigned.data.txComplete.toString());
+  } else {
+    const spendToProxySigned = await spendToProxyUnsigned.data.txComplete
+      .sign()
+      .complete();
+    const spendToProxyHash = await spendToProxySigned.submit();
+    console.log(`Submitting proxy transaction: ${spendToProxyHash}`);
+    await lucid.awaitTx(spendToProxyHash);
+    await loggerDD(`Done!`);
 
-  return spendToProxyUnsigned.data.datum;
+    return spendToProxyUnsigned.data.datum;
+  }
 };

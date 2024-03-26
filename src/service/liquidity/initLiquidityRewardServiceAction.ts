@@ -63,11 +63,15 @@ export const initLiquidityRewardServiceAction = async (
     throw initRewardFoldUnsigned.error;
   }
 
-  const initRewardFoldSigned = await initRewardFoldUnsigned.data
-    .sign()
-    .complete();
-  const initRewardFoldHash = await initRewardFoldSigned.submit();
-  await loggerDD(`Submitting: ${initRewardFoldHash}`);
-  await lucid.awaitTx(initRewardFoldHash);
-  await loggerDD("Done!");
+  if (process.env.DRY_RUN!) {
+    console.log(initRewardFoldUnsigned.data.toString());
+  } else {
+    const initRewardFoldSigned = await initRewardFoldUnsigned.data
+      .sign()
+      .complete();
+    const initRewardFoldHash = await initRewardFoldSigned.submit();
+    await loggerDD(`Submitting: ${initRewardFoldHash}`);
+    await lucid.awaitTx(initRewardFoldHash);
+    await loggerDD("Done!");
+  }
 };

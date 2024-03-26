@@ -26,44 +26,49 @@ export const modifyLiquidityNodesAction = async (
   let loop = true;
   let walletIdx = WALLET_GROUP_START_INDEX;
   while (loop) {
-    try {
-      await selectLucidWallet(lucid, walletIdx);
-      const tx = await modifyLqNode(lucid, {
-        currenTime: emulator?.now() ?? Date.now(),
-        amountLovelace: 1_000_000n,
-        scripts: {
-          nodePolicy: applied.scripts.liquidityPolicy,
-          nodeValidator: applied.scripts.liquidityValidator,
-        },
-        refScripts: {
-          nodePolicy: refNodePolicy?.[0],
-          nodeValidator: refNodeValidator?.[0],
-        },
-      });
+    await selectLucidWallet(lucid, walletIdx);
+    const tx = await modifyLqNode(lucid, {
+      currenTime: emulator?.now() ?? Date.now(),
+      amountLovelace: 1_000_000n,
+      scripts: {
+        nodePolicy: applied.scripts.liquidityPolicy,
+        nodeValidator: applied.scripts.liquidityValidator,
+      },
+      refScripts: {
+        nodePolicy: refNodePolicy?.[0],
+        nodeValidator: refNodeValidator?.[0],
+      },
+    });
 
-      if (tx.type == "error") {
-        throw tx.error;
+    if (tx.type == "error") {
+      throw tx.error;
+    }
+
+    if (process.env.DRY_RUN!) {
+      console.log(tx.data.toString());
+      loop = false;
+    } else {
+      try {
+        console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);
+        const txComplete = await tx.data.sign().complete();
+        const txHash = await txComplete.submit();
+        console.log(`Submitting: ${txHash}`);
+
+        if (walletIdx === MAX_WALLET_GROUP_COUNT) {
+          loop = false;
+          console.log("Done!");
+        } else {
+          walletIdx++;
+          await lucid.awaitTx(txHash);
+        }
+      } catch (e) {
+        console.log(
+          "Failed to fund TT with wallet: " + walletIdx,
+          (e as Error).message,
+        );
+        console.log("Waiting to try again...");
+        await setTimeout(20_000);
       }
-
-      console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);
-      const txComplete = await tx.data.sign().complete();
-      const txHash = await txComplete.submit();
-      console.log(`Submitting: ${txHash}`);
-
-      if (walletIdx === MAX_WALLET_GROUP_COUNT) {
-        loop = false;
-        console.log("Done!");
-      } else {
-        walletIdx++;
-        await lucid.awaitTx(txHash);
-      }
-    } catch (e) {
-      console.log(
-        "Failed to fund TT with wallet: " + walletIdx,
-        (e as Error).message,
-      );
-      console.log("Waiting to try again...");
-      await setTimeout(20_000);
     }
   }
 };
