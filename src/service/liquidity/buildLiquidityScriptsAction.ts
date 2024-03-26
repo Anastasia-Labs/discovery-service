@@ -123,19 +123,34 @@ export const buildLiquidityScriptsAction = async (
     },
   };
 
-  await writeFile(
-    `./applied-scripts.json`,
-    JSON.stringify(
-      {
-        ...{ scripts: scripts.data },
-        ...{ version: currenTime },
-        ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
-        ...parameters,
-      },
-      undefined,
-      2,
-    ),
+  const data = JSON.stringify(
+    {
+      ...{ scripts: scripts.data },
+      ...{ version: currenTime },
+      ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
+      ...parameters,
+    },
+    undefined,
+    2,
   );
 
-  console.log(`Scripts have been saved , version ${currenTime}\n`);
+  if (process.env.DRY_RUN!) {
+    console.log(data);
+  } else {
+    await writeFile(
+      `./applied-scripts.json`,
+      JSON.stringify(
+        {
+          ...{ scripts: scripts.data },
+          ...{ version: currenTime },
+          ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
+          ...parameters,
+        },
+        undefined,
+        2,
+      ),
+    );
+
+    console.log(`Scripts have been saved , version ${currenTime}\n`);
+  }
 };

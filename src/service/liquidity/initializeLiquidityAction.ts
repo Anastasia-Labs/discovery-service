@@ -32,20 +32,21 @@ export const initializeLiquidityAction = async (
     script: applied.scripts.rewardStake,
   });
 
-  const registerStakeHash = await (
-    await (
-      await lucid
-        .newTx()
-        .registerStake(liquidityStakeRewardAddress!)
-        .registerStake(rewardStakeRewardAddress!)
-        .complete()
-    )
-      .sign()
-      .complete()
-  ).submit();
+  const registerStakeTx = await lucid
+    .newTx()
+    .registerStake(liquidityStakeRewardAddress!)
+    .registerStake(rewardStakeRewardAddress!)
+    .complete();
 
-  await loggerDD(`Submitting Registration: ${registerStakeHash}`);
-  await lucid.awaitTx(registerStakeHash);
+  if (process.env.DRY_RUN!) {
+    console.log(registerStakeTx.toString());
+  } else {
+    const registerStakeSignedTx = await registerStakeTx.sign().complete();
+    const registerStakeHash = await registerStakeSignedTx.submit();
+
+    await loggerDD(`Submitting Registration: ${registerStakeHash}`);
+    await lucid.awaitTx(registerStakeHash);
+  }
 
   const tokenHolderUtxo = await lucid.utxosByOutRef([
     applied.projectTokenHolder.initOutRef,

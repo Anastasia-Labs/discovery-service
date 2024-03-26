@@ -207,11 +207,21 @@ export const deployLiquidityScriptsAction = async (
           address: deployWalletAddress,
         },
       });
+      if (process.env.DRY_RUN!) {
+        console.log({
+          [`deploy_${index}`]: txComplete.toString(),
+        });
+      }
+
       const completed = await txComplete.sign().complete();
       console.log(`Completed building reference input #${index}`);
       return completed;
     }),
   );
+
+  if (process.env.DRY_RUN!) {
+    return;
+  }
 
   const txHashes = await Promise.all(
     signedTxs.map(async (signedTx, index) => {

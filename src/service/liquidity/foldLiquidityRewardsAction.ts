@@ -141,30 +141,35 @@ export const foldLiquidityRewardsAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    try {
-      const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-      const multiFoldHash = await multiFoldSigned.submit();
-      await loggerDD(`Submitting: ${multiFoldHash}`);
-      await lucid.awaitTx(multiFoldHash);
+    if (process.env.DRY_RUN!) {
+      console.log(multiFoldUnsigned.data.toString());
+      break;
+    } else {
+      try {
+        const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
+        const multiFoldHash = await multiFoldSigned.submit();
+        await loggerDD(`Submitting: ${multiFoldHash}`);
+        await lucid.awaitTx(multiFoldHash);
 
-      while (rewardFoldUtxo.txHash !== multiFoldHash) {
-        if (!emulator) {
-          await setTimeout(3_000);
+        while (rewardFoldUtxo.txHash !== multiFoldHash) {
+          if (!emulator) {
+            await setTimeout(3_000);
+          }
+
+          const newFoldUtxo = await lucid.utxoByUnit(
+            toUnit(rewardFoldPolicyId, rFold),
+          );
+
+          rewardFoldUtxo = newFoldUtxo;
         }
-
-        const newFoldUtxo = await lucid.utxoByUnit(
-          toUnit(rewardFoldPolicyId, rFold),
+      } catch (e) {
+        await loggerDD(
+          `Failed to build fold with error: ${(e as Error).message}`,
         );
-
-        rewardFoldUtxo = newFoldUtxo;
+        await loggerDD(`Trying again...`);
+        // offset wallet & blockchain sync
+        await setTimeout(20_000);
       }
-    } catch (e) {
-      await loggerDD(
-        `Failed to build fold with error: ${(e as Error).message}`,
-      );
-      await loggerDD(`Trying again...`);
-      // offset wallet & blockchain sync
-      await setTimeout(20_000);
     }
   }
 

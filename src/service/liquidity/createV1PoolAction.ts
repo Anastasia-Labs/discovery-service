@@ -47,12 +47,17 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
     throw unsignedTx.error;
   }
 
-  const signedTx = await unsignedTx.data.tx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
+  if (process.env.DRY_RUN!) {
+    console.log(unsignedTx.data.tx.toString());
+  } else {
+    const signedTx = await unsignedTx.data.tx.sign().complete();
+    const txHash = await signedTx.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
 
-  await updateTasteTestVariables({
-    lpTokenAssetName: unsignedTx.data.poolLpTokenName,
-  });
+    await updateTasteTestVariables({
+      lpTokenAssetName: unsignedTx.data.poolLpTokenName,
+    });
+    console.log("Done! Saved LP token data to taste-test-variables.json.");
+  }
 };

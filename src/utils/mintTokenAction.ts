@@ -40,15 +40,19 @@ export async function mintNFTAction(lucid: Lucid) {
     .attachMintingPolicy(mintingPolicy)
     .complete();
 
-  const signedTx = await tx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
+  if (process.env.DRY_RUN!) {
+    console.log(tx.toString());
+  } else {
+    const signedTx = await tx.sign().complete();
+    const txHash = await signedTx.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
 
-  await updateTasteTestVariables({
-    projectTokenPolicyId: policyId,
-    projectTokenAssetName: assetName,
-  });
+    await updateTasteTestVariables({
+      projectTokenPolicyId: policyId,
+      projectTokenAssetName: assetName,
+    });
 
-  console.log(`Done! Saved minted asset data to taste-test-variables.json.`);
+    console.log(`Done! Saved minted asset data to taste-test-variables.json.`);
+  }
 }

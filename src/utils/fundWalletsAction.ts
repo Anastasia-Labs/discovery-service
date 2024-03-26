@@ -26,8 +26,8 @@ export async function fundWalletsAction(lucid: Lucid) {
 
     // We need at least 200 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log("Sending 200 ADA to our deploy script wallet.");
-      tx.payToAddress(wallet.address, { lovelace: 200_000_000n });
+      console.log("Sending 175 ADA to our deploy script wallet.");
+      tx.payToAddress(wallet.address, { lovelace: 175_000_000n });
       continue;
     }
 
@@ -35,14 +35,18 @@ export async function fundWalletsAction(lucid: Lucid) {
       break;
     }
 
-    console.log("Sending 15 ADA to wallet: " + index);
-    tx.payToAddress(wallet.address, { lovelace: 15_000_000n });
+    console.log("Sending 6 ADA to wallet: " + index);
+    tx.payToAddress(wallet.address, { lovelace: 6_000_000n });
   }
 
   const completedTx = await tx.complete();
-  const signedTx = await completedTx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
-  console.log("Done!");
+  if (process.env.DRY_RUN!) {
+    console.log(completedTx.toString());
+  } else {
+    const signedTx = await completedTx.sign().complete();
+    const txHash = await signedTx.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
+    console.log("Done!");
+  }
 }

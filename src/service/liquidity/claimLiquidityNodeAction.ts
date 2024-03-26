@@ -36,8 +36,12 @@ export const claimLiquidityNodeAction = async (
   }
 
   const txComplete = await tx.data.sign().complete();
-  const txHash = await txComplete.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
-  console.log("Done!");
+  if (process.env.DRY_RUN!) {
+    console.log(txComplete.toString());
+  } else {
+    const txHash = await txComplete.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
+    console.log("Done!");
+  }
 };
