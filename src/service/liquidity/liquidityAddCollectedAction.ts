@@ -1,15 +1,15 @@
 import dotenv from "dotenv";
-dotenv.config();
 import {
-  addCollected,
   AddCollectedConfig,
-  Lucid,
   Emulator,
+  Lucid,
+  addCollected,
 } from "price-discovery-offchain";
+dotenv.config();
 
 import { loggerDD } from "../../logs/datadog-service.js";
-import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const liquidityAddCollectedAction = async (
   lucid: Lucid,
@@ -34,8 +34,7 @@ export const liquidityAddCollectedAction = async (
   const addCollectedUnsigned = await addCollected(lucid, addCollectedConfig);
 
   if (addCollectedUnsigned.type == "error") {
-    console.log(addCollectedUnsigned.error);
-    return;
+    throw addCollectedUnsigned.error;
   }
 
   const addCollectedSigned = await addCollectedUnsigned.data.sign().complete();

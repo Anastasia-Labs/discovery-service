@@ -1,11 +1,15 @@
 import dotenv from "dotenv";
+import {
+  Emulator,
+  InitFoldConfig,
+  Lucid,
+  initLqFold,
+} from "price-discovery-offchain";
 dotenv.config();
-import { InitFoldConfig, initLqFold } from "price-discovery-offchain";
-import { Emulator, Lucid } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
-import { selectLucidWallet } from "../../utils/wallet.js";
 import { getAppliedScripts } from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initLiquidityFoldServiceAction = async (
   lucid: Lucid,
@@ -27,8 +31,7 @@ export const initLiquidityFoldServiceAction = async (
   const initFoldUnsigned = await initLqFold(lucid, initFoldConfig);
 
   if (initFoldUnsigned.type == "error") {
-    console.log(initFoldUnsigned.error);
-    return;
+    throw initFoldUnsigned.error;
   }
 
   const initFoldSigned = await initFoldUnsigned.data.sign().complete();

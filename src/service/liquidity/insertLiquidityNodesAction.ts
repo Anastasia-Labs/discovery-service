@@ -44,8 +44,7 @@ export const insertLiquidityNodesAction = async (
       });
 
       if (tx.type == "error") {
-        console.log(tx.error);
-        return undefined;
+        throw tx.error;
       }
 
       console.log(

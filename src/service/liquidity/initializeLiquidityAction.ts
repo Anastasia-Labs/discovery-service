@@ -11,11 +11,15 @@ import {
   initLqTokenHolder,
 } from "price-discovery-offchain";
 
+import inquirer from "inquirer";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const initializeLiquidityAction = async (lucid: Lucid) => {
+export const initializeLiquidityAction = async (
+  lucid: Lucid,
+  externalTokenProvider?: boolean,
+) => {
   await selectLucidWallet(lucid, 2);
   const applied = await getAppliedScripts();
 
@@ -44,7 +48,6 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
   await loggerDD(`Submitting Registration: ${registerStakeHash}`);
   await lucid.awaitTx(registerStakeHash);
 
-  await selectLucidWallet(lucid, 1);
   const tokenHolderUtxo = await lucid.utxosByOutRef([
     applied.projectTokenHolder.initOutRef,
   ]);
@@ -54,14 +57,30 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
   ) as UTxO;
 
   if (!initUtxo) {
-    console.log(
-      applied.projectTokenHolder.initOutRef,
-      await lucid.wallet.getUtxos(),
-    );
-    await loggerDD(
+    throw new Error(
       "Aborting. Could not find an initUTXO to initialize the token holder with!",
     );
-    return;
+  }
+
+  let collectFrom: UTxO[] | undefined;
+  if (externalTokenProvider) {
+    const [address, tokenAsset] = await inquirer.prompt([
+      {
+        message: "What is the user's wallet address?",
+      },
+      {
+        message: "What is the token asset ID?",
+      },
+    ]);
+
+    if (!address || !tokenAsset) {
+      throw new Error("Can not initialize token holder with empty values.");
+    }
+
+    collectFrom = await lucid.provider.getUtxosWithUnit(address, tokenAsset);
+  } else {
+    // Collect from our own wallet.
+    await selectLucidWallet(lucid, 1);
   }
 
   const initTokenHolderConfig: InitTokenHolderConfig = {
@@ -80,17 +99,20 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
     initTokenHolderConfig,
   );
 
-  if (initTokenHolderUnsigned.type == "error") {
-    console.log(initTokenHolderUnsigned.error);
-    return;
+  if (initTokenHolderUnsigned.type === "error") {
+    throw initTokenHolderUnsigned.error;
   }
 
-  const initTokenHolderSigned = await initTokenHolderUnsigned.data
-    .sign()
-    .complete();
-  const initTokenHolderHash = await initTokenHolderSigned.submit();
-  await loggerDD(`Submitting TokenHolder: ${initTokenHolderHash}`);
-  await lucid.awaitTx(initTokenHolderHash);
+  if (externalTokenProvider) {
+    // print file
+  } else {
+    const initTokenHolderSigned = await initTokenHolderUnsigned.data
+      .sign()
+      .complete();
+    const initTokenHolderHash = await initTokenHolderSigned.submit();
+    await loggerDD(`Submitting TokenHolder: ${initTokenHolderHash}`);
+    await lucid.awaitTx(initTokenHolderHash);
+  }
 
   // // //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {
@@ -110,8 +132,7 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
   const initNodeUnsigned = await initLqNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
-    console.log(initNodeUnsigned.error);
-    return;
+    throw initNodeUnsigned.error;
   }
 
   await loggerDD(`Building initNode Tx...`);

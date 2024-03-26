@@ -32,8 +32,7 @@ export const claimLiquidityNodeAction = async (
   });
 
   if (tx.type == "error") {
-    console.log(tx.error);
-    return;
+    throw tx.error;
   }
 
   const txComplete = await tx.data.sign().complete();

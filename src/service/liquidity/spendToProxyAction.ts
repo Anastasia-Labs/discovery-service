@@ -32,8 +32,7 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
   const spendToProxyUnsigned = await spendToProxy(lucid, spendToProxyConfig);
 
   if (spendToProxyUnsigned.type == "error") {
-    console.log(spendToProxyUnsigned.error);
-    return;
+    throw spendToProxyUnsigned.error;
   }
 
   const spendToProxySigned = await spendToProxyUnsigned.data.txComplete

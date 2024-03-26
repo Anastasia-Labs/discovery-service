@@ -43,8 +43,7 @@ export const modifyLiquidityNodesAction = async (
       });
 
       if (tx.type == "error") {
-        console.log(tx.error);
-        return undefined;
+        throw tx.error;
       }
 
       console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);

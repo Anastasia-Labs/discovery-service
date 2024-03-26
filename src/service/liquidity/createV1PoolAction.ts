@@ -45,8 +45,7 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
   });
 
   if (unsignedTx.type == "error") {
-    console.log(unsignedTx.error);
-    return;
+    throw unsignedTx.error;
   }
 
   const signedTx = await unsignedTx.data.tx.sign().complete();

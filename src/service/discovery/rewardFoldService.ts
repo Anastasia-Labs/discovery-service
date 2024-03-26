@@ -1,17 +1,13 @@
 import dotenv from "dotenv";
-dotenv.config();
 import { setTimeout } from "timers/promises";
+dotenv.config();
 
+import log4js from "log4js";
 import {
-  Blockfrost,
-  Lucid,
-  Network,
-  parseUTxOsAtScript,
   rewardFold,
   RewardFoldConfig,
   utxosAtScript,
 } from "price-discovery-offchain";
-import log4js from "log4js";
 log4js.configure("log4js.json");
 const logger = log4js.getLogger("app");
 
@@ -28,7 +24,7 @@ const run = async () => {
   await loggerDD("selecting WALLET_PROJECT_0");
   await selectLucidWallet(0);
 
-  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
+  const beneficiaryAddress = process.env.PENALTY_ADDRESS!;
 
   const nodeUTxOs = await utxosAtScript(
     lucid,

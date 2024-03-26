@@ -1,4 +1,4 @@
-export const EMULATOR_TT_END_DELAY = 1000 * 20 * 150; // 100 blocks.
+export const EMULATOR_TT_END_DELAY = 1000 * 20 * 150; // 150 blocks.
 export const MAX_WALLET_GROUP_COUNT =
   process.env.NODE_ENV === "emulator" ? 49 : 8;
 export const WALLET_GROUP_START_INDEX = 3;

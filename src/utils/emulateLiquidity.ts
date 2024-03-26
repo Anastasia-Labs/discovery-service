@@ -1,7 +1,11 @@
-import { Emulator, Lucid } from "price-discovery-offchain";
+import {
+  Emulator,
+  Lucid,
+  PROTOCOL_PARAMETERS_DEFAULT,
+  ProtocolParameters,
+} from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
-import { PROTOCOL_PARAMETERS_DEFAULT } from "price-discovery-offchain";
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   DEPLOY_WALLET_ADA,
@@ -31,6 +35,18 @@ const emulateLiquidity = async () => {
       lovelace: 1_500_000_000n,
     },
   }));
+
+  const protocolParams: ProtocolParameters | undefined = [
+    "binds",
+    "tracing",
+  ].includes(process.env.SCRIPT_TYPE!)
+    ? {
+        ...PROTOCOL_PARAMETERS_DEFAULT,
+        maxTxSize: 20_000_000_000,
+        maxTxExMem: 20_000_000_000n,
+        maxTxExSteps: 20_000_000_000n,
+      }
+    : undefined;
 
   const emulator = new Emulator(
     [
@@ -66,13 +82,7 @@ const emulateLiquidity = async () => {
         },
       },
     ],
-    // ONLY TURN ON WHEN USING SCRIPTS WITH TRACING.
-    {
-      ...PROTOCOL_PARAMETERS_DEFAULT,
-      maxTxSize: 20_000_000_000,
-      maxTxExMem: 20_000_000_000n,
-      maxTxExSteps: 20_000_000_000n,
-    },
+    protocolParams,
   );
 
   const deadline = emulator.now() + EMULATOR_TT_END_DELAY;
@@ -117,6 +127,7 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Removing the Last Deposit...");
+    // emulator.awaitBlock(100);
     await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
     console.log("Moving to next step...");
     await setTimeout(DELAY);

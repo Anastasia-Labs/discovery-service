@@ -61,8 +61,7 @@ export const foldLiquidityRewardsAction = async (
   });
 
   if (!firstNode) {
-    console.log("error head");
-    return;
+    throw new Error("Could not find a first node to begin with.");
   }
 
   const lpTokenAssetId = toUnit(process.env.POOL_POLICY_ID!, lpTokenAssetName);
@@ -135,8 +134,7 @@ export const foldLiquidityRewardsAction = async (
     );
 
     if (multiFoldUnsigned.type == "error") {
-      console.log(multiFoldUnsigned.error);
-      return;
+      throw multiFoldUnsigned.error;
     }
 
     try {

@@ -1,11 +1,10 @@
 import dotenv from "dotenv";
+import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
 dotenv.config();
-import { removeLqNode } from "price-discovery-offchain";
-import { Lucid, Emulator } from "price-discovery-offchain";
 
-import { selectLucidWallet } from "../../utils/wallet.js";
 import { MAX_WALLET_GROUP_COUNT } from "../../constants/utils.js";
 import { getAppliedScripts } from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const removeLiquidityNodeAction = async (
   lucid: Lucid,
@@ -17,7 +16,7 @@ export const removeLiquidityNodeAction = async (
 
   const tx = await removeLqNode(lucid, {
     currenTime: emulator?.now() ?? Date.now(),
-    penaltyAddress: process.env.BENEFICIARY_ADDRESS as string,
+    penaltyAddress: process.env.PENALTY_ADDRESS as string,
     scripts: {
       nodePolicy: applied.scripts.liquidityPolicy,
       nodeValidator: applied.scripts.liquidityValidator,
@@ -26,8 +25,7 @@ export const removeLiquidityNodeAction = async (
   });
 
   if (tx.type == "error") {
-    console.log(tx.error);
-    return;
+    throw tx.error;
   }
 
   const txComplete = await tx.data.sign().complete();

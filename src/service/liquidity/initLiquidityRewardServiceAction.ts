@@ -61,8 +61,7 @@ export const initLiquidityRewardServiceAction = async (
   );
 
   if (initRewardFoldUnsigned.type == "error") {
-    console.log(initRewardFoldUnsigned.error);
-    return;
+    throw initRewardFoldUnsigned.error;
   }
 
   const initRewardFoldSigned = await initRewardFoldUnsigned.data

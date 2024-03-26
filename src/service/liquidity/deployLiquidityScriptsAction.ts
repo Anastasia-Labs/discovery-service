@@ -75,18 +75,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[0],
   });
-  if (deploy1.type == "error") {
-    console.log(deploy1.error);
-    return;
+  if (deploy1.type === "error") {
+    throw deploy1.error;
   }
-
-  // try {
-  //   const deploy1Hash = await (await ((await deploy1.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy1Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 1")
-  // }
 
   const deploy2 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityValidator,
@@ -95,18 +86,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[1],
   });
-  if (deploy2.type == "error") {
-    console.log(deploy2.error);
-    return;
+  if (deploy2.type === "error") {
+    throw deploy2.error;
   }
-
-  // try {
-  //   const deploy2Hash = await (await ((await deploy2.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy2Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 2")
-  // }
 
   const deploy3 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldPolicy,
@@ -115,18 +97,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[2],
   });
-  if (deploy3.type == "error") {
-    console.log(deploy3.error);
-    return;
+  if (deploy3.type === "error") {
+    throw deploy3.error;
   }
-
-  // try {
-  //   const deploy3Hash = await (await ((await deploy3.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy3Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 3")
-  // }
 
   const deploy4 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldValidator,
@@ -135,18 +108,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[3],
   });
-  if (deploy4.type == "error") {
-    console.log(deploy4.error);
-    return;
+  if (deploy4.type === "error") {
+    throw deploy4.error;
   }
-
-  // try {
-  //   const deploy4Hash = await (await ((await deploy4.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy4Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 4")
-  // }
 
   const deploy5 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldPolicy,
@@ -155,18 +119,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[4],
   });
-  if (deploy5.type == "error") {
-    console.log(deploy5.error);
-    return;
+  if (deploy5.type === "error") {
+    throw deploy5.error;
   }
-
-  // try {
-  //   const deploy5Hash = await (await ((await deploy5.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy5Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 5")
-  // }
 
   const deploy6 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldValidator,
@@ -175,18 +130,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[5],
   });
-  if (deploy6.type == "error") {
-    console.log(deploy6.error);
-    return;
+  if (deploy6.type === "error") {
+    throw deploy6.error;
   }
-
-  // try {
-  //   const deploy6Hash = await (await ((await deploy6.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy6Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 6")
-  // }
 
   const deploy7 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,
@@ -195,18 +141,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[6],
   });
-  if (deploy7.type == "error") {
-    console.log(deploy7.error);
-    return;
+  if (deploy7.type === "error") {
+    throw deploy7.error;
   }
-
-  // try {
-  //   const deploy7Hash = await (await ((await deploy7.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy7Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 7")
-  // }
 
   const deploy8 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderValidator,
@@ -215,18 +152,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[7],
   });
-  if (deploy8.type == "error") {
-    console.log(deploy8.error);
-    return;
+  if (deploy8.type === "error") {
+    throw deploy8.error;
   }
-
-  // try {
-  //   const deploy8Hash = await (await ((await deploy8.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy8Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 8")
-  // }
 
   const deploy9 = await deployRefScripts(lucid, {
     script: applied.scripts.collectStake,
@@ -235,9 +163,8 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[8],
   });
-  if (deploy9.type == "error") {
-    console.log(deploy9.error);
-    return;
+  if (deploy9.type === "error") {
+    throw deploy9.error;
   }
 
   const deploy10 = await deployRefScripts(lucid, {
@@ -247,18 +174,9 @@ export const deployLiquidityScriptsAction = async (
     currenTime: deployTime,
     spendingInput: spendingUtxos[9],
   });
-  if (deploy10.type == "error") {
-    console.log(deploy10.error);
-    return;
+  if (deploy10.type === "error") {
+    throw deploy10.error;
   }
-
-  // try {
-  //   const deploy9Hash = await (await ((await deploy9.data.tx.complete()).sign().complete())).submit();
-  //   await lucid.awaitTx(deploy9Hash);
-  //   await setTimeout(20_000)
-  // } catch (e) {
-  //   console.log("Could not deploy 9")
-  // }
 
   const signedTxs = await Promise.all(
     [

@@ -176,7 +176,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     parameters: {
       M: {
         beneficiaryAddress: {
-          S: process.env.BENEFICIARY_ADDRESS as string,
+          S: process.env.PENALTY_ADDRESS as string,
         },
         foldFee: {
           N: "2000000",
@@ -188,7 +188,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           N: "3000000",
         },
         penaltyAddress: {
-          S: process.env.BENEFICIARY_ADDRESS as string,
+          S: process.env.PENALTY_ADDRESS as string,
         },
         penaltyPercentage: {
           N: "0.25",

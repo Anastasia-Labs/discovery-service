@@ -9,16 +9,7 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 
-import distributionFoldValidator from "../../compiledLiquidity/distributionFoldValidator.json" assert { type: "json" };
-import distributionFoldPolicy from "../../compiledLiquidity/distributionRewardFoldMint.json" assert { type: "json" };
-import collectionFoldPolicy from "../../compiledLiquidity/liquidityFoldMint.json" assert { type: "json" };
-import collectionFoldValidator from "../../compiledLiquidity/liquidityFoldValidator.json" assert { type: "json" };
-import liquidityPolicy from "../../compiledLiquidity/liquidityMinting.json" assert { type: "json" };
-import liquidityStake from "../../compiledLiquidity/liquidityStakeValidator.json" assert { type: "json" };
-import tokenHolderPolicy from "../../compiledLiquidity/liquidityTokenHolderMint.json" assert { type: "json" };
-import tokenHolderValidator from "../../compiledLiquidity/liquidityTokenHolderValidator.json" assert { type: "json" };
-import liquidityValidator from "../../compiledLiquidity/liquidityValidator.json" assert { type: "json" };
-import proxyTokenHolderValidator from "../../compiledLiquidity/proxyTokenHolderV1.json" assert { type: "json" };
+import { getScripts } from "../../utils/scripts.js";
 
 import { getTasteTestVariables } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -27,6 +18,18 @@ export const buildLiquidityScriptsAction = async (
   lucid: Lucid,
   emulatorDeadline?: number,
 ) => {
+  const {
+    collectionFoldPolicy,
+    collectionFoldValidator,
+    distributionFoldPolicy,
+    distributionFoldValidator,
+    liquidityPolicy,
+    liquidityStake,
+    liquidityValidator,
+    proxyTokenHolderValidator,
+    tokenHolderPolicy,
+    tokenHolderValidator,
+  } = getScripts();
   const { projectTokenPolicyId, projectTokenAssetName } =
     await getTasteTestVariables();
   const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) =>
@@ -66,7 +69,7 @@ export const buildLiquidityScriptsAction = async (
     liquidityPolicy: {
       initUTXO: project0Utxos[0],
       deadline: deadline,
-      penaltyAddress: process.env.BENEFICIARY_ADDRESS!,
+      penaltyAddress: process.env.PENALTY_ADDRESS!,
     },
     rewardFoldValidator: {
       projectCS: projectTokenPolicyId,
@@ -93,7 +96,9 @@ export const buildLiquidityScriptsAction = async (
     },
   });
 
-  if (scripts.type == "error") return;
+  if (scripts.type == "error") {
+    throw scripts.error;
+  }
 
   const currenTime = Date.now();
 
@@ -104,7 +109,7 @@ export const buildLiquidityScriptsAction = async (
         outputIndex: project0Utxos[0].outputIndex,
       },
       deadline: deadline,
-      penaltyAddress: process.env.BENEFICIARY_ADDRESS!,
+      penaltyAddress: process.env.PENALTY_ADDRESS!,
     },
     rewardValidator: {
       projectCS: projectTokenPolicyId,

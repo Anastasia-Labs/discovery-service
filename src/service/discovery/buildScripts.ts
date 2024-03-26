@@ -1,16 +1,16 @@
 import dotenv from "dotenv";
-dotenv.config();
 import { writeFile } from "node:fs";
 import { buildScripts, fromText, toUnit } from "price-discovery-offchain";
-import discoveryValidator from "../../compiled/discoveryValidator.json" assert { type: "json" };
 import discoveryPolicy from "../../compiled/discoveryMinting.json" assert { type: "json" };
 import discoveryStake from "../../compiled/discoveryStakeValidator.json" assert { type: "json" };
+import discoveryValidator from "../../compiled/discoveryValidator.json" assert { type: "json" };
 import foldPolicy from "../../compiled/foldMint.json" assert { type: "json" };
 import foldValidator from "../../compiled/foldValidator.json" assert { type: "json" };
 import rewardPolicy from "../../compiled/rewardFoldMint.json" assert { type: "json" };
 import rewardValidator from "../../compiled/rewardFoldValidator.json" assert { type: "json" };
 import tokenHolderPolicy from "../../compiled/tokenHolderPolicy.json" assert { type: "json" };
 import tokenHolderValidator from "../../compiled/tokenHolderValidator.json" assert { type: "json" };
+dotenv.config();
 
 import { getLucidInstance, selectLucidWallet } from "../../utils/wallet.js";
 
@@ -20,7 +20,7 @@ const run = async () => {
 
   //NOTE: STEP 1 Fund all wallets with at least 500 ADA each before proceding, make sure WALLET_PROJECT_1 has project token
   //
-  const beneficiaryAddress = process.env.BENEFICIARY_ADDRESS!;
+  const beneficiaryAddress = process.env.PENALTY_ADDRESS!;
   const project0Utxos = await wallet0.wallet.getUtxos();
   const project1Utxos = await wallet1.wallet.getUtxos();
 

@@ -1,21 +1,24 @@
-import { setTimeout } from "timers/promises";
 import dotenv from "dotenv";
-dotenv.config();
 import {
-  chunkArray,
-  liquidityFoldNodes,
-  MultiFoldConfig,
-  parseUTxOsAtScript,
+  Data,
+  Emulator,
   LiquidityFoldDatum,
   LiquiditySetNode,
+  Lucid,
+  MultiFoldConfig,
+  UTxO,
+  chunkArray,
+  liquidityFoldNodes,
+  parseUTxOsAtScript,
   utxosAtScript,
 } from "price-discovery-offchain";
-import { Data, Lucid, UTxO, Emulator } from "price-discovery-offchain";
+import { setTimeout } from "timers/promises";
+dotenv.config();
 
 import { loggerDD } from "../../logs/datadog-service.js";
+import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
 
 export const foldLiquidityNodesAction = async (
   lucid: Lucid,
@@ -49,8 +52,7 @@ export const foldLiquidityNodesAction = async (
   });
 
   if (!head) {
-    console.log("error head");
-    return;
+    throw new Error("Could not find a head node.");
   }
 
   const unprocessedNodes = readableUTxOs.filter(({ datum }) => {
@@ -108,8 +110,7 @@ export const foldLiquidityNodesAction = async (
     const multiFoldUnsigned = await liquidityFoldNodes(lucid, multiFoldConfig);
 
     if (multiFoldUnsigned.type == "error") {
-      console.log(multiFoldUnsigned.error);
-      return;
+      throw multiFoldUnsigned.error;
     }
 
     try {
