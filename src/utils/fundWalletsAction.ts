@@ -24,10 +24,10 @@ export async function fundWalletsAction(lucid: Lucid) {
       continue;
     }
 
-    // We need at least 500 ada in the deploy wallet for reference scripts.
+    // We need at least 200 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log("Sending 500 ADA to our deploy script wallet.");
-      tx.payToAddress(wallet.address, { lovelace: 500_000_000n });
+      console.log("Sending 200 ADA to our deploy script wallet.");
+      tx.payToAddress(wallet.address, { lovelace: 200_000_000n });
       continue;
     }
 

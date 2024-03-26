@@ -72,6 +72,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.liquidityPolicy,
     name: "TasteTestPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[0],
   });
@@ -83,6 +84,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.liquidityValidator,
     name: "TasteTestValidator",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[1],
   });
@@ -94,6 +96,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.collectFoldPolicy,
     name: "CollectFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[2],
   });
@@ -105,6 +108,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.collectFoldValidator,
     name: "CollectFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[3],
   });
@@ -116,6 +120,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.rewardFoldPolicy,
     name: "RewardFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[4],
   });
@@ -127,6 +132,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.rewardFoldValidator,
     name: "RewardFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[5],
   });
@@ -138,6 +144,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.tokenHolderPolicy,
     name: "TokenHolderPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[6],
   });
@@ -149,6 +156,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.tokenHolderValidator,
     name: "TokenHolderValidator",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[7],
   });
@@ -160,6 +168,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.collectStake,
     name: "TasteTestStakeValidator",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[8],
   });
@@ -171,6 +180,7 @@ export const deployLiquidityScriptsAction = async (
     script: applied.scripts.rewardStake,
     name: "RewardStake",
     alwaysFails: alwaysFailValidator.cborHex,
+    spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
     spendingInput: spendingUtxos[9],
   });
