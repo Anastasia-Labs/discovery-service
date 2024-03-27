@@ -7,6 +7,7 @@ import {
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const modifyLiquidityNodesAction = async (
@@ -44,7 +45,7 @@ export const modifyLiquidityNodesAction = async (
       throw tx.error;
     }
 
-    if (process.env.DRY_RUN!) {
+    if (isDryRun()) {
       console.log(tx.data.toString());
       loop = false;
     } else {

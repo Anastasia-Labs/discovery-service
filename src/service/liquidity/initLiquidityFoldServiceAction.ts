@@ -8,6 +8,7 @@ import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initLiquidityFoldServiceAction = async (
@@ -33,7 +34,7 @@ export const initLiquidityFoldServiceAction = async (
     throw initFoldUnsigned.error;
   }
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(initFoldUnsigned.data.toString());
   } else {
     const initFoldSigned = await initFoldUnsigned.data.sign().complete();

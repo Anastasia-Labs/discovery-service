@@ -9,6 +9,7 @@ import {
   getDeployedScripts,
   getTasteTestVariables,
 } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initLiquidityRewardServiceAction = async (
@@ -63,7 +64,7 @@ export const initLiquidityRewardServiceAction = async (
     throw initRewardFoldUnsigned.error;
   }
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(initRewardFoldUnsigned.data.toString());
   } else {
     const initRewardFoldSigned = await initRewardFoldUnsigned.data

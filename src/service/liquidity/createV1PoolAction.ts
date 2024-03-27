@@ -11,6 +11,7 @@ import {
   getTasteTestVariables,
   updateTasteTestVariables,
 } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
@@ -47,7 +48,7 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
     throw unsignedTx.error;
   }
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(unsignedTx.data.tx.toString());
   } else {
     const signedTx = await unsignedTx.data.tx.sign().complete();

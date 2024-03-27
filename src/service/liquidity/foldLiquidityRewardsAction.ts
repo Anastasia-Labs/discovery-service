@@ -22,7 +22,7 @@ import {
   getDeployedScripts,
   getTasteTestVariables,
 } from "../../utils/files.js";
-import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
+import { isDryRun, sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const foldLiquidityRewardsAction = async (
@@ -141,7 +141,7 @@ export const foldLiquidityRewardsAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    if (process.env.DRY_RUN!) {
+    if (isDryRun()) {
       console.log(multiFoldUnsigned.data.toString());
       break;
     } else {

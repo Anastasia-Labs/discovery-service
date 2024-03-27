@@ -42,7 +42,7 @@ export async function fundWalletsAction(lucid: Lucid) {
     }
 
     console.log("Sending 6 ADA to wallet: " + index);
-    tx.payToAddress(wallet.address, { lovelace: 6_000_000n });
+    tx.payToAddress(wallet.address, { lovelace: 7_000_000n });
   }
 
   const completedTx = await tx.complete();

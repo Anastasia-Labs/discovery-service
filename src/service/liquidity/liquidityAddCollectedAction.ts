@@ -8,6 +8,7 @@ import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const liquidityAddCollectedAction = async (
@@ -36,7 +37,7 @@ export const liquidityAddCollectedAction = async (
     throw addCollectedUnsigned.error;
   }
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(addCollectedUnsigned.data.toString());
   } else {
     const addCollectedSigned = await addCollectedUnsigned.data

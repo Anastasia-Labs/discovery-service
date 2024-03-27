@@ -1,9 +1,15 @@
 import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
 import "../../utils/env.js";
 
-import { MAX_WALLET_GROUP_COUNT } from "../../constants/utils.js";
 import { getAppliedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+
+import { setTimeout } from "timers/promises";
+import "../../utils/env.js";
+
+import { WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
+import { getDeployedScripts } from "../../utils/files.js";
 
 export const removeLiquidityNodeAction = async (
   lucid: Lucid,
@@ -11,29 +17,69 @@ export const removeLiquidityNodeAction = async (
   emulatorDeadline?: number,
 ) => {
   const applied = await getAppliedScripts();
-  await selectLucidWallet(lucid, MAX_WALLET_GROUP_COUNT - 1);
+  const deployed = await getDeployedScripts();
 
-  const tx = await removeLqNode(lucid, {
-    currenTime: emulator?.now() ?? Date.now(),
-    penaltyAddress: process.env.PENALTY_ADDRESS as string,
-    scripts: {
-      nodePolicy: applied.scripts.liquidityPolicy,
-      nodeValidator: applied.scripts.liquidityValidator,
-    },
-    deadline: emulatorDeadline ?? (Number(process.env.DEADLINE) as number),
-  });
+  const refNodePolicy = await lucid.provider.getUtxosByOutRef([
+    deployed.scriptsRef.TasteTestPolicy,
+  ]);
+  const refNodeValidator = await lucid.provider.getUtxosByOutRef([
+    deployed.scriptsRef.TasteTestValidator,
+  ]);
 
-  if (tx.type == "error") {
-    throw tx.error;
-  }
+  let loop = true;
+  let walletIdx = WALLET_GROUP_START_INDEX;
+  while (loop) {
+    console.log("Building withdraw with wallet: " + walletIdx);
+    await selectLucidWallet(lucid, walletIdx);
+    const tx = await removeLqNode(lucid, {
+      currenTime: emulator?.now() ?? Date.now(),
+      penaltyAddress: process.env.PENALTY_ADDRESS as string,
+      deadline: emulatorDeadline ?? (Number(process.env.DEADLINE) as number),
+      scripts: {
+        nodePolicy: applied.scripts.liquidityPolicy,
+        nodeValidator: applied.scripts.liquidityValidator,
+      },
+      refScripts: {
+        nodePolicy: refNodePolicy?.[0],
+        nodeValidator: refNodeValidator?.[0],
+      },
+    });
 
-  if (process.env.DRY_RUN!) {
-    console.log(tx.data.toString());
-  } else {
-    const txComplete = await tx.data.sign().complete();
-    const txHash = await txComplete.submit();
-    console.log(`Submitting: ${txHash}`);
-    await lucid.awaitTx(txHash);
-    console.log("Done!");
+    if (tx.type == "error") {
+      throw tx.error;
+    }
+
+    if (isDryRun()) {
+      console.log(tx.data.toString());
+
+      if (walletIdx === 3) {
+        loop = false;
+        console.log("Done!");
+      } else {
+        walletIdx++;
+      }
+    } else {
+      try {
+        console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);
+        const txComplete = await tx.data.sign().complete();
+        const txHash = await txComplete.submit();
+        console.log(`Submitting: ${txHash}`);
+
+        if (walletIdx === 3) {
+          loop = false;
+          console.log("Done!");
+        } else {
+          walletIdx++;
+          await lucid.awaitTx(txHash);
+        }
+      } catch (e) {
+        console.log(
+          "Failed to withdraw with wallet: " + walletIdx,
+          (e as Error).message,
+        );
+        console.log("Waiting to try again...");
+        await setTimeout(20_000);
+      }
+    }
   }
 };

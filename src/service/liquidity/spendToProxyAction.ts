@@ -8,6 +8,7 @@ import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
@@ -34,7 +35,7 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     throw spendToProxyUnsigned.error;
   }
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(spendToProxyUnsigned.data.txComplete.toString());
   } else {
     const spendToProxySigned = await spendToProxyUnsigned.data.txComplete

@@ -16,7 +16,7 @@ import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
-import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
+import { isDryRun, sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const foldLiquidityNodesAction = async (
@@ -41,7 +41,7 @@ export const foldLiquidityNodesAction = async (
   foldUtxo = foldUtxoRes[0];
 
   if (!foldUtxo) {
-    throw new Error("We don't have a fold utxo! Run `init-fold:lp`");
+    throw new Error("We don't have a fold utxo! Run `init-fold`");
   }
 
   const head = readableUTxOs.find((utxo) => {
@@ -115,7 +115,7 @@ export const foldLiquidityNodesAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    if (process.env.DRY_RUN!) {
+    if (isDryRun()) {
       console.log(multiFoldUnsigned.data.toString());
       break;
     } else {
