@@ -1,16 +1,12 @@
 import "../../utils/env.js";
 
 import { writeFile } from "fs/promises";
-import {
-  Lucid,
-  UTxO,
-  buildLiquidityScripts,
-  toUnit,
-} from "price-discovery-offchain";
+import { Lucid, buildLiquidityScripts, toUnit } from "price-discovery-offchain";
 
 import { getScripts } from "../../utils/scripts.js";
 
 import { getTasteTestVariables } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const buildLiquidityScriptsAction = async (
@@ -34,27 +30,17 @@ export const buildLiquidityScriptsAction = async (
   const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) =>
     wallet.getUtxos(),
   );
-  const [wallet1Address, project1Utxos] = await selectLucidWallet(
-    lucid,
-    1,
-  ).then(async ({ wallet }): Promise<[string, UTxO[]]> => {
-    return [await wallet.address(), await wallet.getUtxos()];
-  });
 
-  const checkProjectToken = project1Utxos.find((utxo) => {
-    return (
-      utxo.assets[toUnit(projectTokenPolicyId, projectTokenAssetName)] ===
-      BigInt(process.env.PROJECT_AMNT!)
-    );
-  });
+  const projectTokenUnit = toUnit(projectTokenPolicyId, projectTokenAssetName);
+  const projectTokenUtxo = await lucid.provider.getUtxoByUnit(projectTokenUnit);
+  const projectTokenValid =
+    projectTokenUtxo.assets[projectTokenUnit] ===
+    BigInt(process.env.PROJECT_AMNT!);
 
-  if (!checkProjectToken) {
-    console.log("WALLET_PROJECT_1 project token missing");
-    console.log(
-      `Send project ${Number(process.env.PROJECT_AMNT!)} token to: `,
-      wallet1Address,
+  if (!projectTokenValid) {
+    throw new Error(
+      `The provided token holder utxo does not have the required amount of: ${process.env.PROJECT_AMNT}.`,
     );
-    return;
   }
 
   const deadline = Number(emulatorDeadline ?? process.env.DEADLINE);
@@ -79,7 +65,7 @@ export const buildLiquidityScriptsAction = async (
       poolPolicyId: process.env.POOL_POLICY_ID!,
     },
     projectTokenHolder: {
-      initUTXO: project1Utxos[0],
+      initUTXO: projectTokenUtxo,
     },
     unapplied: {
       liquidityPolicy: liquidityPolicy.cborHex,
@@ -117,8 +103,8 @@ export const buildLiquidityScriptsAction = async (
     },
     projectTokenHolder: {
       initOutRef: {
-        txHash: project1Utxos[0].txHash,
-        outputIndex: project1Utxos[0].outputIndex,
+        txHash: projectTokenUtxo.txHash,
+        outputIndex: projectTokenUtxo.outputIndex,
       },
     },
   };
@@ -134,7 +120,7 @@ export const buildLiquidityScriptsAction = async (
     2,
   );
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(data);
   } else {
     await writeFile(

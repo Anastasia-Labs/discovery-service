@@ -13,13 +13,10 @@ import {
 import { setTimeout } from "timers/promises";
 
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
-import {
-  DEPLOY_WALLET_ADA,
-  MIN_ADA_DEPLOY_WALLET,
-} from "../../constants/utils.js";
+import { MIN_ADA_DEPLOY_WALLET } from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
-import { getAppliedScripts } from "../../utils/files.js";
-import { lovelaceAtAddress } from "../../utils/misc.js";
+import { getAppliedScripts, getDeployUtxoMap } from "../../utils/files.js";
+import { isDryRun, lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const deployLiquidityScriptsAction = async (
@@ -43,18 +40,70 @@ export const deployLiquidityScriptsAction = async (
   const deployTime = Date.now();
   const splitTx = lucid.newTx();
   if ((await lucid.wallet.getUtxos()).length < 2) {
-    [...new Array(10).keys()].forEach(() => {
+    [...new Array(10).keys()].forEach((index) => {
+      let amount: bigint | undefined;
+      switch (index) {
+        // TasteTestPolicy
+        case 0:
+          amount = 32_000_000n;
+          break;
+        // TasteTestValidator
+        case 1:
+          amount = 25_000_000n;
+          break;
+        // CollectFoldPolicy
+        case 2:
+          amount = 14_000_000n;
+          break;
+        // CollectFoldValidator
+        case 3:
+          amount = 24_000_000n;
+          break;
+        // RewardFoldPolicy
+        case 4:
+          amount = 20_000_000n;
+          break;
+        // RewardFoldValidator
+        case 5:
+          amount = 30_000_000n;
+          break;
+        // TokenHolderPolicy
+        case 6:
+          amount = 8_000_000n;
+          break;
+        // TokenHolderValidator
+        case 7:
+          amount = 18_000_000n;
+          break;
+        // TasteTestStakeValidator
+        case 8:
+        // RewardStake
+        case 9:
+          amount = 4_000_000n;
+          break;
+      }
+
+      if (!amount) {
+        throw new Error("Amount wasn't set.");
+      }
+
       splitTx.payToAddress(deployWalletAddress, {
-        lovelace: DEPLOY_WALLET_ADA / 10n - 1_000_000n,
+        lovelace: amount,
       });
     });
-    const hash = await (
-      await (await splitTx.complete()).sign().complete()
-    ).submit();
-    lucid.awaitTx(hash);
-    if (!emulator) {
-      console.log("Submitting fragmentation: " + hash);
-      await setTimeout(20_000);
+
+    const txComplete = await splitTx.complete();
+
+    if (isDryRun()) {
+      console.log(txComplete.toString());
+      return;
+    } else {
+      const hash = await (await txComplete.sign().complete()).submit();
+      lucid.awaitTx(hash);
+      if (!emulator) {
+        console.log("Submitting fragmentation: " + hash);
+        await setTimeout(20_000);
+      }
     }
   }
 
@@ -68,124 +117,216 @@ export const deployLiquidityScriptsAction = async (
     }
   }
 
+  const deployUtxos = await getDeployUtxoMap();
+
+  const deploy1Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.TasteTestPolicy])
+  )?.[0];
+
+  if (!deploy1Input) {
+    throw new Error("Could not find input for index 1");
+  }
   const deploy1 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityPolicy,
     name: "TasteTestPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[0],
+    spendingInput: deploy1Input,
   });
   if (deploy1.type === "error") {
-    throw deploy1.error;
+    throw new Error(
+      `Error while trying to deploy script 1. Full error: ${deploy1.error.message}`,
+    );
   }
 
+  const deploy2Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.TasteTestValidator])
+  )?.[0];
+
+  if (!deploy2Input) {
+    throw new Error("Could not find input for index 1");
+  }
   const deploy2 = await deployRefScripts(lucid, {
     script: applied.scripts.liquidityValidator,
     name: "TasteTestValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[1],
+    spendingInput: deploy2Input,
   });
   if (deploy2.type === "error") {
-    throw deploy2.error;
+    throw new Error(
+      `Error while trying to deploy script 2. Full error: ${deploy2.error.message}`,
+    );
   }
 
+  const deploy3Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.CollectFoldPolicy])
+  )?.[0];
+
+  if (!deploy3Input) {
+    throw new Error("Could not find input for index 3");
+  }
   const deploy3 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldPolicy,
     name: "CollectFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[2],
+    spendingInput: deploy3Input,
   });
   if (deploy3.type === "error") {
-    throw deploy3.error;
+    throw new Error(
+      `Error while trying to deploy script 3. Full error: ${deploy3.error.message}`,
+    );
   }
 
+  const deploy4Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.CollectFoldValidator])
+  )?.[0];
+
+  if (!deploy4Input) {
+    throw new Error("Could not find input for index 4");
+  }
   const deploy4 = await deployRefScripts(lucid, {
     script: applied.scripts.collectFoldValidator,
     name: "CollectFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[3],
+    spendingInput: deploy4Input,
   });
   if (deploy4.type === "error") {
-    throw deploy4.error;
+    throw new Error(
+      `Error while trying to deploy script 4. Full error: ${deploy4.error.message}`,
+    );
   }
 
+  const deploy5Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.RewardFoldPolicy])
+  )?.[0];
+
+  if (!deploy5Input) {
+    throw new Error("Could not find input for index 5");
+  }
   const deploy5 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldPolicy,
     name: "RewardFoldPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[4],
+    spendingInput: deploy5Input,
   });
   if (deploy5.type === "error") {
-    throw deploy5.error;
+    throw new Error(
+      `Error while trying to deploy script 5. Full error: ${deploy5.error.message}`,
+    );
   }
 
+  const deploy6Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.RewardFoldValidator])
+  )?.[0];
+
+  if (!deploy6Input) {
+    throw new Error("Could not find input for index 6");
+  }
   const deploy6 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardFoldValidator,
     name: "RewardFoldValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[5],
+    spendingInput: deploy6Input,
   });
   if (deploy6.type === "error") {
-    throw deploy6.error;
+    throw new Error(
+      `Error while trying to deploy script 6. Full error: ${deploy6.error.message}`,
+    );
   }
 
+  const deploy7Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.TokenHolderPolicy])
+  )?.[0];
+
+  if (!deploy7Input) {
+    throw new Error("Could not find input for index 7");
+  }
   const deploy7 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderPolicy,
     name: "TokenHolderPolicy",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[6],
+    spendingInput: deploy7Input,
   });
   if (deploy7.type === "error") {
-    throw deploy7.error;
+    throw new Error(
+      `Error while trying to deploy script 7. Full error: ${deploy7.error.message}`,
+    );
   }
 
+  const deploy8Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.TokenHolderValidator])
+  )?.[0];
+
+  if (!deploy8Input) {
+    throw new Error("Could not find input for index 8");
+  }
   const deploy8 = await deployRefScripts(lucid, {
     script: applied.scripts.tokenHolderValidator,
     name: "TokenHolderValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[7],
+    spendingInput: deploy8Input,
   });
   if (deploy8.type === "error") {
-    throw deploy8.error;
+    throw new Error(
+      `Error while trying to deploy script 8. Full error: ${deploy8.error.message}`,
+    );
   }
 
+  const deploy9Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.TasteTestStakeValidator])
+  )?.[0];
+
+  if (!deploy9Input) {
+    throw new Error("Could not find input for index 9");
+  }
   const deploy9 = await deployRefScripts(lucid, {
     script: applied.scripts.collectStake,
     name: "TasteTestStakeValidator",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[8],
+    spendingInput: deploy9Input,
   });
   if (deploy9.type === "error") {
-    throw deploy9.error;
+    throw new Error(
+      `Error while trying to deploy script 9. Full error: ${deploy9.error.message}`,
+    );
   }
 
+  const deploy10Input = (
+    await lucid.provider.getUtxosByOutRef([deployUtxos.RewardStake])
+  )?.[0];
+
+  if (!deploy10Input) {
+    throw new Error("Could not find input for index 10");
+  }
   const deploy10 = await deployRefScripts(lucid, {
     script: applied.scripts.rewardStake,
     name: "RewardStake",
     alwaysFails: alwaysFailValidator.cborHex,
     spendToAddress: process.env.REF_SCRIPTS_ADDRESS!,
     currenTime: deployTime,
-    spendingInput: spendingUtxos[9],
+    spendingInput: deploy10Input,
   });
   if (deploy10.type === "error") {
-    throw deploy10.error;
+    throw new Error(
+      `Error while trying to deploy script 10. Full error: ${deploy10.error.message}`,
+    );
   }
 
   const signedTxs = await Promise.all(
@@ -201,38 +342,45 @@ export const deployLiquidityScriptsAction = async (
       deploy9.data.tx,
       deploy10.data.tx,
     ].map(async (tx, index) => {
-      const txComplete = await tx.complete({
-        coinSelection: false,
-        change: {
-          address: deployWalletAddress,
-        },
-      });
-      if (process.env.DRY_RUN!) {
-        console.log({
-          [`deploy_${index}`]: txComplete.toString(),
+      try {
+        const txComplete = await tx.complete({
+          coinSelection: false,
+          change: {
+            address: deployWalletAddress,
+          },
         });
-      }
 
-      const completed = await txComplete.sign().complete();
-      console.log(`Completed building reference input #${index}`);
-      return completed;
+        if (isDryRun()) {
+          console.log({
+            [`deploy_${index}`]: txComplete.toString(),
+          });
+        }
+
+        const completed = await txComplete.sign().complete();
+        console.log(`Completed building reference input #${index}`);
+        return completed;
+      } catch (e) {
+        console.log(e);
+        throw new Error(
+          `Error when building deploy transaction at index: ${index}`,
+        );
+      }
     }),
   );
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     return;
   }
 
-  const txHashes = await Promise.all(
+  await Promise.all(
     signedTxs.map(async (signedTx, index) => {
       const txHash = await signedTx.submit();
       console.log(`Submitting reference input #${index}...`);
       await lucid.awaitTx(txHash);
+      console.log(`Deployed Reference Input: ${txHash}`);
       return txHash;
     }),
   );
-
-  txHashes.forEach((hash) => console.log(`Deployed Reference Input: ${hash}`));
 
   //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;
@@ -254,10 +402,11 @@ export const deployLiquidityScriptsAction = async (
 
   for (const name of validators) {
     const [validatorUTxO] = await lucid.utxosAtWithUnit(
-      lucid.utils.validatorToAddress({
-        type: "PlutusV2",
-        script: alwaysFailValidator.cborHex,
-      }),
+      process.env.REF_SCRIPTS_ADDRESS! ??
+        lucid.utils.validatorToAddress({
+          type: "PlutusV2",
+          script: alwaysFailValidator.cborHex,
+        }),
       toUnit(deployPolicyId, fromText(name)),
     );
     scriptsRef[name] = {

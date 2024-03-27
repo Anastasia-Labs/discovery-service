@@ -1,0 +1,42 @@
+{
+  "TasteTestPolicy": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 0
+  },
+  "TasteTestValidator": {
+    "txHash": "0f40201ff46c78356885458e56941623600d478b7bfd6c97f05a58925c402a94",
+    "outputIndex": 0
+  },
+  "CollectFoldPolicy": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 2
+  },
+  "CollectFoldValidator": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 3
+  },
+  "RewardFoldPolicy": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 4
+  },
+  "RewardFoldValidator": {
+    "txHash": "9475aac918c4e3ab6cdecf4e54c275d3fdd8d67f8c296f65816c214b38eabd8a",
+    "outputIndex": 0
+  },
+  "TokenHolderPolicy": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 6
+  },
+  "TokenHolderValidator": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 7
+  },
+  "TasteTestStakeValidator": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 8
+  },
+  "RewardStake": {
+    "txHash": "143425bb546c2343e46036a90d0b4134ee725366dd1aa49ee5947b4c72840ba8",
+    "outputIndex": 9
+  }
+}

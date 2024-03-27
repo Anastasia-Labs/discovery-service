@@ -2,11 +2,22 @@ import { readFile, writeFile } from "fs/promises";
 import isEqual from "lodash/isEqual.js";
 
 import appliedSchema from "../../applied-scripts.json" assert { type: "json" };
+import deployUtxoMapSchema from "../../deploy-utxo-map.json" assert { type: "json" };
 import deployedSchema from "../../deployed-policy.json" assert { type: "json" };
 import ttVariablesSchema from "../../taste-test-variables.json" assert { type: "json" };
 
 export const getAppliedScripts = async (): Promise<typeof appliedSchema> => {
   const fileContents = await readFile(`./applied-scripts.json`, {
+    encoding: "utf-8",
+  });
+  const data = JSON.parse(fileContents);
+  return data;
+};
+
+export const getDeployUtxoMap = async (): Promise<
+  typeof deployUtxoMapSchema
+> => {
+  const fileContents = await readFile(`./deploy-utxo-map.json`, {
     encoding: "utf-8",
   });
   const data = JSON.parse(fileContents);
