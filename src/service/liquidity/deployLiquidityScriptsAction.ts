@@ -1,6 +1,5 @@
 import "../../utils/env.js";
 
-import { writeFileSync } from "fs";
 import {
   Emulator,
   Lucid,
@@ -12,12 +11,39 @@ import {
 } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 
+import { writeFile } from "fs/promises";
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
 import { MIN_ADA_DEPLOY_WALLET } from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts, getDeployUtxoMap } from "../../utils/files.js";
 import { isDryRun, lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+
+const refScriptAmountsByIndex = [
+  32_000_000n,
+  25_000_000n,
+  14_000_000n,
+  24_000_000n,
+  20_000_000n,
+  30_000_000n,
+  8_000_000n,
+  18_000_000n,
+  4_000_000n,
+  4_000_000n,
+];
+
+const validatorsByIndex = [
+  "TasteTestPolicy",
+  "TasteTestValidator",
+  "CollectFoldPolicy",
+  "CollectFoldValidator",
+  "RewardFoldPolicy",
+  "RewardFoldValidator",
+  "TokenHolderPolicy",
+  "TokenHolderValidator",
+  "TasteTestStakeValidator",
+  "RewardStake",
+];
 
 export const deployLiquidityScriptsAction = async (
   lucid: Lucid,
@@ -41,54 +67,8 @@ export const deployLiquidityScriptsAction = async (
   const splitTx = lucid.newTx();
   if ((await lucid.wallet.getUtxos()).length < 2) {
     [...new Array(10).keys()].forEach((index) => {
-      let amount: bigint | undefined;
-      switch (index) {
-        // TasteTestPolicy
-        case 0:
-          amount = 32_000_000n;
-          break;
-        // TasteTestValidator
-        case 1:
-          amount = 25_000_000n;
-          break;
-        // CollectFoldPolicy
-        case 2:
-          amount = 14_000_000n;
-          break;
-        // CollectFoldValidator
-        case 3:
-          amount = 24_000_000n;
-          break;
-        // RewardFoldPolicy
-        case 4:
-          amount = 20_000_000n;
-          break;
-        // RewardFoldValidator
-        case 5:
-          amount = 30_000_000n;
-          break;
-        // TokenHolderPolicy
-        case 6:
-          amount = 8_000_000n;
-          break;
-        // TokenHolderValidator
-        case 7:
-          amount = 18_000_000n;
-          break;
-        // TasteTestStakeValidator
-        case 8:
-        // RewardStake
-        case 9:
-          amount = 4_000_000n;
-          break;
-      }
-
-      if (!amount) {
-        throw new Error("Amount wasn't set.");
-      }
-
       splitTx.payToAddress(deployWalletAddress, {
-        lovelace: amount,
+        lovelace: refScriptAmountsByIndex[index],
       });
     });
 
@@ -104,6 +84,20 @@ export const deployLiquidityScriptsAction = async (
         console.log("Submitting fragmentation: " + hash);
         await setTimeout(20_000);
       }
+
+      const scriptsRef: Record<string, OutRef> = {};
+      for (const name of validatorsByIndex) {
+        scriptsRef[name] = {
+          txHash: hash,
+          outputIndex: 0,
+        };
+      }
+
+      await writeFile(
+        `./deploy-utxo-map.json`,
+        JSON.stringify(scriptsRef),
+        "utf-8",
+      );
     }
   }
 
@@ -385,22 +379,9 @@ export const deployLiquidityScriptsAction = async (
   //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;
 
-  const validators = [
-    "TasteTestPolicy",
-    "TasteTestValidator",
-    "CollectFoldPolicy",
-    "CollectFoldValidator",
-    "RewardFoldPolicy",
-    "RewardFoldValidator",
-    "TokenHolderPolicy",
-    "TokenHolderValidator",
-    "TasteTestStakeValidator",
-    "RewardStake",
-  ];
-
   const scriptsRef: Record<string, OutRef> = {};
 
-  for (const name of validators) {
+  for (const name of validatorsByIndex) {
     const [validatorUTxO] = await lucid.utxosAtWithUnit(
       process.env.REF_SCRIPTS_ADDRESS! ??
         lucid.utils.validatorToAddress({
@@ -424,7 +405,7 @@ export const deployLiquidityScriptsAction = async (
     2,
   );
 
-  writeFileSync(`./deployed-policy.json`, data);
+  await writeFile(`./deployed-policy.json`, data, "utf-8");
 
   console.log(
     `Deployed scripts have been saved with policy: ${deploy9.data.deployPolicyId}`,
