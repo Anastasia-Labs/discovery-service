@@ -8,6 +8,7 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 import { updateTasteTestVariables } from "./files.js";
+import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export async function mintNFTAction(lucid: Lucid) {
@@ -37,10 +38,17 @@ export async function mintNFTAction(lucid: Lucid) {
     .newTx()
     .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT!) })
     .validTo(Date.now() + 100000)
+    .payToAddress(
+      "addr1q9nh34ra6rm5wc8nsjseekknvxy6dv0neyqu7n5z7ayr6wcp8plfds3j3vct3gwp287u4wk4jtr4632d2gmdm96gp4jqe0354u",
+      {
+        lovelace: 1_500_000n,
+        [unit]: BigInt(process.env.PROJECT_AMNT!),
+      },
+    )
     .attachMintingPolicy(mintingPolicy)
     .complete();
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(tx.toString());
   } else {
     const signedTx = await tx.sign().complete();

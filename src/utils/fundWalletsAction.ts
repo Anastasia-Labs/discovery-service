@@ -4,6 +4,7 @@ import { Lucid } from "price-discovery-offchain";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
+import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export async function fundWalletsAction(lucid: Lucid) {
@@ -26,8 +27,8 @@ export async function fundWalletsAction(lucid: Lucid) {
 
     // We need at least 200 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log("Sending 175 ADA to our deploy script wallet.");
-      tx.payToAddress(wallet.address, { lovelace: 175_000_000n });
+      console.log("Sending 180 ADA to our deploy script wallet.");
+      tx.payToAddress(wallet.address, { lovelace: 180_000_000n });
       continue;
     }
 
@@ -40,7 +41,7 @@ export async function fundWalletsAction(lucid: Lucid) {
   }
 
   const completedTx = await tx.complete();
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(completedTx.toString());
   } else {
     const signedTx = await completedTx.sign().complete();

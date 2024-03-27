@@ -1,39 +1,58 @@
 import "./env.js";
 
-import { Lucid } from "price-discovery-offchain";
+import { Assets, Lucid } from "price-discovery-offchain";
 
-import { lovelaceAtAddress } from "./misc.js";
+import wallets from "../../test/wallets.json" assert { type: "json" };
+import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export const refundWalletsAction = async (lucid: Lucid) => {
-  await selectLucidWallet(lucid, 0);
-  const balance = await lovelaceAtAddress(lucid);
+  for (const [index, wallet] of wallets.entries()) {
+    await selectLucidWallet(lucid, index);
+    const utxos = await lucid.provider.getUtxos(wallet.address);
+    const lovelaceOffset = -2_000_000n;
+    const assets: Assets = {
+      lovelace: lovelaceOffset,
+    };
 
-  const tx = await lucid
-    .newTx()
-    .payToAddress(
-      "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s",
-      { lovelace: balance - 2_000_000n },
-    )
-    .complete();
-  const txHash = await (await tx.sign().complete()).submit();
+    for (const utxo of utxos) {
+      for (const [id, amount] of Object.entries(utxo.assets)) {
+        if (assets[id]) {
+          assets[id] += amount;
+        } else {
+          assets[id] = amount;
+        }
+      }
+    }
 
-  console.log(
-    `Refunded seed wallet of ${balance - 500_000n} lovelace:  ${txHash}`,
-  );
+    const tx = await lucid
+      .newTx()
+      .collectFrom(utxos)
+      .payToAddress(process.env.PROJECT_REFUND_ADDRESS!, assets)
+      .complete();
 
-  await selectLucidWallet(lucid, 2);
-  const newBalance = await lovelaceAtAddress(lucid);
-  const newTx = await lucid
-    .newTx()
-    .payToAddress(
-      "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s",
-      { lovelace: newBalance - 2_000_000n },
-    )
-    .complete();
-  const newTxHash = await (await newTx.sign().complete()).submit();
+    const preSigned = await tx.sign().complete();
+    const preSignedTxFee = preSigned.txSigned.body().fee();
 
-  console.log(
-    `Refunded deploy wallet of ${newBalance - 1_000_000n} lovelace:  ${newTxHash}`,
-  );
+    const newAssets = {
+      ...assets,
+      lovelace:
+        assets.lovelace + lovelaceOffset - BigInt(preSignedTxFee.to_str()),
+    };
+    const realTx = await lucid
+      .newTx()
+      .collectFrom(utxos)
+      .payToAddress(process.env.PROJECT_REFUND_ADDRESS!, newAssets)
+      .complete();
+
+    if (isDryRun()) {
+      console.log(realTx.toString());
+      break;
+    } else {
+      const txHash = await (await realTx.sign().complete()).submit();
+      console.log(`Refunding wallet #${index}:  ${txHash}`);
+      await lucid.awaitTx(txHash);
+      console.log("Done!");
+    }
+  }
 };
