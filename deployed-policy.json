@@ -1,44 +1,44 @@
 {
-  "policy": "c5e29b9abbee188769fe76b0f93084271e0546a1c3bbcc08bce2daff",
+  "policy": "bdbbaa62dbd6ec7f0bab47b42cfe1f4572fb8216c611b4fc11d96258",
   "scriptsRef": {
     "TasteTestPolicy": {
-      "txHash": "2b152d0fe96e5475fccf9ea775daae65c2c38091483f346f45bcafe04229a6dc",
+      "txHash": "6e5be54676fcf757eee293fcca7c210a5a62eaa0df90ce92092f606346347b8e",
       "outputIndex": 0
     },
     "TasteTestValidator": {
-      "txHash": "a3b17982dc7ec5b600e55242d56f27b2b3ef59bb1d254dfaa69f03b1f5b32533",
+      "txHash": "3bbdfefee22fbf841cb34b5023e34b0ab0da4790fb6bf33bc66fe3adbca11bda",
       "outputIndex": 0
     },
     "CollectFoldPolicy": {
-      "txHash": "ecd20d294e2ab4abde98ceea6a99b7ad831259ad3090beee057a74b50d872b9d",
+      "txHash": "0cbf167ec35fd9c8675de10bf0dc7149ae189beeb21e0dae7da4502414e51a21",
       "outputIndex": 0
     },
     "CollectFoldValidator": {
-      "txHash": "170c5c7981495e79fa259821f220ee3fd54f74ef1870345e33c4d9fbabf55c4f",
+      "txHash": "5de979abd293a902008a97e27e737d763755b941d7d451954880cd93648cc206",
       "outputIndex": 0
     },
     "RewardFoldPolicy": {
-      "txHash": "6a342e299381a60f11e88ecaca180ccb3121607cfd3994b8e9bba4ca40aa7da5",
+      "txHash": "c56c65a27f209180c09e3357c26adcc4c8e79e840037aa2c1ccb1a3135e762ee",
       "outputIndex": 0
     },
     "RewardFoldValidator": {
-      "txHash": "2cc15735a3f5aca2336bd934b9940c37aa8d114a9f801576b21b81a28fde88ad",
+      "txHash": "4969b5cf6cbe8db0156aed9e1d7446f2bc9a4c299371598eb53c58e7d36d4517",
       "outputIndex": 0
     },
     "TokenHolderPolicy": {
-      "txHash": "99557a3a8122e043350db28ccf490d93331f5b514f2c7a061217a0c10c7195e5",
+      "txHash": "fa48024d8940be75dce797a60cfab88fac580c7b8c2c4f63344a9a6fa49f5388",
       "outputIndex": 0
     },
     "TokenHolderValidator": {
-      "txHash": "cef8471b56d19d106a5eaa51a3c2e31df8acb4d2faf2a2bf905f636358e123e3",
+      "txHash": "458d19018517fbe79ac3e7ff1cb73dd3705ce39f6c45d5960c70e87a8a775353",
       "outputIndex": 0
     },
     "TasteTestStakeValidator": {
-      "txHash": "1f4a78d143703f52d9ceab291e34f3dee7f2095e1fe49d725177c2d445874945",
+      "txHash": "8dcd02206ece14e7d18e77478b4dde1b773d7183ed7944c1e2b40d1515e8f941",
       "outputIndex": 0
     },
     "RewardStake": {
-      "txHash": "4e4f648f7e1ab612888803c4443fcf32ca4b5d4c2c5e16f6dbd92de8f3c9ba24",
+      "txHash": "1349347ad7daca579cf51cc567f71f72777b52509915e458d4d13f7e6cdd6cbb",
       "outputIndex": 0
     }
   }

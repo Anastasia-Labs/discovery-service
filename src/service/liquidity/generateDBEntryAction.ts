@@ -1,12 +1,12 @@
 import { writeFile } from "fs";
+import { Lucid, Script } from "price-discovery-offchain";
 import "../../utils/env.js";
 
-import { Lucid, Script } from "price-discovery-offchain";
 import appliedScripts from "../../../applied-scripts.json" assert { type: "json" };
 import deployedPolicy from "../../../deployed-policy.json" assert { type: "json" };
 import tx from "../../../init-tx.json" assert { type: "json" };
 import { DynamoTTEntry } from "../../@types/db.js";
-import { PREVIEW_OFFSET } from "../../constants/network.js";
+import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../../constants/network.js";
 import { getTasteTestVariables } from "../../utils/files.js";
 import {
   fetchFromBlockfrost,
@@ -92,7 +92,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               S: startSlot.toString(),
             },
             SlotOffset: {
-              N: PREVIEW_OFFSET,
+              N:
+                process.env.NODE_ENV === "mainnet"
+                  ? MAINNET_OFFSET
+                  : PREVIEW_OFFSET,
             },
           },
         },
@@ -116,7 +119,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: startSlot.toString(),
         },
         SlotOffset: {
-          N: PREVIEW_OFFSET,
+          N:
+            process.env.NODE_ENV === "mainnet"
+              ? MAINNET_OFFSET
+              : PREVIEW_OFFSET,
         },
       },
     },
@@ -129,7 +135,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: posixToSlot(process.env.DEADLINE as string).toString(),
         },
         SlotOffset: {
-          N: PREVIEW_OFFSET,
+          N:
+            process.env.NODE_ENV === "mainnet"
+              ? MAINNET_OFFSET
+              : PREVIEW_OFFSET,
         },
       },
     },
@@ -158,7 +167,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           ).toString(),
         },
         SlotOffset: {
-          N: PREVIEW_OFFSET,
+          N:
+            process.env.NODE_ENV === "mainnet"
+              ? MAINNET_OFFSET
+              : PREVIEW_OFFSET,
         },
       },
     },
@@ -168,7 +180,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: startSlot.toString(),
         },
         SlotOffset: {
-          N: PREVIEW_OFFSET,
+          N:
+            process.env.NODE_ENV === "mainnet"
+              ? MAINNET_OFFSET
+              : PREVIEW_OFFSET,
         },
       },
     },
@@ -581,7 +596,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
                   S: (startSlot + 86400 * 100).toString(),
                 },
                 SlotOffset: {
-                  N: PREVIEW_OFFSET,
+                  N:
+                    process.env.NODE_ENV === "mainnet"
+                      ? MAINNET_OFFSET
+                      : PREVIEW_OFFSET,
                 },
               },
             },

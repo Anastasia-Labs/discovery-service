@@ -1,6 +1,6 @@
 {
   "pk": {
-    "S": "3fd9a74a42ea16123a9f1b4b1e8c4f3f46b4cfeca8ac03c2a764b98f"
+    "S": "bdbbaa62dbd6ec7f0bab47b42cfe1f4572fb8216c611b4fc11d96258"
   },
   "adaHandle": {
     "S": "000de14074745f74657374"
@@ -20,10 +20,10 @@
   "asset": {
     "M": {
       "AssetId": {
-        "S": "14e957a7799ee1feb0afe68a7abeb6f642832d28045e71fb0003b1cb.545450726576696577"
+        "S": "740a7a7e76b04ff7fb1b7f67bc95278151fbd78e625b3ba0c19160e8.54544d61696e6e6574"
       },
       "AssetName": {
-        "S": "TTPreview"
+        "S": "TTMainnet"
       },
       "Decimals": {
         "N": "6"
@@ -34,44 +34,44 @@
       "MintDate": {
         "M": {
           "Slot": {
-            "S": "44565818"
+            "S": "119994082"
           },
           "SlotOffset": {
-            "N": "1666656000"
+            "N": "1591566291"
           }
         }
       },
       "PolicyId": {
-        "S": "14e957a7799ee1feb0afe68a7abeb6f642832d28045e71fb0003b1cb"
+        "S": "740a7a7e76b04ff7fb1b7f67bc95278151fbd78e625b3ba0c19160e8"
       },
       "Ticker": {
-        "S": "TTPRE"
+        "S": "TTMAI"
       },
       "TotalSupply": {
-        "S": "10001000000000"
+        "S": "21000000"
       }
     }
   },
   "createdDate": {
     "M": {
       "Slot": {
-        "S": "44565818"
+        "S": "119994082"
       },
       "SlotOffset": {
-        "N": "1666656000"
+        "N": "1591566291"
       }
     }
   },
   "creationTxHash": {
-    "S": "fc5106fd1ae7d3d46552e52836043435829bdbf2b6d42d72ab7f2f5d4decef65"
+    "S": "ed841cf66c5572c97c65fb7298e81fc6a687a10c7a1a4ebefb268110e02b3c37"
   },
   "endDate": {
     "M": {
       "Slot": {
-        "S": "44825060"
+        "S": "120005467"
       },
       "SlotOffset": {
-        "N": "1666656000"
+        "N": "1591566291"
       }
     }
   },
@@ -95,39 +95,39 @@
   "lastCallDate": {
     "M": {
       "Slot": {
-        "S": "44738660"
+        "S": "119919067"
       },
       "SlotOffset": {
-        "N": "1666656000"
+        "N": "1591566291"
       }
     }
   },
   "openDate": {
     "M": {
       "Slot": {
-        "S": "44565818"
+        "S": "119994082"
       },
       "SlotOffset": {
-        "N": "1666656000"
+        "N": "1591566291"
       }
     }
   },
   "parameters": {
     "M": {
       "beneficiaryAddress": {
-        "S": "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s"
+        "S": "addr1q8stdr3zn7wqgw4kzqr8a4lncmtx9w8nc6a5a3zjcy0kgy0su9a4r0qcjc3ew3gwkcjjy27wn3gsewptyyaanncha2pqg6y5ke"
       },
       "foldFee": {
-        "N": "1000000"
+        "N": "2000000"
       },
       "poolPolicyId": {
-        "S": "4086577ed57c514f8e29b78f42ef4f379363355a3b65b9a032ee30c9"
+        "S": "0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b913"
       },
       "minUTXO": {
         "N": "3000000"
       },
       "penaltyAddress": {
-        "S": "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s"
+        "S": "addr1q8stdr3zn7wqgw4kzqr8a4lncmtx9w8nc6a5a3zjcy0kgy0su9a4r0qcjc3ew3gwkcjjy27wn3gsewptyyaanncha2pqg6y5ke"
       },
       "penaltyPercentage": {
         "N": "0.25"
@@ -150,13 +150,13 @@
   "projectDetails": {
     "M": {
       "Description": {
-        "S": "The Preview Test is an example project description that goes here, allowing users to more easily see the details."
+        "S": "The Mainnet Test is an example project description that goes here, allowing users to more easily see the details."
       },
       "Handle": {
         "S": "yes"
       },
       "Name": {
-        "S": "Preview Test"
+        "S": "Mainnet TT Test"
       },
       "Socials": {
         "L": [
@@ -185,7 +185,7 @@
       "Team": {
         "M": {
           "Company": {
-            "S": "undefined, Inc."
+            "S": "TTMainnet, Inc."
           },
           "Members": {
             "L": [
@@ -283,7 +283,7 @@
     }
   },
   "projectTokens": {
-    "N": "10001000000000"
+    "N": "21000000"
   },
   "scripts": {
     "M": {
@@ -296,7 +296,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "9aedc10fc680446fd0a9b84fb427e1c09140741368a74390f165216f"
+            "S": "545897abdf53c469c726c7eda897a4630702f4eab504f2ce447b91a4"
           },
           "utxo": {
             "M": {
@@ -304,7 +304,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "8ad76d3a56b3e86061301c4deef3d54d698b63b292dcd79257865a53e9215b77"
+                "S": "0cbf167ec35fd9c8675de10bf0dc7149ae189beeb21e0dae7da4502414e51a21"
               }
             }
           }
@@ -319,7 +319,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "faf9e93020f87cb503b46953e6fb8a4187a7d6931cf96aabcd1f81a8"
+            "S": "f5ef805df4a4553717c13d27d1329624a0efdfd94ff9d96fca0b0ec4"
           },
           "utxo": {
             "M": {
@@ -327,7 +327,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "f409c3581dd8afac7bc06c47c623e7915be86774f0859563b61925dad9ff0ca1"
+                "S": "5de979abd293a902008a97e27e737d763755b941d7d451954880cd93648cc206"
               }
             }
           }
@@ -342,7 +342,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "fc0b6a679dddf760f35dc315cf004f0fd6d2a9b8ac795bcc34366c40"
+            "S": "a16614353ae30d075841feaa779d82babb2c72d0dc6ceb177bf94193"
           },
           "utxo": {
             "M": {
@@ -350,7 +350,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "5e392680c5cff8a4116e89a56e18739a7e3d67f8dbd1a6f3ae5e2a659cb535cc"
+                "S": "c56c65a27f209180c09e3357c26adcc4c8e79e840037aa2c1ccb1a3135e762ee"
               }
             }
           }
@@ -365,7 +365,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "270db241fe64badc499a0ac2352ac045a80d2dff6a838f43975a1d3e"
+            "S": "3a2c3f1f7b372ef3e93e0a61f679930c6a388a40decc1fc3073a88f1"
           },
           "utxo": {
             "M": {
@@ -373,7 +373,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "76c466682861fce7a9dbc9e848fc9b2e2842de3feeb3fb4fb9100113f0b7e464"
+                "S": "4969b5cf6cbe8db0156aed9e1d7446f2bc9a4c299371598eb53c58e7d36d4517"
               }
             }
           }
@@ -388,7 +388,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "28df674aa9a8debd9e8a4051821d558c30b3d8ed0e8af53216bd9c84"
+            "S": "694ed19d1288b81272f7985a13f92f99e75bd89048100c2ce5e736d7"
           },
           "utxo": {
             "M": {
@@ -396,7 +396,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "ccffe191477b775291e937de063e97a53aac7b130dd302bf7bfd91893a2417e7"
+                "S": "6e5be54676fcf757eee293fcca7c210a5a62eaa0df90ce92092f606346347b8e"
               }
             }
           }
@@ -411,7 +411,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "00d2323642355b6ede60181b7f0f711eb28b63e304ad3b3798d8be3c"
+            "S": "4f19e10142068a6179c36f2433762f9415d9b87113bd80f05821474b"
           },
           "utxo": {
             "M": {
@@ -419,7 +419,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "1c00271622e9f4a7f29b8b1915e9bd8d6499e37ecc34cbae0f5abd7551defcd3"
+                "S": "3bbdfefee22fbf841cb34b5023e34b0ab0da4790fb6bf33bc66fe3adbca11bda"
               }
             }
           }
@@ -434,7 +434,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "ff6a9f2a8ac1edc8d4196cd1110117e29c4d7ce7dc0feac093deb3ad"
+            "S": "4e795e1ae8e488cb041682768b4fa610076c1410d729580e4d83b41e"
           },
           "utxo": {
             "M": {
@@ -442,7 +442,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "cadb0ccde1d9ce3f3989bdcc5a187f6ba5d6522a291c7197212e7b54e3cff5cb"
+                "S": "8dcd02206ece14e7d18e77478b4dde1b773d7183ed7944c1e2b40d1515e8f941"
               }
             }
           }
@@ -457,7 +457,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "ca92db211d568a0ab7c0527739f401a74ebb00c801a3cf6aceef5dc6"
+            "S": "19848fae0c20b85807dfa3cd48e36a6e4b7eaefbddf574b4454cd5f5"
           },
           "utxo": {
             "M": {
@@ -465,7 +465,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "65c785670cfb146e0657513390a1d83b0c34242f6a9de13e6c9620a06294b14b"
+                "S": "fa48024d8940be75dce797a60cfab88fac580c7b8c2c4f63344a9a6fa49f5388"
               }
             }
           }
@@ -480,7 +480,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "893db957bbdfc302e3ee361bbcc7774e1858896d26c2d8d556683936"
+            "S": "1daa1f2fa44ee12458ac04184e88622ac64c7a097d3537d2d1d11de9"
           },
           "utxo": {
             "M": {
@@ -488,7 +488,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "2a9d8d75f64ccb78701f963213dfbb3dfca162409f56db37162c3102f3f61736"
+                "S": "458d19018517fbe79ac3e7ff1cb73dd3705ce39f6c45d5960c70e87a8a775353"
               }
             }
           }
@@ -497,7 +497,7 @@
     }
   },
   "slug": {
-    "S": "preview-test"
+    "S": "mainnet-tt test"
   },
   "type": {
     "S": "Liquidity"
@@ -518,10 +518,10 @@
           "ReleaseDate": {
             "M": {
               "Slot": {
-                "S": "53205818"
+                "S": "128634082"
               },
               "SlotOffset": {
-                "N": "1666656000"
+                "N": "1591566291"
               }
             }
           }

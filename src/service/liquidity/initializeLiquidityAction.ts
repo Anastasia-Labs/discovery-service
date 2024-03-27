@@ -1,6 +1,5 @@
 import "../../utils/env.js";
 
-import { writeFileSync } from "fs";
 import {
   InitNodeConfig,
   Lucid,
@@ -8,8 +7,10 @@ import {
   initLqNode,
 } from "price-discovery-offchain";
 
+import { writeFile } from "fs/promises";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { getAppliedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initializeLiquidityAction = async (lucid: Lucid) => {
@@ -32,7 +33,7 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
     .registerStake(rewardStakeRewardAddress!)
     .complete();
 
-  if (process.env.DRY_RUN!) {
+  if (isDryRun()) {
     console.log(registerStakeTx.toString());
   } else {
     const registerStakeSignedTx = await registerStakeTx.sign().complete();
@@ -72,7 +73,7 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
   ).toString("hex");
   const signedTxHash = signedTransaction.toHash();
 
-  writeFileSync(
+  await writeFile(
     `./init-tx.json`,
     JSON.stringify(
       {

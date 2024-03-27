@@ -7,6 +7,8 @@ import {
   PolicyId,
   toUnit,
 } from "price-discovery-offchain";
+
+import wallets from "../../test/wallets.json" assert { type: "json" };
 import { updateTasteTestVariables } from "./files.js";
 import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
@@ -39,7 +41,7 @@ export async function mintNFTAction(lucid: Lucid) {
     .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT!) })
     .validTo(Date.now() + 100000)
     .payToAddress(
-      "addr1q9nh34ra6rm5wc8nsjseekknvxy6dv0neyqu7n5z7ayr6wcp8plfds3j3vct3gwp287u4wk4jtr4632d2gmdm96gp4jqe0354u",
+      process.env.PROJECT_TOKEN_HOLDER_ADDRESS! ?? wallets[1].address,
       {
         lovelace: 1_500_000n,
         [unit]: BigInt(process.env.PROJECT_AMNT!),
