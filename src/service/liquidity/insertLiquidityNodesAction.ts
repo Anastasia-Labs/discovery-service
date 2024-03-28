@@ -62,7 +62,7 @@ export const insertLiquidityNodesAction = async (
         console.log(`Submitting: ${txHash}`);
         await lucid.awaitTx(txHash);
 
-        if (walletIdx === MAX_WALLET_GROUP_COUNT - 1) {
+        if (walletIdx === MAX_WALLET_GROUP_COUNT) {
           loop = false;
           console.log("Done!");
         } else {

@@ -22,23 +22,6 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
 
-  const [
-    collectFoldPolicyHash,
-    collectFoldValidatorHash,
-    rewardFoldPolicyHash,
-    rewardFoldValidatorHash,
-    tasteTestPolicyHash,
-    tasteTestValidatorHash,
-    tasteTestStakeValidatorHash,
-    tokenHolderPolicyHash,
-    tokenHolderValidatorHash,
-  ] = Object.entries(applied.scripts).map(([key, script]) => {
-    return lucid.utils.validatorToScriptHash({
-      type: key === "proxyTokenHolderValidator" ? "PlutusV1" : "PlutusV2",
-      script,
-    });
-  });
-
   const startSlot = (
     await fetchFromBlockfrost(
       `txs/${appliedScripts.projectTokenHolder.initOutRef.txHash}`,
@@ -232,7 +215,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
                   S: "Discord",
                 },
                 Url: {
-                  S: "https://https://discord.gg/KujHvyA4xd ",
+                  S: "https://discord.gg/KujHvyA4xd ",
                 },
               },
             },
@@ -439,7 +422,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: collectFoldPolicyHash as string,
+              S: applied.scriptHashes.collectFoldPolicy,
             },
             utxo: {
               M: {
@@ -462,7 +445,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: collectFoldValidatorHash as string,
+              S: applied.scriptHashes.collectFoldValidator,
             },
             utxo: {
               M: {
@@ -485,7 +468,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: rewardFoldPolicyHash as string,
+              S: applied.scriptHashes.rewardFoldPolicy,
             },
             utxo: {
               M: {
@@ -508,7 +491,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: rewardFoldValidatorHash as string,
+              S: applied.scriptHashes.rewardFoldValidator,
             },
             utxo: {
               M: {
@@ -531,7 +514,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: tasteTestPolicyHash as string,
+              S: applied.scriptHashes.liquidityPolicy,
             },
             utxo: {
               M: {
@@ -554,7 +537,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: tasteTestValidatorHash as string,
+              S: applied.scriptHashes.liquidityValidator,
             },
             utxo: {
               M: {
@@ -577,7 +560,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: tasteTestStakeValidatorHash as string,
+              S: applied.scriptHashes.collectStake,
             },
             utxo: {
               M: {
@@ -600,7 +583,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: tokenHolderPolicyHash as string,
+              S: applied.scriptHashes.tokenHolderPolicy,
             },
             utxo: {
               M: {
@@ -623,7 +606,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               NULL: true,
             },
             scriptHash: {
-              S: tokenHolderValidatorHash as string,
+              S: applied.scriptHashes.tokenHolderValidator,
             },
             utxo: {
               M: {
@@ -665,9 +648,9 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
         ReleaseDate: {
           M: {
             Slot: {
-              S: (
+              S: posixToSlot(
                 Number(process.env.DEADLINE!) +
-                1000 * 60 * 60 * 24 * 30 * month
+                  1000 * 60 * 60 * 24 * 30 * month,
               ).toString(),
             },
             SlotOffset: {

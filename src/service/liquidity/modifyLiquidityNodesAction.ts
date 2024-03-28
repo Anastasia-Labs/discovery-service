@@ -55,7 +55,7 @@ export const modifyLiquidityNodesAction = async (
         const txHash = await txComplete.submit();
         console.log(`Submitting: ${txHash}`);
 
-        if (walletIdx === MAX_WALLET_GROUP_COUNT - 1) {
+        if (walletIdx === MAX_WALLET_GROUP_COUNT) {
           loop = false;
           console.log("Done!");
         } else {

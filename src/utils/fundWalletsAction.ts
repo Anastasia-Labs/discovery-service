@@ -4,7 +4,6 @@ import { Lucid } from "price-discovery-offchain";
 
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
-  DEPLOY_WALLET_ADA,
   MAX_WALLET_GROUP_COUNT,
   MIN_ADA_INSERT_WALLET,
 } from "../constants/utils.js";
@@ -18,23 +17,26 @@ export async function fundWalletsAction(lucid: Lucid) {
 
   for (const [index, wallet] of wallets.entries()) {
     // Skip our seeded wallet.
-    if (index === 0) {
-      console.log("Found our seeded wallet!");
-      continue;
-    }
+    // if (index === 0) {
+    //   console.log("Found our seeded wallet!");
+    //   continue;
+    // }
 
-    if (index === 1) {
-      console.log("Sending 5 ADA to our token minting wallet.");
-      tx.payToAddress(wallet.address, { lovelace: 5_000_000n });
-      continue;
-    }
+    // if (index === 1) {
+    //   console.log("Sending 5 ADA to our token minting wallet.");
+    //   tx.payToAddress(wallet.address, { lovelace: 5_000_000n });
+    //   continue;
+    // }
 
-    // We need at least 200 ada in the deploy wallet for reference scripts.
-    if (index === 2) {
-      console.log(
-        `Sending ${DEPLOY_WALLET_ADA} lovelace to our deploy script wallet.`,
-      );
-      tx.payToAddress(wallet.address, { lovelace: DEPLOY_WALLET_ADA });
+    // // We need at least 200 ada in the deploy wallet for reference scripts.
+    // if (index === 2) {
+    //   console.log(
+    //     `Sending ${DEPLOY_WALLET_ADA} lovelace to our deploy script wallet.`,
+    //   );
+    //   tx.payToAddress(wallet.address, { lovelace: DEPLOY_WALLET_ADA });
+    //   continue;
+    // }
+    if (index < 3) {
       continue;
     }
 
