@@ -25,7 +25,7 @@
     "tokenHolderValidator": "d7bd86fa11b68ff74828bd96d44a9da2c1dfb5c80a6a2aec53cdd7a3",
     "proxyTokenHolderValidator": "0f9e60d444ec6805afa02aae76e47574439d8383213eed10d9f9c4df"
   },
-  "version": 1711649023601,
+  "version": 1711649155063,
   "projectAmount": 100000000000000,
   "discoveryPolicy": {
     "initOutRef": {
