@@ -63,10 +63,12 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
     throw initNodeUnsigned.error;
   }
 
+  if (isDryRun()) {
+    console.log(initNodeUnsigned.data.toString());
+    return;
+  }
+
   await loggerDD(`Building initNode Tx...`);
-  const unsignedCbor = Buffer.from(
-    initNodeUnsigned.data.txComplete.to_bytes(),
-  ).toString("hex");
   const signedTransaction = await initNodeUnsigned.data.sign().complete();
   const signedCbor = Buffer.from(
     signedTransaction.txSigned.to_bytes(),
@@ -77,7 +79,7 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
     `./init-tx.json`,
     JSON.stringify(
       {
-        cbor: unsignedCbor,
+        cbor: initNodeUnsigned.data.toString(),
         signedCbor,
         txHash: signedTxHash,
       },

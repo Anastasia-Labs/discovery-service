@@ -6,36 +6,32 @@ import {
 } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { getAppliedScripts } from "../../utils/files.js";
 import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initTokenHolderAction = async (lucid: Lucid) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
   const externalTokenProvider =
     process.env.SHOULD_BUILD_TOKEN_DEPOSIT_TX! !== "false";
 
   // Collect from the token holder's wallet.
   const tokenSupplierAddress = process.env.PROJECT_TOKEN_HOLDER_ADDRESS!;
   if (tokenSupplierAddress && externalTokenProvider) {
-    const utxos = (await lucid.provider.getUtxos(tokenSupplierAddress)).filter(
-      // Don't spend out deployed scripts if they have been put in the same wallet.
-      ({ assets }) => {
-        let validUtxo = true;
-        for (const assetId in assets) {
-          if (assetId.includes(deployed.policy)) {
-            validUtxo = false;
-            break;
-          }
-        }
-
-        return validUtxo;
+    const utxos = await lucid.provider.getUtxosByOutRef([
+      {
+        txHash: process.env.TT_INIT_TOKEN_HOLDER_UTXO_HASH!,
+        outputIndex: Number(process.env.TT_INIT_TOKEN_HOLDER_UTXO_INDEX!),
       },
-    );
+      {
+        txHash:
+          "4dcaeeb8f0084fb9b6c3409cf685493d25b4010951932dfe5ceeba477cca4d1c",
+        outputIndex: 0,
+      },
+    ]);
 
     lucid.selectWalletFrom({
-      address: tokenSupplierAddress,
+      address: utxos[0].address,
       utxos,
     });
   } else {
