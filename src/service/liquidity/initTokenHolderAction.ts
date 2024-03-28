@@ -19,22 +19,24 @@ export const initTokenHolderAction = async (lucid: Lucid) => {
   // Collect from the token holder's wallet.
   const tokenSupplierAddress = process.env.PROJECT_TOKEN_HOLDER_ADDRESS!;
   if (tokenSupplierAddress && externalTokenProvider) {
+    const utxos = (await lucid.provider.getUtxos(tokenSupplierAddress)).filter(
+      // Don't spend out deployed scripts if they have been put in the same wallet.
+      ({ assets }) => {
+        let validUtxo = true;
+        for (const assetId in assets) {
+          if (assetId.includes(deployed.policy)) {
+            validUtxo = false;
+            break;
+          }
+        }
+
+        return validUtxo;
+      },
+    );
+
     lucid.selectWalletFrom({
       address: tokenSupplierAddress,
-      utxos: (await lucid.provider.getUtxos(tokenSupplierAddress)).filter(
-        // Don't spend out deployed scripts if they have been put in the same wallet.
-        ({ assets }) => {
-          let validUtxo = true;
-          for (const assetId in assets) {
-            if (assetId.includes(deployed.policy)) {
-              validUtxo = false;
-              break;
-            }
-          }
-
-          return validUtxo;
-        },
-      ),
+      utxos,
     });
   } else {
     await selectLucidWallet(lucid, 1);

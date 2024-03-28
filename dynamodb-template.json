@@ -1,29 +1,26 @@
 {
   "pk": {
-    "S": "bdbbaa62dbd6ec7f0bab47b42cfe1f4572fb8216c611b4fc11d96258"
-  },
-  "adaHandle": {
-    "S": "000de14074745f74657374"
+    "S": "0ed531b3c85fa4ee7749fef02d005f657094329274f33e5c1403e591"
   },
   "banner": {
-    "S": ""
+    "S": "http://cdn.sundaeswap.finance/clarity/banner-2.png"
   },
   "primary_color": {
-    "S": "#2457f2"
+    "S": "#636eff"
   },
   "secondary_color": {
-    "S": "#dce0ef"
+    "S": "#ff74f1"
   },
   "profile": {
-    "S": ""
+    "S": "http://cdn.sundaeswap.finance/clarity/pfp-2.png"
   },
   "asset": {
     "M": {
       "AssetId": {
-        "S": "740a7a7e76b04ff7fb1b7f67bc95278151fbd78e625b3ba0c19160e8.54544d61696e6e6574"
+        "S": "1e76aaec4869308ef5b61e81ebf229f2e70f75a50223defa087f807b.436c61726974792044414f20546f6b656e"
       },
       "AssetName": {
-        "S": "TTMainnet"
+        "S": "Clarity DAO Token"
       },
       "Decimals": {
         "N": "6"
@@ -34,7 +31,7 @@
       "MintDate": {
         "M": {
           "Slot": {
-            "S": "119994082"
+            "S": "119557909"
           },
           "SlotOffset": {
             "N": "1591566291"
@@ -42,20 +39,20 @@
         }
       },
       "PolicyId": {
-        "S": "740a7a7e76b04ff7fb1b7f67bc95278151fbd78e625b3ba0c19160e8"
+        "S": "1e76aaec4869308ef5b61e81ebf229f2e70f75a50223defa087f807b"
       },
       "Ticker": {
-        "S": "TTMAI"
+        "S": "CLARITY"
       },
       "TotalSupply": {
-        "S": "21000000"
+        "S": "2000000000000000"
       }
     }
   },
   "createdDate": {
     "M": {
       "Slot": {
-        "S": "119994082"
+        "S": "120075025"
       },
       "SlotOffset": {
         "N": "1591566291"
@@ -63,12 +60,12 @@
     }
   },
   "creationTxHash": {
-    "S": "ed841cf66c5572c97c65fb7298e81fc6a687a10c7a1a4ebefb268110e02b3c37"
+    "S": "cd4c193288831655a8cf0a7e90f49f7070dfb2ec4c777920cb3882cb3061fc1c"
   },
   "endDate": {
     "M": {
       "Slot": {
-        "S": "120005467"
+        "S": "120737709"
       },
       "SlotOffset": {
         "N": "1591566291"
@@ -79,23 +76,12 @@
     "NULL": true
   },
   "fundingAllocations": {
-    "L": [
-      {
-        "M": {
-          "Label": {
-            "S": "SS"
-          },
-          "Percentage": {
-            "N": "1"
-          }
-        }
-      }
-    ]
+    "L": []
   },
   "lastCallDate": {
     "M": {
       "Slot": {
-        "S": "119919067"
+        "S": "120651309"
       },
       "SlotOffset": {
         "N": "1591566291"
@@ -105,7 +91,7 @@
   "openDate": {
     "M": {
       "Slot": {
-        "S": "119994082"
+        "S": "120075025"
       },
       "SlotOffset": {
         "N": "1591566291"
@@ -115,7 +101,7 @@
   "parameters": {
     "M": {
       "beneficiaryAddress": {
-        "S": "addr1q8stdr3zn7wqgw4kzqr8a4lncmtx9w8nc6a5a3zjcy0kgy0su9a4r0qcjc3ew3gwkcjjy27wn3gsewptyyaanncha2pqg6y5ke"
+        "S": "addr1q9nh34ra6rm5wc8nsjseekknvxy6dv0neyqu7n5z7ayr6wcp8plfds3j3vct3gwp287u4wk4jtr4632d2gmdm96gp4jqe0354u"
       },
       "foldFee": {
         "N": "2000000"
@@ -150,33 +136,53 @@
   "projectDetails": {
     "M": {
       "Description": {
-        "S": "The Mainnet Test is an example project description that goes here, allowing users to more easily see the details."
+        "S": "Clarity is a decentralized governance protocol that enables DAOs and other tokenized projects to formalize on-chain governance."
       },
       "Handle": {
         "S": "yes"
       },
       "Name": {
-        "S": "Mainnet TT Test"
+        "S": "ClarityDAO"
       },
       "Socials": {
         "L": [
           {
             "M": {
               "Name": {
-                "S": "Reddit"
+                "S": "Twitter"
               },
               "Url": {
-                "S": "https://example.com"
+                "S": "https://twitter.com/clarity_dao"
               }
             }
           },
           {
             "M": {
               "Name": {
-                "S": "Telegram"
+                "S": "Discord"
               },
               "Url": {
-                "S": "https://example.com"
+                "S": "https://https://discord.gg/KujHvyA4xd "
+              }
+            }
+          },
+          {
+            "M": {
+              "Name": {
+                "S": "Medium"
+              },
+              "Url": {
+                "S": "https://medium.com/@Clarity_"
+              }
+            }
+          },
+          {
+            "M": {
+              "Name": {
+                "S": "Youtube"
+              },
+              "Url": {
+                "S": "https://www.youtube.com/watch?v=5nRwAVQ8LMM"
               }
             }
           }
@@ -185,17 +191,69 @@
       "Team": {
         "M": {
           "Company": {
-            "S": "TTMainnet, Inc."
+            "S": "ClarityDAO"
           },
           "Members": {
             "L": [
               {
                 "M": {
                   "Name": {
-                    "S": "Lorem Ipsum"
+                    "S": "Logan Panchot"
                   },
                   "Role": {
-                    "S": "CEO"
+                    "S": "Business Development Lead"
+                  },
+                  "Social": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "Name": {
+                    "S": "Justin Schreiner"
+                  },
+                  "Role": {
+                    "S": "Product Lead"
+                  },
+                  "Social": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "Name": {
+                    "S": "Matt Laux"
+                  },
+                  "Role": {
+                    "S": "Full Stack Developer"
+                  },
+                  "Social": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "Name": {
+                    "S": "Tomasz Maciosowski"
+                  },
+                  "Role": {
+                    "S": "On-chain Lead"
+                  },
+                  "Social": {
+                    "NULL": true
+                  }
+                }
+              },
+              {
+                "M": {
+                  "Name": {
+                    "S": "Ben Hart"
+                  },
+                  "Role": {
+                    "S": "Business Development"
                   },
                   "Social": {
                     "NULL": true
@@ -205,14 +263,31 @@
             ]
           },
           "Other": {
-            "L": [
-              {
-                "S": "AP1"
-              }
-            ]
+            "L": []
           },
           "Socials": {
-            "NULL": true
+            "L": [
+              {
+                "M": {
+                  "Name": {
+                    "S": "Website"
+                  },
+                  "Url": {
+                    "S": "https://clarity.community"
+                  }
+                }
+              },
+              {
+                "M": {
+                  "Name": {
+                    "S": "Whitepaper"
+                  },
+                  "Url": {
+                    "S": "https://docsend.com/view/5dxmuwzgptqxzvm7"
+                  }
+                }
+              }
+            ]
           }
         }
       },
@@ -221,50 +296,20 @@
           {
             "M": {
               "Label": {
-                "S": "DAO Treasury"
-              },
-              "Percentage": {
-                "N": "50"
-              }
-            }
-          },
-          {
-            "M": {
-              "Label": {
-                "S": "Airdrop"
-              },
-              "Percentage": {
-                "N": "15"
-              }
-            }
-          },
-          {
-            "M": {
-              "Label": {
-                "S": "Governance"
-              },
-              "Percentage": {
-                "N": "10"
-              }
-            }
-          },
-          {
-            "M": {
-              "Label": {
                 "S": "Team"
               },
               "Percentage": {
-                "N": "5"
+                "N": "11.5"
               }
             }
           },
           {
             "M": {
               "Label": {
-                "S": "Protocol Liquidity"
+                "S": "Strategic Partners"
               },
               "Percentage": {
-                "N": "12"
+                "N": "20.15"
               }
             }
           },
@@ -274,7 +319,37 @@
                 "S": "Taste Test"
               },
               "Percentage": {
-                "N": "8"
+                "N": "5"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Community Rewards"
+              },
+              "Percentage": {
+                "N": "29"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "DAO Treasury"
+              },
+              "Percentage": {
+                "N": "24.35"
+              }
+            }
+          },
+          {
+            "M": {
+              "Label": {
+                "S": "Future Development"
+              },
+              "Percentage": {
+                "N": "10"
               }
             }
           }
@@ -283,7 +358,7 @@
     }
   },
   "projectTokens": {
-    "N": "21000000"
+    "N": "100000000000000"
   },
   "scripts": {
     "M": {
@@ -296,7 +371,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "545897abdf53c469c726c7eda897a4630702f4eab504f2ce447b91a4"
+            "S": "128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31"
           },
           "utxo": {
             "M": {
@@ -304,7 +379,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "0cbf167ec35fd9c8675de10bf0dc7149ae189beeb21e0dae7da4502414e51a21"
+                "S": "29b02b2530587b8e40f68685ee2d29c8a2f0bb7fd4422066abdea58098b2034c"
               }
             }
           }
@@ -319,7 +394,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "f5ef805df4a4553717c13d27d1329624a0efdfd94ff9d96fca0b0ec4"
+            "S": "c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5"
           },
           "utxo": {
             "M": {
@@ -327,7 +402,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "5de979abd293a902008a97e27e737d763755b941d7d451954880cd93648cc206"
+                "S": "83b7d20a4e6137f30904f7ecef979c631e2e0e6aef1033e7eb494db95c913ea5"
               }
             }
           }
@@ -342,7 +417,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "a16614353ae30d075841feaa779d82babb2c72d0dc6ceb177bf94193"
+            "S": "7588fb2ab52047977a3275bd214835f01214dc229488193ffd6d1c8c"
           },
           "utxo": {
             "M": {
@@ -350,7 +425,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "c56c65a27f209180c09e3357c26adcc4c8e79e840037aa2c1ccb1a3135e762ee"
+                "S": "118acddea0989bf53403e9fd41173488b1631f0eb33d543142860339d584d3d5"
               }
             }
           }
@@ -365,7 +440,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "3a2c3f1f7b372ef3e93e0a61f679930c6a388a40decc1fc3073a88f1"
+            "S": "2d02b3c52395d66c06135b950e1a716eafae192c426d1231d9b6ed31"
           },
           "utxo": {
             "M": {
@@ -373,7 +448,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "4969b5cf6cbe8db0156aed9e1d7446f2bc9a4c299371598eb53c58e7d36d4517"
+                "S": "0804405a5c34ab37399576b7f422360181a556afcfb46f0a1fa2f75390c6e8c7"
               }
             }
           }
@@ -388,7 +463,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "694ed19d1288b81272f7985a13f92f99e75bd89048100c2ce5e736d7"
+            "S": "d3dcccaea10587f70abc771c673a78ae0823bf3de2cbd6b0d54ecadc"
           },
           "utxo": {
             "M": {
@@ -396,7 +471,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "6e5be54676fcf757eee293fcca7c210a5a62eaa0df90ce92092f606346347b8e"
+                "S": "8a5575d5dea6e397bfff302e6da1b7a5c6dd7eac7a0dc625ffa22bf57547e3bd"
               }
             }
           }
@@ -411,7 +486,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "4f19e10142068a6179c36f2433762f9415d9b87113bd80f05821474b"
+            "S": "6c3dd6692c229960385f4b6e83e6430b38cde6aacc9b39afebe4b27d"
           },
           "utxo": {
             "M": {
@@ -419,7 +494,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "3bbdfefee22fbf841cb34b5023e34b0ab0da4790fb6bf33bc66fe3adbca11bda"
+                "S": "ceef69b5df9abe2fabcbae7d4bde4238bd4b59088f56aa58d30f09050501fbe3"
               }
             }
           }
@@ -434,7 +509,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "4e795e1ae8e488cb041682768b4fa610076c1410d729580e4d83b41e"
+            "S": "e82bb756d433e59afaa50f5f5bfcd605cecabef69111596214cc663c"
           },
           "utxo": {
             "M": {
@@ -442,7 +517,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "8dcd02206ece14e7d18e77478b4dde1b773d7183ed7944c1e2b40d1515e8f941"
+                "S": "ec73877d0eae27ecc5e316ae806eda0d5a8743dd575ef2ab87a1420ff8b498fd"
               }
             }
           }
@@ -457,7 +532,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "19848fae0c20b85807dfa3cd48e36a6e4b7eaefbddf574b4454cd5f5"
+            "S": "a576496208e88e026d461e9ddb74d925239ce985abbff87b7d38d39b"
           },
           "utxo": {
             "M": {
@@ -465,7 +540,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "fa48024d8940be75dce797a60cfab88fac580c7b8c2c4f63344a9a6fa49f5388"
+                "S": "8d8ce897a1e3eb9c0d1387f79244f7a92c74a2578177e4430f02dea6898587fa"
               }
             }
           }
@@ -480,7 +555,7 @@
             "NULL": true
           },
           "scriptHash": {
-            "S": "1daa1f2fa44ee12458ac04184e88622ac64c7a097d3537d2d1d11de9"
+            "S": "3660d1f66080385c6006043199aa76e75676f11fa17589713aac4ee0"
           },
           "utxo": {
             "M": {
@@ -488,7 +563,7 @@
                 "N": "0"
               },
               "txId": {
-                "S": "458d19018517fbe79ac3e7ff1cb73dd3705ce39f6c45d5960c70e87a8a775353"
+                "S": "0cac7a64c467746106bc72ba71a0a8984688dcdb663220fc89f8839df5454c07"
               }
             }
           }
@@ -497,7 +572,7 @@
     }
   },
   "slug": {
-    "S": "mainnet-tt test"
+    "S": "clarity"
   },
   "type": {
     "S": "Liquidity"
@@ -507,18 +582,1651 @@
       {
         "M": {
           "Address": {
-            "S": "addr1justoneparty"
+            "S": "Team"
           },
           "Amount": {
-            "S": "1000000"
+            "S": "57500000000000"
           },
           "Label": {
-            "S": "Just One Party"
+            "S": "Team"
           },
           "ReleaseDate": {
             "M": {
               "Slot": {
-                "S": "128634082"
+                "S": "1712304000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "100750000000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1712304000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "50000000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1712304000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1714896000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1714896000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1714896000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1717488000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1717488000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1717488000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1720080000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1720080000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1720080000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1722672000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1722672000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1722672000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1725264000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1725264000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1725264000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1727856000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1727856000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1727856000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1730448000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1730448000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1730448000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1733040000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1733040000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1733040000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1735632000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1735632000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1735632000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1738224000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1738224000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1738224000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1740816000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1740816000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1740816000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1743408000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1743408000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1743408000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1746000000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1746000000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1746000000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1748592000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1748592000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1748592000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1751184000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1751184000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1751184000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1753776000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1753776000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1753776000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1756368000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1756368000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1756368000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1758960000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1758960000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1758960000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1761552000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1761552000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1761552000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1764144000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1764144000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1764144000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1766736000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1766736000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1766736000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1769328000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1769328000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1769328000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Team"
+          },
+          "Amount": {
+            "S": "7187500000000"
+          },
+          "Label": {
+            "S": "Team"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1771920000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Strategic Partners"
+          },
+          "Amount": {
+            "S": "12593750000000"
+          },
+          "Label": {
+            "S": "Strategic Partners"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1771920000000"
+              },
+              "SlotOffset": {
+                "N": "1591566291"
+              }
+            }
+          }
+        }
+      },
+      {
+        "M": {
+          "Address": {
+            "S": "Future Development"
+          },
+          "Amount": {
+            "S": "6250000000000"
+          },
+          "Label": {
+            "S": "Future Development"
+          },
+          "ReleaseDate": {
+            "M": {
+              "Slot": {
+                "S": "1771920000000"
               },
               "SlotOffset": {
                 "N": "1591566291"

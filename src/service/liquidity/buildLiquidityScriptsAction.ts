@@ -31,10 +31,23 @@ export const buildLiquidityScriptsAction = async (
     wallet.getUtxos(),
   );
 
+  const [initUtxo] = await lucid.provider.getUtxosByOutRef([
+    {
+      txHash: process.env.TT_INIT_UTXO_HASH!,
+      outputIndex: Number(process.env.TT_INIT_UTXO_INDEX!),
+    },
+  ]);
+
+  const [tokenHolderUtxo] = await lucid.provider.getUtxosByOutRef([
+    {
+      txHash: process.env.TT_INIT_TOKEN_HOLDER_UTXO_HASH!,
+      outputIndex: Number(process.env.TT_INIT_TOKEN_HOLDER_UTXO_INDEX!),
+    },
+  ]);
+
   const projectTokenUnit = toUnit(projectTokenPolicyId, projectTokenAssetName);
-  const projectTokenUtxo = await lucid.provider.getUtxoByUnit(projectTokenUnit);
   const projectTokenValid =
-    projectTokenUtxo.assets[projectTokenUnit] ===
+    tokenHolderUtxo.assets[projectTokenUnit] ===
     BigInt(process.env.PROJECT_AMNT!);
 
   if (!projectTokenValid) {
@@ -52,7 +65,7 @@ export const buildLiquidityScriptsAction = async (
 
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {
-      initUTXO: project0Utxos[0],
+      initUTXO: initUtxo,
       deadline: deadline,
       penaltyAddress: process.env.PENALTY_ADDRESS!,
     },
@@ -65,7 +78,7 @@ export const buildLiquidityScriptsAction = async (
       poolPolicyId: process.env.POOL_POLICY_ID!,
     },
     projectTokenHolder: {
-      initUTXO: projectTokenUtxo,
+      initUTXO: tokenHolderUtxo,
     },
     unapplied: {
       liquidityPolicy: liquidityPolicy.cborHex,
@@ -90,8 +103,8 @@ export const buildLiquidityScriptsAction = async (
   const parameters = {
     discoveryPolicy: {
       initOutRef: {
-        txHash: project0Utxos[0].txHash,
-        outputIndex: project0Utxos[0].outputIndex,
+        txHash: initUtxo.txHash,
+        outputIndex: initUtxo.outputIndex,
       },
       deadline: deadline,
       penaltyAddress: process.env.PENALTY_ADDRESS!,
@@ -103,8 +116,8 @@ export const buildLiquidityScriptsAction = async (
     },
     projectTokenHolder: {
       initOutRef: {
-        txHash: projectTokenUtxo.txHash,
-        outputIndex: projectTokenUtxo.outputIndex,
+        txHash: tokenHolderUtxo.txHash,
+        outputIndex: tokenHolderUtxo.outputIndex,
       },
     },
   };

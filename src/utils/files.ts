@@ -5,6 +5,17 @@ import appliedSchema from "../../applied-scripts.json" assert { type: "json" };
 import deployUtxoMapSchema from "../../deploy-utxo-map.json" assert { type: "json" };
 import deployedSchema from "../../deployed-policy.json" assert { type: "json" };
 import ttVariablesSchema from "../../taste-test-variables.json" assert { type: "json" };
+import tokenHolderSubmitSchema from "../../token-holder-submit.json" assert { type: "json" };
+
+export const getTokenHolderSubmitTx = async (): Promise<
+  typeof tokenHolderSubmitSchema
+> => {
+  const fileContents = await readFile(`./token-holder-submit.json`, {
+    encoding: "utf-8",
+  });
+  const data = JSON.parse(fileContents);
+  return data;
+};
 
 export const getAppliedScripts = async (): Promise<typeof appliedSchema> => {
   const fileContents = await readFile(`./applied-scripts.json`, {

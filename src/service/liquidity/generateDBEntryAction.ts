@@ -1,5 +1,5 @@
 import { writeFile } from "fs";
-import { Lucid, Script } from "price-discovery-offchain";
+import { Lucid } from "price-discovery-offchain";
 import "../../utils/env.js";
 
 import appliedScripts from "../../../applied-scripts.json" assert { type: "json" };
@@ -7,7 +7,7 @@ import deployedPolicy from "../../../deployed-policy.json" assert { type: "json"
 import tx from "../../../init-tx.json" assert { type: "json" };
 import { DynamoTTEntry } from "../../@types/db.js";
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../../constants/network.js";
-import { getTasteTestVariables } from "../../utils/files.js";
+import { getAppliedScripts, getTasteTestVariables } from "../../utils/files.js";
 import {
   fetchFromBlockfrost,
   posixToSlot,
@@ -20,18 +20,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
   const { projectTokenAssetName, projectTokenPolicyId } =
     await getTasteTestVariables();
   await selectLucidWallet(lucid, 0);
-
-  const scriptRefUtxos = await lucid.utxosByOutRef([
-    deployedPolicy.scriptsRef.CollectFoldPolicy,
-    deployedPolicy.scriptsRef.CollectFoldValidator,
-    deployedPolicy.scriptsRef.RewardFoldPolicy,
-    deployedPolicy.scriptsRef.RewardFoldValidator,
-    deployedPolicy.scriptsRef.TasteTestPolicy,
-    deployedPolicy.scriptsRef.TasteTestValidator,
-    deployedPolicy.scriptsRef.TasteTestStakeValidator,
-    deployedPolicy.scriptsRef.TokenHolderPolicy,
-    deployedPolicy.scriptsRef.TokenHolderValidator,
-  ]);
+  const applied = await getAppliedScripts();
 
   const [
     collectFoldPolicyHash,
@@ -43,8 +32,11 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     tasteTestStakeValidatorHash,
     tokenHolderPolicyHash,
     tokenHolderValidatorHash,
-  ] = scriptRefUtxos.map(({ scriptRef }) => {
-    return lucid.utils.validatorToScriptHash(scriptRef as Script);
+  ] = Object.entries(applied.scripts).map(([key, script]) => {
+    return lucid.utils.validatorToScriptHash({
+      type: key === "proxyTokenHolderValidator" ? "PlutusV1" : "PlutusV2",
+      script,
+    });
   });
 
   const startSlot = (
@@ -53,24 +45,21 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     )
   ).slot as number;
 
-  const entry: DynamoTTEntry = {
+  const entry: Partial<DynamoTTEntry> = {
     pk: {
       S: deployedPolicy.policy,
     },
-    adaHandle: {
-      S: "000de14074745f74657374",
-    },
     banner: {
-      S: "",
+      S: "http://cdn.sundaeswap.finance/clarity/banner-2.png",
     },
     primary_color: {
-      S: "#2457f2",
+      S: "#636eff",
     },
     secondary_color: {
-      S: "#dce0ef",
+      S: "#ff74f1",
     },
     profile: {
-      S: "",
+      S: "http://cdn.sundaeswap.finance/clarity/pfp-2.png",
     },
     asset: {
       M: {
@@ -89,13 +78,12 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
         MintDate: {
           M: {
             Slot: {
-              S: startSlot.toString(),
+              S: "119557909",
             },
             SlotOffset: {
-              N:
-                process.env.NODE_ENV === "mainnet"
-                  ? MAINNET_OFFSET
-                  : PREVIEW_OFFSET,
+              N: process.env.NODE_ENV?.includes("mainnet")
+                ? MAINNET_OFFSET
+                : PREVIEW_OFFSET,
             },
           },
         },
@@ -103,13 +91,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: projectTokenPolicyId,
         },
         Ticker: {
-          S: Buffer.from(projectTokenAssetName, "hex")
-            .toString("utf-8")
-            .slice(0, 5)
-            .toUpperCase(),
+          S: "CLARITY",
         },
         TotalSupply: {
-          S: process.env.PROJECT_AMNT as string,
+          S: "2000000000000000",
         },
       },
     },
@@ -119,10 +104,9 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: startSlot.toString(),
         },
         SlotOffset: {
-          N:
-            process.env.NODE_ENV === "mainnet"
-              ? MAINNET_OFFSET
-              : PREVIEW_OFFSET,
+          N: process.env.NODE_ENV?.includes("mainnet")
+            ? MAINNET_OFFSET
+            : PREVIEW_OFFSET,
         },
       },
     },
@@ -135,10 +119,9 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: posixToSlot(process.env.DEADLINE as string).toString(),
         },
         SlotOffset: {
-          N:
-            process.env.NODE_ENV === "mainnet"
-              ? MAINNET_OFFSET
-              : PREVIEW_OFFSET,
+          N: process.env.NODE_ENV?.includes("mainnet")
+            ? MAINNET_OFFSET
+            : PREVIEW_OFFSET,
         },
       },
     },
@@ -147,16 +130,16 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     },
     fundingAllocations: {
       L: [
-        {
-          M: {
-            Label: {
-              S: "SS",
-            },
-            Percentage: {
-              N: "1",
-            },
-          },
-        },
+        // {
+        //   M: {
+        //     Label: {
+        //       S: "SS",
+        //     },
+        //     Percentage: {
+        //       N: "1",
+        //     },
+        //   },
+        // },
       ],
     },
     lastCallDate: {
@@ -167,10 +150,9 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           ).toString(),
         },
         SlotOffset: {
-          N:
-            process.env.NODE_ENV === "mainnet"
-              ? MAINNET_OFFSET
-              : PREVIEW_OFFSET,
+          N: process.env.NODE_ENV?.includes("mainnet")
+            ? MAINNET_OFFSET
+            : PREVIEW_OFFSET,
         },
       },
     },
@@ -180,17 +162,16 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: startSlot.toString(),
         },
         SlotOffset: {
-          N:
-            process.env.NODE_ENV === "mainnet"
-              ? MAINNET_OFFSET
-              : PREVIEW_OFFSET,
+          N: process.env.NODE_ENV?.includes("mainnet")
+            ? MAINNET_OFFSET
+            : PREVIEW_OFFSET,
         },
       },
     },
     parameters: {
       M: {
         beneficiaryAddress: {
-          S: process.env.PENALTY_ADDRESS as string,
+          S: process.env.PROJECT_ADDRESS as string,
         },
         foldFee: {
           N: "2000000",
@@ -225,33 +206,53 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     projectDetails: {
       M: {
         Description: {
-          S: process.env.PROJECT_DESC as string,
+          S: "Clarity is a decentralized governance protocol that enables DAOs and other tokenized projects to formalize on-chain governance.",
         },
         Handle: {
           S: "yes",
         },
         Name: {
-          S: process.env.PROJECT_NAME as string,
+          S: "ClarityDAO",
         },
         Socials: {
           L: [
             {
               M: {
                 Name: {
-                  S: "Reddit",
+                  S: "Twitter",
                 },
                 Url: {
-                  S: "https://example.com",
+                  S: "https://twitter.com/clarity_dao",
                 },
               },
             },
             {
               M: {
                 Name: {
-                  S: "Telegram",
+                  S: "Discord",
                 },
                 Url: {
-                  S: "https://example.com",
+                  S: "https://https://discord.gg/KujHvyA4xd ",
+                },
+              },
+            },
+            {
+              M: {
+                Name: {
+                  S: "Medium",
+                },
+                Url: {
+                  S: "https://medium.com/@Clarity_",
+                },
+              },
+            },
+            {
+              M: {
+                Name: {
+                  S: "Youtube",
+                },
+                Url: {
+                  S: "https://www.youtube.com/watch?v=5nRwAVQ8LMM",
                 },
               },
             },
@@ -260,18 +261,68 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
         Team: {
           M: {
             Company: {
-              S: `${process.env.PROJECT_TN}, Inc.`,
+              S: "ClarityDAO",
             },
             Members: {
               L: [
                 {
                   M: {
                     Name: {
-                      S: "Lorem Ipsum",
+                      S: "Logan Panchot",
                     },
                     Role: {
-                      S: "CEO",
+                      S: "Business Development Lead",
                     },
+                    Social: {
+                      NULL: true,
+                    },
+                  },
+                },
+                {
+                  M: {
+                    Name: {
+                      S: "Justin Schreiner",
+                    },
+                    Role: {
+                      S: "Product Lead",
+                    },
+                    Social: {
+                      NULL: true,
+                    },
+                  },
+                },
+                {
+                  M: {
+                    Name: {
+                      S: "Matt Laux",
+                    },
+                    Role: {
+                      S: "Full Stack Developer",
+                    },
+                    Social: {
+                      NULL: true,
+                    },
+                  },
+                },
+                {
+                  M: {
+                    Name: {
+                      S: "Tomasz Maciosowski",
+                    },
+                    Role: {
+                      S: "On-chain Lead",
+                    },
+                    Social: {
+                      NULL: true,
+                    },
+                  },
+                },
+                {
+                  M: {
+                    Name: {
+                      S: "Ben Hart",
+                    },
+                    Role: { S: "Business Development" },
                     Social: {
                       NULL: true,
                     },
@@ -280,14 +331,31 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               ],
             },
             Other: {
-              L: [
-                {
-                  S: "AP1",
-                },
-              ],
+              L: [],
             },
             Socials: {
-              NULL: true,
+              L: [
+                {
+                  M: {
+                    Name: {
+                      S: "Website",
+                    },
+                    Url: {
+                      S: "https://clarity.community",
+                    },
+                  },
+                },
+                {
+                  M: {
+                    Name: {
+                      S: "Whitepaper",
+                    },
+                    Url: {
+                      S: "https://docsend.com/view/5dxmuwzgptqxzvm7",
+                    },
+                  },
+                },
+              ],
             },
           },
         },
@@ -296,50 +364,20 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
             {
               M: {
                 Label: {
-                  S: "DAO Treasury",
-                },
-                Percentage: {
-                  N: "50",
-                },
-              },
-            },
-            {
-              M: {
-                Label: {
-                  S: "Airdrop",
-                },
-                Percentage: {
-                  N: "15",
-                },
-              },
-            },
-            {
-              M: {
-                Label: {
-                  S: "Governance",
-                },
-                Percentage: {
-                  N: "10",
-                },
-              },
-            },
-            {
-              M: {
-                Label: {
                   S: "Team",
                 },
                 Percentage: {
-                  N: "5",
+                  N: "11.5",
                 },
               },
             },
             {
               M: {
                 Label: {
-                  S: "Protocol Liquidity",
+                  S: "Strategic Partners",
                 },
                 Percentage: {
-                  N: "12",
+                  N: "20.15",
                 },
               },
             },
@@ -349,7 +387,37 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
                   S: "Taste Test",
                 },
                 Percentage: {
-                  N: "8",
+                  N: "5",
+                },
+              },
+            },
+            {
+              M: {
+                Label: {
+                  S: "Community Rewards",
+                },
+                Percentage: {
+                  N: "29",
+                },
+              },
+            },
+            {
+              M: {
+                Label: {
+                  S: "DAO Treasury",
+                },
+                Percentage: {
+                  N: "24.35",
+                },
+              },
+            },
+            {
+              M: {
+                Label: {
+                  S: "Future Development",
+                },
+                Percentage: {
+                  N: "10",
                 },
               },
             },
@@ -572,42 +640,64 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
       },
     },
     slug: {
-      S: (process.env.PROJECT_NAME as string).toLowerCase().replace(" ", "-"),
+      S: "clarity",
     },
     type: {
       S: "Liquidity",
     },
     vestingSchedule: {
-      L: [
-        {
+      L: [],
+    },
+  };
+
+  const getUnlock = (label: string, amount: bigint, month: number) => {
+    return {
+      M: {
+        Address: {
+          S: label,
+        },
+        Amount: {
+          S: amount.toString(),
+        },
+        Label: {
+          S: label,
+        },
+        ReleaseDate: {
           M: {
-            Address: {
-              S: "addr1justoneparty",
+            Slot: {
+              S: (
+                Number(process.env.DEADLINE!) +
+                1000 * 60 * 60 * 24 * 30 * month
+              ).toString(),
             },
-            Amount: {
-              S: "1000000",
-            },
-            Label: {
-              S: "Just One Party",
-            },
-            ReleaseDate: {
-              M: {
-                Slot: {
-                  S: (startSlot + 86400 * 100).toString(),
-                },
-                SlotOffset: {
-                  N:
-                    process.env.NODE_ENV === "mainnet"
-                      ? MAINNET_OFFSET
-                      : PREVIEW_OFFSET,
-                },
-              },
+            SlotOffset: {
+              N: MAINNET_OFFSET,
             },
           },
         },
-      ],
-    },
+      },
+    };
   };
+
+  for (let i = 0; i < 24; i++) {
+    if (i === 0) {
+      entry.vestingSchedule?.L.push(getUnlock("Team", 57_500_000_000_000n, 0));
+      entry.vestingSchedule?.L.push(
+        getUnlock("Strategic Partners", 100_750_000_000_000n, 0),
+      );
+      entry.vestingSchedule?.L.push(
+        getUnlock("Future Development", 50_000_000_000_000n, 0),
+      );
+    } else {
+      entry.vestingSchedule?.L.push(getUnlock("Team", 7_187_500_000_000n, i));
+      entry.vestingSchedule?.L.push(
+        getUnlock("Strategic Partners", 12_593_750_000_000n, i),
+      );
+      entry.vestingSchedule?.L.push(
+        getUnlock("Future Development", 6_250_000_000_000n, i),
+      );
+    }
+  }
 
   writeFile(
     `./dynamodb-template.json`,

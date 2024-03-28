@@ -2,43 +2,43 @@
   "policy": "0ed531b3c85fa4ee7749fef02d005f657094329274f33e5c1403e591",
   "scriptsRef": {
     "TasteTestPolicy": {
-      "txHash": "567549793c3c407e15a88b45a46792e36f65521a5bbe6cd5538f639116f9fdec",
+      "txHash": "8a5575d5dea6e397bfff302e6da1b7a5c6dd7eac7a0dc625ffa22bf57547e3bd",
       "outputIndex": 0
     },
     "TasteTestValidator": {
-      "txHash": "38050a1465fbbc836045f6721fad76b73e6a682ee0c8d6595fdf6404b7370f11",
+      "txHash": "ceef69b5df9abe2fabcbae7d4bde4238bd4b59088f56aa58d30f09050501fbe3",
       "outputIndex": 0
     },
     "CollectFoldPolicy": {
-      "txHash": "9bfe84dd469567fb34ba59bd03d730cc5673885aceecd5df4e74f7d9a6e7fb5c",
+      "txHash": "29b02b2530587b8e40f68685ee2d29c8a2f0bb7fd4422066abdea58098b2034c",
       "outputIndex": 0
     },
     "CollectFoldValidator": {
-      "txHash": "d607c40bf5b985a0f518d811a2f1656cdcfa6382ea629115c08e0cd6cc82e971",
+      "txHash": "83b7d20a4e6137f30904f7ecef979c631e2e0e6aef1033e7eb494db95c913ea5",
       "outputIndex": 0
     },
     "RewardFoldPolicy": {
-      "txHash": "77e4d7e3ab60e3bcd7fa90dd5747c12461daf12bb9e0020d86c856769601e3c0",
+      "txHash": "118acddea0989bf53403e9fd41173488b1631f0eb33d543142860339d584d3d5",
       "outputIndex": 0
     },
     "RewardFoldValidator": {
-      "txHash": "59068474652de609ebd8f69615b1b3ab5c0972961d015522b49513ccf95c4021",
+      "txHash": "0804405a5c34ab37399576b7f422360181a556afcfb46f0a1fa2f75390c6e8c7",
       "outputIndex": 0
     },
     "TokenHolderPolicy": {
-      "txHash": "e92ff88f588c9bcf95cf6ddfd19bf134ecf8fa2d99b7dea3c940fef31ec1b3e1",
+      "txHash": "8d8ce897a1e3eb9c0d1387f79244f7a92c74a2578177e4430f02dea6898587fa",
       "outputIndex": 0
     },
     "TokenHolderValidator": {
-      "txHash": "9f9ba829e38ab31d4da7183f49f1b74da7d86f8577d0a8c76a366d789e22a4fd",
+      "txHash": "0cac7a64c467746106bc72ba71a0a8984688dcdb663220fc89f8839df5454c07",
       "outputIndex": 0
     },
     "TasteTestStakeValidator": {
-      "txHash": "3ca73f74f8f2d7548628b847513a159b1e53c734ed60c52b0b94765591fc4c19",
+      "txHash": "ec73877d0eae27ecc5e316ae806eda0d5a8743dd575ef2ab87a1420ff8b498fd",
       "outputIndex": 0
     },
     "RewardStake": {
-      "txHash": "74e33cbee213b0fbfdd917c014ac0bf242be22842f10a7f950d699bda7e4f56c",
+      "txHash": "e86886b87206b789e4b9935209d71213dbeda525fdfbe417e6cd92e853b4d204",
       "outputIndex": 0
     }
   }
