@@ -6,10 +6,13 @@ import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../constants/network.js";
 
 let lucidInstance: Lucid;
 
+export const getNewBlockfrostInstance = () =>
+  new Blockfrost(process.env.API_URL!, process.env.API_KEY);
+
 export const getLucidInstance = async () => {
   if (!lucidInstance) {
     lucidInstance = await Lucid.new(
-      new Blockfrost(process.env.API_URL!, process.env.API_KEY),
+      getNewBlockfrostInstance(),
       process.env.NETWORK as Network,
     );
   }

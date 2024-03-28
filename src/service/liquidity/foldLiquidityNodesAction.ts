@@ -25,7 +25,7 @@ export const foldLiquidityNodesAction = async (
 ) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, 2);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
@@ -58,18 +58,23 @@ export const foldLiquidityNodesAction = async (
     return datum.commitment === 0n;
   });
 
-  const chunks = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 25);
+  const chunks = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 20);
 
-  console.log(`Found a total of ${chunks.length} chunks to process.`);
+  console.log(
+    `Found a total of ${unprocessedNodes.length} nodes and ${chunks.length} chunks to process.`,
+  );
   for (const [index, chunk] of chunks.entries()) {
     console.log(
       `Processing chunk at index #${index}, out of ${chunks.length} chunks...`,
     );
     const sortedInputs = sortByOrefWithIndex(chunk);
 
-    const feeInput = (await lucid.wallet.getUtxos()).find(
-      ({ assets }) => assets.lovelace > 2_000_000n,
+    const walletUtxos = await lucid.wallet.getUtxos();
+    const feeInput = walletUtxos.find(
+      ({ assets }) =>
+        assets.lovelace > 2_000_000n && Object.keys(assets).length === 1,
     );
+
     if (!feeInput) {
       throw Error("Could not find a UTxO that had at least 2 ADA in it.");
     }
@@ -90,23 +95,23 @@ export const foldLiquidityNodesAction = async (
         foldPolicy: applied.scripts.collectFoldPolicy,
         foldValidator: applied.scripts.collectFoldValidator,
       },
-      refInputs: {
-        foldValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.CollectFoldValidator,
-          ])
-        )?.[0] as UTxO,
-        liquidityValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestValidator,
-          ])
-        )?.[0] as UTxO,
-        collectStake: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestStakeValidator,
-          ])
-        )?.[0] as UTxO,
-      },
+      // refInputs: {
+      //   foldValidator: (
+      //     await lucid.provider.getUtxosByOutRef([
+      //       deployed.scriptsRef.CollectFoldValidator,
+      //     ])
+      //   )?.[0] as UTxO,
+      //   liquidityValidator: (
+      //     await lucid.provider.getUtxosByOutRef([
+      //       deployed.scriptsRef.TasteTestValidator,
+      //     ])
+      //   )?.[0] as UTxO,
+      //   collectStake: (
+      //     await lucid.provider.getUtxosByOutRef([
+      //       deployed.scriptsRef.TasteTestStakeValidator,
+      //     ])
+      //   )?.[0] as UTxO,
+      // },
     };
 
     const multiFoldUnsigned = await liquidityFoldNodes(lucid, multiFoldConfig);
