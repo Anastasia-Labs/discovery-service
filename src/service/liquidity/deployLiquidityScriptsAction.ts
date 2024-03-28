@@ -347,9 +347,11 @@ export const deployLiquidityScriptsAction = async (
         });
 
         if (isDryRun()) {
-          console.log({
-            [`deploy_${index}`]: txComplete.toString(),
-          });
+          console.log(
+            JSON.stringify({
+              [`deploy_${index}`]: txComplete.toString(),
+            }),
+          );
         }
 
         const completed = await txComplete.sign().complete();
@@ -378,7 +380,6 @@ export const deployLiquidityScriptsAction = async (
     }),
   );
 
-  //NOTE: FIND UTXOS
   const deployPolicyId = deploy1.data.deployPolicyId;
 
   const scriptsRef: Record<string, OutRef> = {};
@@ -401,7 +402,7 @@ export const deployLiquidityScriptsAction = async (
   const data = JSON.stringify(
     {
       policy: deploy9.data.deployPolicyId,
-      scriptsRef: scriptsRef,
+      scriptsRef,
     },
     undefined,
     2,

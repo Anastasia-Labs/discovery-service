@@ -53,7 +53,8 @@
     "mint-token:mainnet": "NODE_ENV=mainnet NODE_NO_WARNINGS=1 ts-node --esm src/commands/mintToken.ts",
     "get-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/getScriptData.ts",
     "emulate-liquidity:preview": "NODE_ENV=emulator NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts",
-    "emulate-liquidity:mainnet": "NODE_ENV=emulator.mainnet NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts"
+    "emulate-liquidity:mainnet": "NODE_ENV=emulator.mainnet NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts",
+    "test": "NODE_ENV=mainnet NODE_NO_WARNINGS=1 ts-node --esm src/tempCommands/testtx.ts"
   },
   "author": "",
   "license": "ISC",

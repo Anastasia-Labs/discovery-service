@@ -1,1 +1,42 @@
-{"TasteTestPolicy":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":0},"TasteTestValidator":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":1},"CollectFoldPolicy":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":2},"CollectFoldValidator":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":3},"RewardFoldPolicy":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":4},"RewardFoldValidator":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":5},"TokenHolderPolicy":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":6},"TokenHolderValidator":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":7},"TasteTestStakeValidator":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":8},"RewardStake":{"txHash":"74c0ae49b7afda999cc630757ce32d511e6ceb432106b6331cca4e35b402a995","outputIndex":9}}
+{
+  "TasteTestPolicy": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 0
+  },
+  "TasteTestValidator": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 1
+  },
+  "CollectFoldPolicy": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 2
+  },
+  "CollectFoldValidator": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 3
+  },
+  "RewardFoldPolicy": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 4
+  },
+  "RewardFoldValidator": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 5
+  },
+  "TokenHolderPolicy": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 6
+  },
+  "TokenHolderValidator": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 7
+  },
+  "TasteTestStakeValidator": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 8
+  },
+  "RewardStake": {
+    "txHash": "3995d05847fc59c7888b02de7c0bf8ed771a8cfd629ccf5cb8b0295aefe375ab",
+    "outputIndex": 9
+  }
+}
