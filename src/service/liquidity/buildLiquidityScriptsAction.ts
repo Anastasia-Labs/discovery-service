@@ -122,9 +122,20 @@ export const buildLiquidityScriptsAction = async (
     },
   };
 
+  const scriptHashes = Object.entries(scripts.data).reduce(
+    (acc, [key, script]) => {
+      acc[key] = lucid.utils.validatorToScriptHash({
+        type: key === "proxyTokenHolderValidator" ? "PlutusV1" : "PlutusV2",
+        script,
+      });
+      return acc;
+    },
+    {} as Record<string, string>,
+  );
+
   const data = JSON.stringify(
     {
-      ...{ scripts: scripts.data },
+      ...{ scripts: scripts.data, scriptHashes },
       ...{ version: currenTime },
       ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
       ...parameters,
@@ -136,19 +147,7 @@ export const buildLiquidityScriptsAction = async (
   if (isDryRun()) {
     console.log(data);
   } else {
-    await writeFile(
-      `./applied-scripts.json`,
-      JSON.stringify(
-        {
-          ...{ scripts: scripts.data },
-          ...{ version: currenTime },
-          ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
-          ...parameters,
-        },
-        undefined,
-        2,
-      ),
-    );
+    await writeFile(`./applied-scripts.json`, data);
 
     console.log(`Scripts have been saved , version ${currenTime}\n`);
   }

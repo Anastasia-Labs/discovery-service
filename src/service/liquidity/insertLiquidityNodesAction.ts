@@ -30,7 +30,7 @@ export const insertLiquidityNodesAction = async (
     await selectLucidWallet(lucid, walletIdx);
     // Emulator needs this to refresh some random data.
     if (emulator) {
-      await setTimeout(500);
+      await setTimeout(50);
       await lucid.wallet.getUtxos();
     }
 
