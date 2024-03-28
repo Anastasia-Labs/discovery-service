@@ -36,12 +36,17 @@ export async function mintNFTAction(lucid: Lucid) {
 
   const unit = toUnit(policyId, assetName);
 
+  const externalTokenProvider =
+    process.env.SHOULD_BUILD_TOKEN_DEPOSIT_TX! !== "false";
+
   const tx = await lucid
     .newTx()
     .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT!) })
     .validTo(Date.now() + 100000)
     .payToAddress(
-      process.env.PROJECT_TOKEN_HOLDER_ADDRESS! ?? wallets[1].address,
+      externalTokenProvider
+        ? process.env.PROJECT_TOKEN_HOLDER_ADDRESS!
+        : wallets[1].address,
       {
         lovelace: 1_500_000n,
         [unit]: BigInt(process.env.PROJECT_AMNT!),

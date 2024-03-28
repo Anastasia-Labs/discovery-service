@@ -1,6 +1,6 @@
 import { writeFile } from "fs/promises";
 import {
-  InitTokenHolderConfig,
+  InitLiquidityTokenHolderConfig,
   Lucid,
   initLqTokenHolder,
 } from "price-discovery-offchain";
@@ -13,34 +13,12 @@ import { selectLucidWallet } from "../../utils/wallet.js";
 export const initTokenHolderAction = async (lucid: Lucid) => {
   const applied = await getAppliedScripts();
   const deployed = await getDeployedScripts();
-  const externalTokenProvider = Boolean(
-    process.env.SHOULD_BUILD_TOKEN_DEPOSIT_TX!,
-  );
-
-  // const address =
-  // let collectFrom: UTxO[] | undefined = externalTokenProvider ? await lucid.provider.getUtxosByOutRef([applied.projectTokenHolder.initOutRef]) : undefined;
-  // if (externalTokenProvider) {
-  //   const [address] = await inquirer.prompt([
-  //     {
-  //       type: "input",
-  //       name: "value",
-  //       message: "What is the user's wallet address?",
-  //     },
-  //   ]);
-
-  //   if (!address) {
-  //     throw new Error("Can not initialize token holder with empty values.");
-  //   }
-
-  //   collectFrom = await lucid.provider.getUtxosWithUnit(
-  //     address,
-  //     toUnit(process.env.PROJECT_CS!, fromText(process.env.PROJECT_TN!)),
-  //   );
-  // }
+  const externalTokenProvider =
+    process.env.SHOULD_BUILD_TOKEN_DEPOSIT_TX! !== "false";
 
   // Collect from the token holder's wallet.
   const tokenSupplierAddress = process.env.PROJECT_TOKEN_HOLDER_ADDRESS!;
-  if (tokenSupplierAddress) {
+  if (tokenSupplierAddress && externalTokenProvider) {
     lucid.selectWalletFrom({
       address: tokenSupplierAddress,
       utxos: (await lucid.provider.getUtxos(tokenSupplierAddress)).filter(
@@ -61,7 +39,7 @@ export const initTokenHolderAction = async (lucid: Lucid) => {
   } else {
     await selectLucidWallet(lucid, 1);
   }
-  const initTokenHolderConfig: InitTokenHolderConfig = {
+  const initTokenHolderConfig: InitLiquidityTokenHolderConfig = {
     projectCS: applied.rewardValidator.projectCS,
     projectTN: applied.rewardValidator.projectTN,
     projectAmount: Number(process.env.PROJECT_AMNT),

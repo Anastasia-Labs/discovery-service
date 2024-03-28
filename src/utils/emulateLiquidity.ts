@@ -1,6 +1,8 @@
 import {
+  Assets,
   Emulator,
   Lucid,
+  OutputData,
   PROTOCOL_PARAMETERS_DEFAULT,
   ProtocolParameters,
 } from "price-discovery-offchain";
@@ -10,7 +12,9 @@ import "./env.js";
 import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   DEPLOY_WALLET_ADA,
+  EMULATOR_TT_BLOCK_DURATION,
   EMULATOR_TT_END_DELAY,
+  MIN_ADA_INSERT_WALLET,
 } from "../constants/utils.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
 import { claimLiquidityNodeAction } from "../service/liquidity/claimLiquidityNodeAction.js";
@@ -20,6 +24,7 @@ import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNode
 import { foldLiquidityRewardsAction } from "../service/liquidity/foldLiquidityRewardsAction.js";
 import { initLiquidityFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
 import { initLiquidityRewardServiceAction } from "../service/liquidity/initLiquidityRewardServiceAction.js";
+import { initTokenHolderAction } from "../service/liquidity/initTokenHolderAction.js";
 import { initializeLiquidityAction } from "../service/liquidity/initializeLiquidityAction.js";
 import { insertLiquidityNodesAction } from "../service/liquidity/insertLiquidityNodesAction.js";
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
@@ -33,7 +38,7 @@ const emulateLiquidity = async () => {
   const restAccounts = [...wallets].slice(3).map(({ address }) => ({
     address,
     assets: {
-      lovelace: 1_500_000_000n,
+      lovelace: MIN_ADA_INSERT_WALLET,
     },
   }));
 
@@ -49,7 +54,7 @@ const emulateLiquidity = async () => {
       }
     : undefined;
 
-  const emulator = new Emulator(
+  const utxos: { address: string; assets: Assets; outputData?: OutputData }[] =
     [
       {
         address: wallets[0].address,
@@ -70,28 +75,44 @@ const emulateLiquidity = async () => {
         },
       },
       ...restAccounts,
-      {
-        address:
-          "addr_test1wz93mczshjd4zpv84csc6q6hk3w0usmrksxgx8gwqahqpqgv4p5ty",
-        assets: {
-          lovelace: 2_000_000n,
-          "947dd0cec86ce6106517fbcf74ce93530e1f60127be57f0a4bbc50c1666163746f7279":
-            1n,
-        },
-        outputData: {
-          hash: "d2653ed85dac06c5b39554b78875d4f8cb6680a274a0f2cf6897f2b99e35b0da",
-        },
-      },
-    ],
-    protocolParams,
-  );
+    ];
 
+  if (process.env.NODE_ENV?.includes("mainnet")) {
+    utxos.push({
+      address: "addr1w82z6yrftsxz77el0ce2q4vuspcym2x0xgpgneurrwvasfge778fd",
+      assets: {
+        lovelace: 2_000_000n,
+        e8a447d4e19016ca2aa74d20b4c4de87adb1f21dfb5493bf2d7281a6666163746f7279:
+          1n,
+      },
+      outputData: {
+        hash: "24aa61609c74285e0d02f7adebb258cc9de480e0bd59207cd1a5f76793dc0c07",
+      },
+    });
+  } else {
+    utxos.push({
+      address:
+        "addr_test1wz93mczshjd4zpv84csc6q6hk3w0usmrksxgx8gwqahqpqgv4p5ty",
+      assets: {
+        lovelace: 2_000_000n,
+        "947dd0cec86ce6106517fbcf74ce93530e1f60127be57f0a4bbc50c1666163746f7279":
+          1n,
+      },
+      outputData: {
+        hash: "d2653ed85dac06c5b39554b78875d4f8cb6680a274a0f2cf6897f2b99e35b0da",
+      },
+    });
+  }
+
+  const emulator = new Emulator(utxos, protocolParams);
   const deadline = emulator.now() + EMULATOR_TT_END_DELAY;
-  const lucidInstance = await Lucid.new(emulator);
+  const network = process.env.NODE_ENV?.includes("mainnet")
+    ? "Mainnet"
+    : "Preview";
+  const lucidInstance = await Lucid.new(emulator, network);
   const DELAY = 0;
 
   try {
-    lucidInstance.selectWalletFromSeed(wallets[1].seed);
     console.log("\n\n\nEMULATOR: Minting Project Token...");
     await mintNFTAction(lucidInstance);
     console.log("Moving to next step...");
@@ -104,6 +125,11 @@ const emulateLiquidity = async () => {
 
     console.log("\n\n\nEMULATOR: Deploying Liquidity Scripts...");
     await deployLiquidityScriptsAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Initializing Token Holder...");
+    await initTokenHolderAction(lucidInstance);
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
@@ -127,14 +153,13 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
-    console.log("\n\n\nEMULATOR: Removing the Last Deposit...");
-    // emulator.awaitBlock(100);
+    console.log("\n\n\nEMULATOR: Removing Some Deposits with Penalty...");
     await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Initializing Fold UTXO...");
-    emulator.awaitBlock(150); // Ensure TT is done.
+    emulator.awaitBlock(EMULATOR_TT_BLOCK_DURATION); // Ensure TT is done.
     await initLiquidityFoldServiceAction(lucidInstance, emulator);
     console.log("Moving to next step...");
     await setTimeout(DELAY);

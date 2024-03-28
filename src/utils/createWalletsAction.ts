@@ -6,7 +6,7 @@ import { generateSeedPhrase, Lucid } from "price-discovery-offchain";
 import { refundWalletsAction } from "./refundWalletAction.js";
 
 export const createWalletsAction = async (lucid: Lucid) => {
-  const target = 50;
+  const target = 100;
   const wallets = [];
   const path = "./test/wallets.json";
 

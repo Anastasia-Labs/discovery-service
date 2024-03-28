@@ -65,7 +65,8 @@ export const deployLiquidityScriptsAction = async (
   //NOTE: deploy minting policy has 15 minutes deadline it should be enough time to deploy 9 scripts
   const deployTime = Date.now();
   const splitTx = lucid.newTx();
-  if ((await lucid.wallet.getUtxos()).length < 2) {
+  const deployWalletUtxos = await lucid.wallet.getUtxos();
+  if (deployWalletUtxos.length < 2) {
     [...new Array(10).keys()].forEach((index) => {
       splitTx.payToAddress(deployWalletAddress, {
         lovelace: refScriptAmountsByIndex[index],
@@ -80,8 +81,9 @@ export const deployLiquidityScriptsAction = async (
     } else {
       const hash = await (await txComplete.sign().complete()).submit();
       lucid.awaitTx(hash);
+      console.log("Submitting fragmentation: " + hash);
+
       if (!emulator) {
-        console.log("Submitting fragmentation: " + hash);
         await setTimeout(20_000);
       }
 
@@ -89,7 +91,7 @@ export const deployLiquidityScriptsAction = async (
       for (const name of validatorsByIndex) {
         scriptsRef[name] = {
           txHash: hash,
-          outputIndex: 0,
+          outputIndex: validatorsByIndex.indexOf(name),
         };
       }
 

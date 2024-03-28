@@ -6,6 +6,7 @@ import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   DEPLOY_WALLET_ADA,
   MAX_WALLET_GROUP_COUNT,
+  MIN_ADA_INSERT_WALLET,
 } from "../constants/utils.js";
 import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
@@ -41,8 +42,8 @@ export async function fundWalletsAction(lucid: Lucid) {
       break;
     }
 
-    console.log("Sending 6 ADA to wallet: " + index);
-    tx.payToAddress(wallet.address, { lovelace: 7_000_000n });
+    console.log("Sending 10 ADA to wallet: " + index);
+    tx.payToAddress(wallet.address, { lovelace: MIN_ADA_INSERT_WALLET });
   }
 
   const completedTx = await tx.complete();
