@@ -30,6 +30,7 @@ import {
   getDeployedScripts,
   getTokenHolderSubmitTx,
 } from "./files.js";
+import { mintNFTAction } from "./mintTokenAction.js";
 import { getLucidInstance, selectLucidWallet } from "./wallet.js";
 
 interface EmulatorAccount {
@@ -152,11 +153,12 @@ const emulateLiquidity = async () => {
   const DELAY = 0;
 
   try {
-    // console.log("\n\n\nEMULATOR: Minting Project Token...");
-    // await mintNFTAction(lucidInstance);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
     if (false) {
+      console.log("\n\n\nEMULATOR: Minting Project Token...");
+      await mintNFTAction(lucidInstance);
+      console.log("Moving to next step...");
+      await setTimeout(DELAY);
+
       console.log("\n\n\nEMULATOR: Building Liquidity Scripts...");
       await buildLiquidityScriptsAction(lucidInstance, deadline);
       console.log("Moving to next step...");
