@@ -3,6 +3,7 @@ import "./env.js";
 import { Blockfrost, Lucid, Network } from "price-discovery-offchain";
 
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../constants/network.js";
+import { getWallets } from "./files.js";
 
 let lucidInstance: Lucid;
 
@@ -21,9 +22,7 @@ export const getLucidInstance = async () => {
 };
 
 export const selectLucidWallet = async (lucid: Lucid, index: number) => {
-  const { default: wallets } = await import("../../test/wallets.json", {
-    assert: { type: "json" },
-  });
+  const wallets = await getWallets();
   lucid.selectWalletFromSeed(wallets[index].seed as string);
 
   return lucid;

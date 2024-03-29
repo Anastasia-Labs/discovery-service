@@ -2,19 +2,19 @@ import "./env.js";
 
 import { Lucid } from "price-discovery-offchain";
 
-import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   MAX_WALLET_GROUP_COUNT,
   MIN_ADA_INSERT_WALLET,
 } from "../constants/utils.js";
+import { getWallets } from "./files.js";
 import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export async function fundWalletsAction(lucid: Lucid) {
+  const wallets = await getWallets();
   await selectLucidWallet(lucid, 0);
 
   const tx = lucid.newTx();
-
   for (const [index, wallet] of wallets.entries()) {
     // Skip our seeded wallet.
     // if (index === 0) {

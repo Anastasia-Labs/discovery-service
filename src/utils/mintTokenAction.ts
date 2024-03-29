@@ -8,12 +8,12 @@ import {
   toUnit,
 } from "price-discovery-offchain";
 
-import wallets from "../../test/wallets.json" assert { type: "json" };
-import { updateTasteTestVariables } from "./files.js";
+import { getWallets, updateTasteTestVariables } from "./files.js";
 import { isDryRun } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export async function mintNFTAction(lucid: Lucid) {
+  const wallets = await getWallets();
   await selectLucidWallet(lucid, 1);
 
   const { paymentCredential } = lucid.utils.getAddressDetails(

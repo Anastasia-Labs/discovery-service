@@ -2,12 +2,13 @@ import "./env.js";
 
 import { Assets, Lucid } from "price-discovery-offchain";
 
-import wallets from "../../test/wallets.json" assert { type: "json" };
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
+import { getWallets } from "./files.js";
 import { isDryRun, lovelaceAtAddress } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export const refundWalletsAction = async (lucid: Lucid) => {
+  const wallets = await getWallets();
   const walletEntries = [...wallets.entries()].slice(0, MAX_WALLET_GROUP_COUNT);
 
   for (const [index, wallet] of walletEntries) {

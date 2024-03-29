@@ -1,24 +1,25 @@
 import "./env.js";
 
 import inquirer from "inquirer";
-import { writeFile } from "node:fs";
 import { generateSeedPhrase, Lucid } from "price-discovery-offchain";
+import { IWallet } from "../@types/files.js";
+import { saveWallets } from "./files.js";
 import { refundWalletsAction } from "./refundWalletAction.js";
 
 export const createWalletsAction = async (lucid: Lucid) => {
   const target = 100;
-  const wallets = [];
-  const path = "./test/wallets.json";
+  const wallets: IWallet[] = [];
 
-  const { value } = await inquirer.prompt<{ value: string }>([
+  const { applyRefunds } = await inquirer.prompt<{ applyRefunds: boolean }>([
     {
-      type: "input",
-      name: "value",
-      message: "Do you want to apply refunds first? y/n (default: n)",
+      type: "confirm",
+      name: "applyRefunds",
+      message: "Do you want to apply refunds first?",
+      default: false,
     },
   ]);
 
-  if ("y" === value) {
+  if (applyRefunds) {
     await refundWalletsAction(lucid);
     console.log(`Done! Now creating new wallets...`);
   }
@@ -32,9 +33,5 @@ export const createWalletsAction = async (lucid: Lucid) => {
     wallets.push(wallet);
   }
 
-  writeFile(path, JSON.stringify(wallets, undefined, 2), (error) => {
-    error ? console.log(error) : console.log(`Wallets saved at ${path} `);
-  });
-
-  console.log(`Fund this wallet address (seed wallet): ${wallets[0].address}`);
+  await saveWallets(wallets);
 };

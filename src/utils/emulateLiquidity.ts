@@ -9,7 +9,6 @@ import {
 import { setTimeout } from "timers/promises";
 import "./env.js";
 
-import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   DEPLOY_WALLET_ADA,
   MIN_ADA_INSERT_WALLET,
@@ -30,10 +29,11 @@ import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidity
 import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { startTasteTest } from "../service/startTasteTestAction.js";
-import { getTokenHolderSubmitTx } from "./files.js";
+import { getTokenHolderSubmitTx, getWallets } from "./files.js";
 import { selectLucidWallet } from "./wallet.js";
 
 const emulateLiquidity = async () => {
+  const wallets = await getWallets();
   const restAccounts = [...wallets].slice(3).map(({ address }) => ({
     address,
     assets: {

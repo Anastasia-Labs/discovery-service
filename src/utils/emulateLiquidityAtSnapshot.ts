@@ -4,7 +4,6 @@ import "./env.js";
 
 import { readFile, writeFile } from "fs/promises";
 import inquirer from "inquirer";
-import wallets from "../../test/wallets.json" assert { type: "json" };
 import {
   MAX_WALLET_GROUP_COUNT,
   MIN_ADA_INSERT_WALLET,
@@ -29,6 +28,7 @@ import {
   getAppliedScripts,
   getDeployedScripts,
   getTokenHolderSubmitTx,
+  getWallets,
 } from "./files.js";
 import { mintNFTAction } from "./mintTokenAction.js";
 import { getLucidInstance, selectLucidWallet } from "./wallet.js";
@@ -112,7 +112,7 @@ const saveSnapshot = async (restAccounts: EmulatorAccount[]) => {
 };
 
 const emulateLiquidity = async () => {
-  const restAccounts: EmulatorAccount[] = [...wallets]
+  const restAccounts: EmulatorAccount[] = [...(await getWallets())]
     .slice(0, MAX_WALLET_GROUP_COUNT)
     .map(({ address }) => ({
       address,
