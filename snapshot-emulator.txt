@@ -1,0 +1,247 @@
+EMULATOR: Initializing Fold UTXO...
+1711728115469
+Submitting: b68c849aae208cb1720a7e5310e3f998e255e3619d7c6adba81e8cac7c29477f
+Done!
+Moving to next step...
+
+
+
+EMULATOR: Fold Liquidity Nodes...
+Found a total of 47 nodes and 3 chunks to process.
+Processing chunk at index #0, out of 3 chunks...
+Folding: 81225fb6abc249fab016e4cd89ad74a667f8c3d31efda7c45259bd0c9041a0b0#1 with key: 002a9444eb20c00e22d9f96292adc08456f46b09908d1f7b133a1a49
+Folding: 81907cdd96857a2dda027e7a7ade9068f0c0a9eae6c394d9e93fd7e30d7baa0c#0 with key: 0152f2a607187b6c5084b56093dd30d9501a6efcdb9c906b8275f183
+Folding: 81907cdd96857a2dda027e7a7ade9068f0c0a9eae6c394d9e93fd7e30d7baa0c#1 with key: 079e5889ebad2824a11135d36f52ecb426638161a14381be802987a2
+Folding: abd221795880eb1fff2bb15c1ae64e4b4bdaf98d8a34326007619d452649eff5#1 with key: 09e294d9b0149045d37df3fe28542c6201f941ceafa60aa0d1894de8
+Folding: 7d8982981fbee17ae0cd2db5a5939872c8a3f86a16c9d31d97908cce90fef862#0 with key: 0b0cb5b9865afbb101a87ba4fa97593e57166e73cc1dd5f0044d8620
+Folding: 7d8982981fbee17ae0cd2db5a5939872c8a3f86a16c9d31d97908cce90fef862#1 with key: 11db5570d711fb186ec1c8498cd13531a90bbfd3cb49e46b0793b964
+Folding: 8ff8865df7e346f9823898c1ea5616bc3f7eb29bf7cbdf2dfee9d1236d80c240#0 with key: 13b604b41036234be2bbf4f359e70d9e314b9bf99630fe408c326d05
+Folding: 8ff8865df7e346f9823898c1ea5616bc3f7eb29bf7cbdf2dfee9d1236d80c240#1 with key: 15cd339b7fb5ed225b0b7c410572fcbfc5c3086fcf436837b9894cf3
+Folding: 70b3304215111fba1ae34c9f8ab26208143056eb7ba9175e18a22344f0ddefee#0 with key: 17d5639e396811eb460ca987c3437945c71f18390a27922812bcb9ab
+Folding: d3aeb67575f8549aadd11f6bb7fc6f8405496156a6a037b9fed11097b744c082#0 with key: 33f28673a75ed5a5d78afbc42a473e3a05d980d592e7dc496758e7b6
+Folding: d3aeb67575f8549aadd11f6bb7fc6f8405496156a6a037b9fed11097b744c082#1 with key: 40fb02bc1dea003e3f2a100f662aed92641aa16e603f4168e6ec1654
+Folding: 3006da72b4f5f5a6334975c3a66516aee61fcfe053a1fad93d57d2ea8481024e#1 with key: 496404d63245ed87d88ca56521b54b7d0ef4c979d19095213f5f510c
+Folding: 7abf940ee3b7cdd1077ca22b6c2e3c289249af107310a889fd92bf8381cd8658#0 with key: 4c9daa00e64ab05bad53ca42327e22fe32144a5bbad7cdd173d1ab50
+Folding: 7abf940ee3b7cdd1077ca22b6c2e3c289249af107310a889fd92bf8381cd8658#1 with key: 4e0b4f4d82e76535d80c94d3610a38c1227a07ed34db9bbcdc101e77
+Folding: 31ca829baf73139171e51059fe0198d38b99e6af1c8e546de98e5845028dba4c#1 with key: 4e1f9fccda1acaa316021f1f52afe721622529718c688ae37d53f5fd
+Folding: 80fb87ba4b27eb3a784732991d4107415c8fb111ff42fb0e3c59cecbf11597e9#0 with key: 501c7e4cff8bae7d8c2353b640d5c05a95a403a019ff4877d48f2df0
+Folding: 80fb87ba4b27eb3a784732991d4107415c8fb111ff42fb0e3c59cecbf11597e9#1 with key: 597829988fabbbbf9e9f3eedcd0bd8ec9dad2073cd7bfd49f0e31623
+Folding: 713c65cf94d9389c931cb242a24947575566afd776be3f38d9fdfb56cbbb1986#0 with key: 5e0bba00bf57f42eff114f26b20bd2f393945c4a379c40e5ad7f843f
+Folding: 713c65cf94d9389c931cb242a24947575566afd776be3f38d9fdfb56cbbb1986#1 with key: 77f3da28ac9dc2de10595028c9720e076c6545c680aec8c8fea46b9f
+Folding: e9c48e69cadb961d2524a047a48704bbf713dc39aed1347699686eea9e552e88#0 with key: 7858f94f0813a59af49caeb1991715df47303b6a44236abb3e8f3a45
+Submitting: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c
+Processing chunk at index #1, out of 3 chunks...
+Folding: e9c48e69cadb961d2524a047a48704bbf713dc39aed1347699686eea9e552e88#1 with key: 7a2fd8a21d21a76922798b3d0e783948c85c2ee1288d16838ca06161
+Folding: 9fc1d5ee2a6cdbe3316ee4786b5e391b93d9bed74f00cc26945b716d56243e5e#0 with key: 7e5b0ed8ab145f7f4f614909a268b50015a993aef88c2364dfb2858b
+Folding: 58b04b3146340bad9ddbe13b56fc85cb088a15d16c9bd4307623d8deaff2f6de#1 with key: 821701a35a1803c0b32ca48f6483e9b9947712b61d1eb7dc13ec8927
+Folding: 4c3619a608e9766d7d5feb74c4088fc920a85bea6d3205c80dbd3cb5199b5717#0 with key: 83a91897213a38cda84e9d1c6ddbac20e464e8d5faf85a21fa7166d1
+Folding: fd25bd60c1121ef373b28e20782cee6e3b7981b9c8ce75d6633329489513e6ea#0 with key: 8acd14fb502d4390470e7a15f153445383a65e260ce2e480d19cc36f
+Folding: fd25bd60c1121ef373b28e20782cee6e3b7981b9c8ce75d6633329489513e6ea#1 with key: 8e6d228c689913f3eccb8f65769204eec46a3b20c18789c1b061d174
+Folding: 7bef38c51eebe738ee8ce54b684c752d2afbcdfd7022ddf3926f5688d82566ec#1 with key: 9b3af8542e6b674ccbeab3f89e3d8e5ee5f9e7735177c265fdd923dc
+Folding: 0e9d1cba5312dd5630dd5ea95f66c430aa74d04b2f86a7f19fae4da5d7f68b5e#1 with key: 9ba1dd9ce174ac23cabfb23ad089b4005e5f7e03de0f5f689fd9d230
+Folding: 2596a00e55902f8e7a1ce75b39327f9b9dfb89cd34a9b3819410c1ee629dff8e#0 with key: a2db56dadf592bab7b9224943a7c227abf7ac01e90f43fa17c848c21
+Folding: 2596a00e55902f8e7a1ce75b39327f9b9dfb89cd34a9b3819410c1ee629dff8e#1 with key: ab1963e370e33238c58ff58e8d171a5269f9e8aa7e71264680b14c2e
+Folding: 1b634c2eaf003c0ab9744b1c8793292ccce4983ae06aa4419642ad2220ea5d7e#0 with key: b255346a60580f135838292691951caf7d174807ccc108e10749fbd5
+Folding: fef113e72ffcb17d6ce524f403802e74a4f8eb763fe044543ab8d3a10fcb8e1d#0 with key: b2c902c2d59c56b88a9f688f662d4d8e8aa81f083af76afeb41c8787
+Folding: fef113e72ffcb17d6ce524f403802e74a4f8eb763fe044543ab8d3a10fcb8e1d#1 with key: b3073fb39154d9fa3f321d0cbd7e08e4c0c44424a8894a74ff955d9c
+Folding: 8bddf53f9d78fca5ef75c1ccfdc943f95e613ed4c8dbc84941f3a8e1a39ef71a#0 with key: bff9d82df32a0d450987deda3210002dd1d94e493d43a4a13ebb0ea5
+Folding: 6bd2866f525aed0b89cadc71356a1a600849bb6952c8ec7f181eb05695706b97#0 with key: c0ff5904e5d29c1d85ef193acbe0c6eb7cddbcf3a0d2a593e96931c4
+Folding: 6bd2866f525aed0b89cadc71356a1a600849bb6952c8ec7f181eb05695706b97#1 with key: ceec3ade1e783e82148ee69c32f067779f58171c70ae723b7d91d947
+Folding: 9427d7adcc193e82f4b7c58e4acf0bbded9bfe2e14dcb366c939b8541fa8fed9#1 with key: d3cbd6f2e1e0d619cea0cc63dd41f22d4a7509de4a4c9d27e3e16076
+Folding: a31a1cf9e6dda6b58d78acdc4079b72870dd3255ca4c592c4fe4b8d928fd2b70#0 with key: d55e94c29543cd1baee435a54aafc28adf65b04f5e6deb0492df9f72
+Folding: 01ee211bbebdc1d705e0cff647add14752c04025eb44943096f87a9655245422#0 with key: d6c504e0c9711a20ac5060e943229cb67f91aac6621b1a9faac7a89a
+Folding: ecef432be3f6f156ca2cd415de0887a12d7b12b5024fdd9302bf316584c0ce7e#1 with key: daeb0e1359b83575d4765bc0865b1d6031a01f33a8a781b332dcec59
+Submitting: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef
+Processing chunk at index #2, out of 3 chunks...
+Folding: b7c4b566054a182c5b897079ebadfe0afaa265294ecb9309c4dd36399dd69870#0 with key: e791615bffd5f1f7176749805e40dc27de6b95d9e7f25d1a53ebc121
+Folding: 3fdb38256eb2722e07d317e50885f9d2786317213a95dacc5e3e4681faffe2a6#0 with key: efcbb5a18d3829549dc075d13e61b6e368a1ee4af39475865d6689dd
+Folding: 05c567642c88b8e54370863c4a8cb077e40d676c665b845f74d3a1d9777b15ab#0 with key: f0772ced6e75fb47afe119bc7f24d04fa7c835099904eef5cca94085
+Folding: cd8826308c4f147a514538d9b014d2a3b87fc0d073fe4ad268ec93856b3a1bf6#0 with key: f0e17b51bc18962397450eb625222bce9c510cb82b213bd9cf17ea82
+Folding: 66e8f53b90f58394174762eb57f0c446040f072ab1f9987a05b5aea6f7b512fb#0 with key: f1384c6f930cd0da1c5607cbd6ff0f10b8c8c80e1dc55eb1b8dca19f
+Folding: 66e8f53b90f58394174762eb57f0c446040f072ab1f9987a05b5aea6f7b512fb#1 with key: fa43712ca58c07e8122184dbecb023e700e3cefbcd494eb4354cc11f
+Submitting: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3
+Done!
+Moving to next step...
+
+
+
+EMULATOR: Adding Liquidity to Token Holder...
+PlutusV2 script of length: 1135
+pushing optional V2 hash from reference: 3660d1f66080385c6006043199aa76e75676f11fa17589713aac4ee0
+PlutusV2 script of length: 3501
+pushing optional V2 hash from reference: d7bd86fa11b68ff74828bd96d44a9da2c1dfb5c80a6a2aec53cdd7a3
+Submitted: 28417ccfa5187776215517670e219a4fe6e977707380e28ad80c2ba030d4af16
+Done!
+Moving to next step...
+
+
+
+EMULATOR: Spending to Proxy Token Holder...
+PlutusV2 script of length: 1135
+pushing optional V2 hash from reference: 3660d1f66080385c6006043199aa76e75676f11fa17589713aac4ee0
+PlutusV2 script of length: 3501
+pushing optional V2 hash from reference: d7bd86fa11b68ff74828bd96d44a9da2c1dfb5c80a6a2aec53cdd7a3
+Submitting proxy transaction: df7e46d332271baa19989237cf1d6eda4a204ba9491b47ec29559ba4d90d2276
+Done!
+Moving to next step...
+
+
+
+EMULATOR: Creating V1 Pool...
+
+          Depositing: 727025712959 Lovelace,
+          Depositing: 100000000000000 Clarity DAO Token,
+          Generating: 8526580281443 LP Tokens
+          LP Asset Name: 0029cb7c88c7567b63d1a512c0ed626aa169688ec980730c0473b9136c70205605
+      
+Submitting: 416d3d5f75464efbb736d257a17f98f94077651270b9b5e1be4c0eb68dc8b9ae
+Done! Saved LP token data to taste-test-variables.json.
+Moving to next step...
+
+
+
+EMULATOR: Initializing Reward Fold...
+PlutusV2 script of length: 1135
+pushing optional V2 hash from reference: 3660d1f66080385c6006043199aa76e75676f11fa17589713aac4ee0
+PlutusV2 script of length: 3946
+pushing optional V2 hash from reference: e82bb756d433e59afaa50f5f5bfcd605cecabef69111596214cc663c
+PlutusV2 script of length: 3501
+pushing optional V2 hash from reference: d7bd86fa11b68ff74828bd96d44a9da2c1dfb5c80a6a2aec53cdd7a3
+Submitting: 9372eaac5583a104728bfc47a5c0a094ac01000215655ec949a6d9ac6cb50f3f
+Done!
+Moving to next step...
+
+
+
+EMULATOR: Distributing Rewards...
+Found a total of 2 chunks to process.
+Processing chunk at index #0 out of 2 chunks...
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#0 with 293200781 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#1 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#2 with 1172803125 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#3 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#4 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#5 with 4398011718 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#6 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#7 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#8 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#9 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#10 with 1084842890 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#11 with 2932007812605 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#12 with 41048109376 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#13 with 76232203 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#14 with 17592046875 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#15 with 5864015 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#16 with 2052405468 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#17 with 82096218 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#18 with 117280312 LP Tokens
+Folding: 5375d3f8e63c25856af12daeda352a3325d16f578cf626113b9156db4da0a58c#19 with 586401562 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#0 with 8737383281 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#1 with 2961327890 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#2 with 17592046875 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#3 with 5864015 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#4 with 117280312504 LP Tokens
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+PlutusV2 script of length: 5707
+pushing optional V2 hash from reference: a576496208e88e026d461e9ddb74d925239ce985abbff87b7d38d39b
+PlutusV2 script of length: 223
+pushing optional V2 hash from reference: 2d02b3c52395d66c06135b950e1a716eafae192c426d1231d9b6ed31
+Submitting: 78f88fc09ecd20a6d106c2672029628a1b8cf964805c3eeecccc01a9346d5b8c
+Processing chunk at index #1 out of 2 chunks...
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#5 with 762322031 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#6 with 2932007812 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#7 with 35184093 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#8 with 586401562 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#9 with 1759204687 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#10 with 2932007812 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#11 with 873378345701 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#12 with 58640156252 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#13 with 29320078126 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#14 with 29320078126 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#15 with 2345606250 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#16 with 117280312 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#17 with 51016935939 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#18 with 727472708 LP Tokens
+Folding: 402bfa194101eb493ec116dd93454fe85c203db7fcffb6e05f4513658efd98ef#19 with 11728031250 LP Tokens
+Folding: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3#0 with 879602343 LP Tokens
+Folding: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3#1 with 557081484 LP Tokens
+Folding: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3#2 with 17158369237 LP Tokens
+Folding: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3#3 with 29320078126 LP Tokens
+Folding: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3#4 with 2052405468 LP Tokens
+Folding: 8dc88fbe9ea91c2aeb0141b8330ceff32123d03ec97dd2d8afcc9444a4a81cc3#5 with 586401562 LP Tokens
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+PlutusV2 script of length: 5707
+pushing optional V2 hash from reference: a576496208e88e026d461e9ddb74d925239ce985abbff87b7d38d39b
+PlutusV2 script of length: 223
+pushing optional V2 hash from reference: 2d02b3c52395d66c06135b950e1a716eafae192c426d1231d9b6ed31
+Submitting: 19f8d09796496fdc009d42db614802b0eac9ca3733029b02df3962cb80ee39c1
+Done!
+Moving to next step...
+
+
+
+EMULATOR: Claiming a Reward...
+Building claim with wallet: 3
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: 150c08035a58ae71d056a5f89423180e99715a4cbb2120d29ffaac1235703ec2
+Building claim with wallet: 4
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: 2579ff891b083ca5170b3343b3e85d741143eb4e53fc9c6eaa216fb3c8a9251a
+Building claim with wallet: 5
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: abacf6e7e9b4bb329fbb9e8e3b3bc74369bc3813a5050025d206b7c01177a93a
+Building claim with wallet: 6
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: caf752ad8c55f377187517b9f84474ef0162b46ec0f727456d0f2f9d92e09d9a
+Building claim with wallet: 7
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: c885e27d8350a4189301abe2d45edd002920b835ad7c019ed8e43d82120a87f9
+Building claim with wallet: 8
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: 913232f6b2c8e1f74441dccd571ef8ed26055421921e7a1cac94b6d8c30af73f
+Building claim with wallet: 9
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: 6d338ebf163507d7bfe8150c0c129b1035b2cce102a7bea3638d0d0475d6a3c0
+Building claim with wallet: 10
+PlutusV2 script of length: 6767
+pushing optional V2 hash from reference: 128f096a1660a6ccc74b97973f08563439911cdf693bc4d185917b31
+PlutusV2 script of length: 4534
+pushing optional V2 hash from reference: c8d92514cca2ce3dc4273e0fcf1bc09305c14294687a2d40ae69daa5
+Submitting: 9b6adc87bbde65f4f49172f9fd81681008e6f4e7d272a313b0aa580f17ac6355
+Done!
+
+    [32m
+        You Did It! You are the
+        
+    ██████╗  ██████╗ ███████╗███████╗
+    ██╔══██╗██╔═══██╗██╔════╝██╔════╝
+    ██████╔╝██║   ██║███████╗███████╗
+    ██╔══██╗██║   ██║╚════██║╚════██║
+    ██████╔╝╚██████╔╝███████║███████║
+    ╚═════╝  ╚═════╝ ╚══════╝╚══════╝
+    [0m
+    
+Done in 17.05s.

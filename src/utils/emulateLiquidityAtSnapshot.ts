@@ -51,6 +51,22 @@ const saveSnapshot = async (restAccounts: EmulatorAccount[]) => {
     lucidInstance.provider.getUtxos(process.env.PENALTY_ADDRESS!),
     lucidInstance.provider.getUtxos(process.env.REF_SCRIPTS_ADDRESS!),
     lucidInstance.provider.getUtxos(process.env.POOL_ADDRESS!),
+    lucidInstance.provider
+      .getUtxoByUnit(process.env.V1_FACTORY_TOKEN!.replace(".", ""))
+      .then(async (res) => {
+        const datum = await lucidInstance.provider.getDatum(
+          res.datumHash as string,
+        );
+
+        // Replace the datum hash with the real inline datum.
+        return [
+          {
+            ...res,
+            hash: undefined,
+            datum,
+          },
+        ];
+      }),
     lucidInstance.provider.getUtxosByOutRef([
       applied.discoveryPolicy.initOutRef,
     ]),
@@ -81,6 +97,7 @@ const saveSnapshot = async (restAccounts: EmulatorAccount[]) => {
         outputData: {
           hash: utxo.datumHash ?? undefined,
           inline: utxo.datum ?? undefined,
+          scriptRef: utxo.scriptRef ?? undefined,
         },
       })),
     ),
@@ -202,35 +219,35 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
+    console.log("\n\n\nEMULATOR: Adding Liquidity to Token Holder...");
+    await liquidityAddCollectedAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Spending to Proxy Token Holder...");
+    await spendToProxyAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Creating V1 Pool...");
+    await createV1PoolAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Initializing Reward Fold...");
+    await initLiquidityRewardServiceAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Distributing Rewards...");
+    await foldLiquidityRewardsAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Claiming a Reward...");
+    await claimLiquidityNodeAction(lucidInstance, emulator);
+    await setTimeout(DELAY);
     if (false) {
-      console.log("\n\n\nEMULATOR: Adding Liquidity to Token Holder...");
-      await liquidityAddCollectedAction(lucidInstance, emulator);
-      console.log("Moving to next step...");
-      await setTimeout(DELAY);
-
-      console.log("\n\n\nEMULATOR: Spending to Proxy Token Holder...");
-      await spendToProxyAction(lucidInstance, emulator);
-      console.log("Moving to next step...");
-      await setTimeout(DELAY);
-
-      console.log("\n\n\nEMULATOR: Creating V1 Pool...");
-      await createV1PoolAction(lucidInstance, emulator);
-      console.log("Moving to next step...");
-      await setTimeout(DELAY);
-
-      console.log("\n\n\nEMULATOR: Initializing Reward Fold...");
-      await initLiquidityRewardServiceAction(lucidInstance, emulator);
-      console.log("Moving to next step...");
-      await setTimeout(DELAY);
-
-      console.log("\n\n\nEMULATOR: Distributing Rewards...");
-      await foldLiquidityRewardsAction(lucidInstance, emulator);
-      console.log("Moving to next step...");
-      await setTimeout(DELAY);
-
-      console.log("\n\n\nEMULATOR: Claiming a Reward...");
-      await claimLiquidityNodeAction(lucidInstance, emulator);
-      await setTimeout(DELAY);
     }
   } catch (e) {
     console.log("Something went wrong. Error:", e);
