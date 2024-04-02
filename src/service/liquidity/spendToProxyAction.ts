@@ -7,8 +7,8 @@ import {
 import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
+import { isDryRun } from "../../utils/args.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
-import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {

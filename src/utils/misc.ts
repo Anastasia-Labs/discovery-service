@@ -161,8 +161,3 @@ export const sortByOrefWithIndex = (utxos: ReadableUTxO[]) => {
     [firstNodeIndex],
   );
 };
-
-export const isDryRun = () => {
-  const val = process.env.DRY_RUN!;
-  return val === "true";
-};

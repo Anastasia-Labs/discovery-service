@@ -15,8 +15,9 @@ import { writeFile } from "fs/promises";
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
 import { MIN_ADA_DEPLOY_WALLET } from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
+import { isDryRun } from "../../utils/args.js";
 import { getAppliedScripts, getDeployUtxoMap } from "../../utils/files.js";
-import { isDryRun, lovelaceAtAddress } from "../../utils/misc.js";
+import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 const refScriptAmountsByIndex = [

@@ -3,13 +3,13 @@ import "../../utils/env.js";
 
 import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
 import { loggerDD } from "../../logs/datadog-service.js";
+import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
   getDeployedScripts,
   getTasteTestVariables,
 } from "../../utils/files.js";
-import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initLiquidityRewardServiceAction = async (

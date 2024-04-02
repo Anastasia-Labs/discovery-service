@@ -6,8 +6,8 @@ import {
   MAX_WALLET_GROUP_COUNT,
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
+import { isDryRun } from "../../utils/args.js";
 import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
-import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const modifyLiquidityNodesAction = async (

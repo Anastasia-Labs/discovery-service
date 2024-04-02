@@ -1,8 +1,8 @@
 import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
 import "../../utils/env.js";
 
+import { isDryRun } from "../../utils/args.js";
 import { getAppliedScripts } from "../../utils/files.js";
-import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 import { setTimeout } from "timers/promises";

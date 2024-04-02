@@ -5,13 +5,13 @@ import {
   Lucid,
   createLiquidityV1Pool,
 } from "price-discovery-offchain";
+import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
   getTasteTestVariables,
   updateTasteTestVariables,
 } from "../../utils/files.js";
-import { isDryRun } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {

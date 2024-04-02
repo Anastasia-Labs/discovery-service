@@ -72,7 +72,7 @@ export const foldLiquidityRewardsAction = async (
 
   const chunks = chunkArray(
     sortByKeys(unprocessedNodes, firstNode.datum.key),
-    25,
+    35,
   );
 
   console.log(`Found a total of ${chunks.length} chunks to process.`);

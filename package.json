@@ -6,7 +6,10 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "build-scripts:preview": "NODE_ENV=preview NODE_NO_WARNINGS=1 ts-node --esm src/commands/buildLiquidityScripts.ts",
+    "get-balance": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/getAddresses.ts",
+    "create-tt": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/createTasteTest.ts",
+    "build-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/buildLiquidityScripts.ts",
+    "deploy-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/deployLiquidityScripts.ts",
     "deploy-scripts:preview": "NODE_ENV=preview NODE_NO_WARNINGS=1 ts-node --esm src/commands/deployLiquidityScripts.ts",
     "init-token-holder:preview": "NODE_ENV=preview NODE_NO_WARNINGS=1 ts-node --esm src/commands/initTokenHolder.ts",
     "generate-dynamo:preview": "NODE_ENV=preview NODE_NO_WARNINGS=1 ts-node --esm src/commands/generateDynamoDB.ts",

@@ -2,7 +2,7 @@ import { Lucid } from "price-discovery-offchain";
 import "../utils/env.js";
 
 import { loggerDD } from "../logs/datadog-service.js";
-import { isDryRun } from "../utils/misc.js";
+import { isDryRun } from "../utils/args.js";
 import { selectLucidWallet } from "../utils/wallet.js";
 
 export async function startTasteTest(lucid: Lucid) {

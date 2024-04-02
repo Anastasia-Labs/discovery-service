@@ -1,18 +1,26 @@
 import "../../utils/env.js";
 
-import { writeFile } from "fs/promises";
-import { Lucid, buildLiquidityScripts, toUnit } from "price-discovery-offchain";
+import {
+  Lucid,
+  UTxO,
+  buildLiquidityScripts,
+  toUnit,
+} from "price-discovery-offchain";
 
 import { getScripts } from "../../utils/scripts.js";
 
-import { getTasteTestVariables } from "../../utils/files.js";
-import { isDryRun } from "../../utils/misc.js";
+import { IAppliedScriptsJSON } from "../../@types/files.js";
+import { isDryRun } from "../../utils/args.js";
+import {
+  getConfig,
+  getTasteTestVariables,
+  saveAppliedScripts,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const buildLiquidityScriptsAction = async (
-  lucid: Lucid,
-  emulatorDeadline?: number,
-) => {
+export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
+  const config = await getConfig();
+
   const {
     collectionFoldPolicy,
     collectionFoldValidator,
@@ -25,38 +33,48 @@ export const buildLiquidityScriptsAction = async (
     tokenHolderPolicy,
     tokenHolderValidator,
   } = getScripts();
+
   const { projectTokenPolicyId, projectTokenAssetName } =
     await getTasteTestVariables();
-  const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) =>
-    wallet.getUtxos(),
-  );
 
-  const [initUtxo] = await lucid.provider.getUtxosByOutRef([
-    {
-      txHash: process.env.TT_INIT_UTXO_HASH!,
-      outputIndex: Number(process.env.TT_INIT_UTXO_INDEX!),
-    },
-  ]);
+  let initUtxo: UTxO;
+  if (config.reservedUtxos?.initTasteTest) {
+    const res = await lucid.provider.getUtxosByOutRef([
+      config.reservedUtxos.initTasteTest,
+    ]);
 
-  const [tokenHolderUtxo] = await lucid.provider.getUtxosByOutRef([
-    {
-      txHash: process.env.TT_INIT_TOKEN_HOLDER_UTXO_HASH!,
-      outputIndex: Number(process.env.TT_INIT_TOKEN_HOLDER_UTXO_INDEX!),
-    },
-  ]);
+    initUtxo = res[0];
+  } else {
+    await selectLucidWallet(lucid, 0);
+    const res = await lucid.wallet.getUtxos();
+    initUtxo = res[0];
+  }
+
+  let tokenHolderUtxo: UTxO;
+  if (config.reservedUtxos?.initTokenHolder) {
+    const res = await lucid.provider.getUtxosByOutRef([
+      config.reservedUtxos.initTokenHolder,
+    ]);
+
+    tokenHolderUtxo = res[0];
+  } else {
+    await selectLucidWallet(lucid, 1);
+    const res = await lucid.wallet.getUtxos();
+    tokenHolderUtxo = res[0];
+  }
 
   const projectTokenUnit = toUnit(projectTokenPolicyId, projectTokenAssetName);
   const projectTokenValid =
     tokenHolderUtxo.assets[projectTokenUnit] ===
-    BigInt(process.env.PROJECT_AMNT!);
+    BigInt(config.project.token.suppliedAmount);
 
   if (!projectTokenValid) {
     throw new Error(
-      `The provided token holder utxo does not have the required amount of: ${process.env.PROJECT_AMNT}.`,
+      `The provided token holder utxo does not have the required amount of: ${config.project.token.suppliedAmount}.`,
     );
   }
 
-  const deadline = Number(emulatorDeadline ?? process.env.DEADLINE);
+  const deadline = config.deadline;
   console.log(
     "Deadline UTC",
     deadline,
@@ -66,16 +84,16 @@ export const buildLiquidityScriptsAction = async (
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {
       initUTXO: initUtxo,
-      deadline: deadline,
-      penaltyAddress: process.env.PENALTY_ADDRESS!,
+      deadline,
+      penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardFoldValidator: {
       projectCS: projectTokenPolicyId,
-      projectLpPolicyId: process.env.POOL_POLICY_ID!,
-      projectAddr: process.env.PROJECT_ADDRESS!,
+      projectLpPolicyId: config.v1PoolData.policyId,
+      projectAddr: config.project.addresses.liquidityDestination,
     },
     proxyTokenHolderValidator: {
-      poolPolicyId: process.env.POOL_POLICY_ID!,
+      poolPolicyId: config.v1PoolData.policyId,
     },
     projectTokenHolder: {
       initUTXO: tokenHolderUtxo,
@@ -98,8 +116,6 @@ export const buildLiquidityScriptsAction = async (
     throw scripts.error;
   }
 
-  const currenTime = Date.now();
-
   const parameters = {
     discoveryPolicy: {
       initOutRef: {
@@ -107,12 +123,12 @@ export const buildLiquidityScriptsAction = async (
         outputIndex: initUtxo.outputIndex,
       },
       deadline: deadline,
-      penaltyAddress: process.env.PENALTY_ADDRESS!,
+      penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardValidator: {
       projectCS: projectTokenPolicyId,
       projectTN: projectTokenAssetName,
-      projectAddr: process.env.PROJECT_ADDRESS!,
+      projectAddr: config.project.addresses.liquidityDestination,
     },
     projectTokenHolder: {
       initOutRef: {
@@ -133,22 +149,19 @@ export const buildLiquidityScriptsAction = async (
     {} as Record<string, string>,
   );
 
-  const data = JSON.stringify(
-    {
-      ...{ scripts: scripts.data, scriptHashes },
-      ...{ version: currenTime },
-      ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
-      ...parameters,
-    },
-    undefined,
-    2,
-  );
+  const data: IAppliedScriptsJSON = {
+    scripts: scripts.data,
+    scriptHashes:
+      scriptHashes as unknown as IAppliedScriptsJSON["scriptHashes"],
+    projectAmount: config.project.token.suppliedAmount,
+    version: Date.now(),
+    ...parameters,
+  };
 
   if (isDryRun()) {
     console.log(data);
-  } else {
-    await writeFile(`./applied-scripts.json`, data);
-
-    console.log(`Scripts have been saved , version ${currenTime}\n`);
+    return;
   }
+
+  await saveAppliedScripts(data);
 };
