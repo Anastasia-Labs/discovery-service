@@ -6,19 +6,21 @@ import branchName from "current-git-branch";
 import { existsSync } from "fs";
 import inquirer from "inquirer";
 import path from "path";
-import deployUtxoMapSchema from "../../deploy-utxo-map.json" assert { type: "json" };
-import deployedSchema from "../../deployed-policy.json" assert { type: "json" };
-import ttVariablesSchema from "../../taste-test-variables.json" assert { type: "json" };
-import tokenHolderSubmitSchema from "../../token-holder-submit.json" assert { type: "json" };
 import { ITTConfigJSON } from "../@types/config.js";
-import { IAppliedScriptsJSON, IWallet } from "../@types/files.js";
+import {
+  IAppliedScriptsJSON,
+  IFragmentedUtxosMapJSON,
+  IPublishedPolicyJSON,
+  ITasteTestVariablesJSON,
+  IWallet,
+} from "../@types/json.js";
 import { getNetwork, isDryRun } from "./args.js";
 
 export const getConfigFilePath = () =>
-  path.resolve(process.cwd(), `./generated/${branchName()}/`);
+  path.resolve(process.cwd(), `./generated/${branchName()}/${getNetwork()}`);
 
 export const getTransactionFilesPath = () =>
-  `${getConfigFilePath()}/transactions/${getNetwork()}`;
+  `${getConfigFilePath()}/transactions`;
 
 export const getFragmentationTransactionPath = () =>
   `${getTransactionFilesPath()}/fragmentation.txt`;
@@ -41,30 +43,55 @@ export const getFragmentationTransaction = async () => {
 export const saveFragmentationFileTransaction = async (cbor: string) => {
   const path = getFragmentationTransactionPath();
 
-  await mkdir(path);
+  await mkdir(getConfigFilePath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
 };
 
-export const getTokenHolderSubmitTx = async (): Promise<
-  typeof tokenHolderSubmitSchema
-> => {
-  const fileContents = await readFile(`./token-holder-submit.json`, {
-    encoding: "utf-8",
-  });
-  const data = JSON.parse(fileContents);
-  return data;
+export const getTokenHolderSubmitTransactionPath = () =>
+  `${getConfigFilePath()}/token-holder-submit.txt`;
+export const getTokenHolderSubmitTransaction = async () => {
+  const path = getTokenHolderSubmitTransactionPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      "A token holder submit transaction hasn't been built yet. Run this command with --dry and then try again.",
+    );
+  }
+
+  const cbor = await readFile(path, "utf-8");
+  return cbor;
+};
+
+export const saveTokenHolderSubmitTransaction = async (cbor: string) => {
+  const path = getTokenHolderSubmitTransactionPath();
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
 };
 
 export const getAppliedScriptsPath = () =>
-  `${getConfigFilePath()}/applied-scripts.${getNetwork()}.json`;
+  `${getConfigFilePath()}/applied-scripts.json`;
 export const getAppliedScripts = async (): Promise<IAppliedScriptsJSON> => {
-  const fileContents = await readFile(getAppliedScriptsPath(), "utf-8");
+  const path = getAppliedScriptsPath();
+  const fileContents = await readFile(path, "utf-8");
+  if (!existsSync(path)) {
+    throw new Error(`Could not find applied scripts at: ${path}`);
+  }
+
   const data: IAppliedScriptsJSON = JSON.parse(fileContents);
   return data;
 };
+
 export const saveAppliedScripts = async (data: IAppliedScriptsJSON) => {
   const path = getAppliedScriptsPath();
   if (existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
     const { appliedScriptsOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -85,54 +112,112 @@ export const saveAppliedScripts = async (data: IAppliedScriptsJSON) => {
   console.log(`Done!`);
 };
 
-export const getDeployUtxoMap = async (): Promise<
-  typeof deployUtxoMapSchema
-> => {
-  const fileContents = await readFile(`./deploy-utxo-map.json`, {
-    encoding: "utf-8",
-  });
-  const data = JSON.parse(fileContents);
-  return data;
+export const getFragmentedUtxosMapPath = () =>
+  `${getConfigFilePath()}/fragmented-utxos-map.json`;
+export const getFragmentedUtxosMap =
+  async (): Promise<IFragmentedUtxosMapJSON> => {
+    const fileContents = await readFile(getFragmentedUtxosMapPath(), {
+      encoding: "utf-8",
+    });
+    const data: IFragmentedUtxosMapJSON = JSON.parse(fileContents);
+    return data;
+  };
+
+export const saveFragmentedUtxosMapPath = async (
+  data: IFragmentedUtxosMapJSON,
+) => {
+  const path = getAppliedScriptsPath();
+  if (existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    const { fragmentedUtxosMapOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "fragmentedUtxosMapOverwrite",
+        message: `Fragmented UTxOs have already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!fragmentedUtxosMapOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, JSON.stringify(data, null, 2), "utf-8");
+  console.log(`Done!`);
 };
 
-export const getDeployedScripts = async (): Promise<typeof deployedSchema> => {
-  const fileContents = await readFile(`./deployed-policy.json`, {
-    encoding: "utf-8",
-  });
-  const data = JSON.parse(fileContents);
-  return data;
+export const getPublishedPolicyOutRefsPath = () =>
+  `${getConfigFilePath()}/published-policy.json`;
+export const getPublishedPolicyOutRefs =
+  async (): Promise<IPublishedPolicyJSON> => {
+    const fileContents = await readFile(getPublishedPolicyOutRefsPath(), {
+      encoding: "utf-8",
+    });
+    const data: IPublishedPolicyJSON = JSON.parse(fileContents);
+    return data;
+  };
+
+export const savePublishedPolicyOutRefs = async (
+  data: IPublishedPolicyJSON,
+) => {
+  const path = getPublishedPolicyOutRefsPath();
+  if (existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    const { publishedPolicyOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "publishedPolicyOverwrite",
+        message: `A published policy has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!publishedPolicyOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, JSON.stringify(data, null, 2), "utf-8");
+  console.log(`Done!`);
 };
 
-export const getTasteTestVariables = async (): Promise<
-  typeof ttVariablesSchema
-> => {
-  const fileContents = await readFile(`./taste-test-variables.json`, {
-    encoding: "utf-8",
-  });
-  const data = JSON.parse(fileContents);
-  return data;
-};
+export const getTasteTestVariablesPath = () =>
+  `${getConfigFilePath()}/tt-variables.json`;
+export const getTasteTestVariables =
+  async (): Promise<ITasteTestVariablesJSON> => {
+    const fileContents = await readFile(getTasteTestVariablesPath(), {
+      encoding: "utf-8",
+    });
+    const data: ITasteTestVariablesJSON = JSON.parse(fileContents);
+    return data;
+  };
 
 export const updateTasteTestVariables = async (
-  values: Partial<typeof ttVariablesSchema>,
+  values: Partial<ITasteTestVariablesJSON>,
 ): Promise<true> => {
-  const fileContents = await readFile(`./taste-test-variables.json`, "utf-8");
-  const data = JSON.parse(fileContents);
+  const path = getTasteTestVariablesPath();
+  const fileContents = await readFile(path, "utf-8");
+  const data: ITasteTestVariablesJSON = JSON.parse(fileContents);
 
-  const newData: typeof ttVariablesSchema = {
+  const newData: ITasteTestVariablesJSON = {
     ...data,
     ...values,
   };
 
-  await writeFile(
-    `./taste-test-variables.json`,
-    JSON.stringify(newData, null, 2),
-    "utf-8",
-  );
+  await writeFile(path, JSON.stringify(newData, null, 2), "utf-8");
 
-  const refreshedData = JSON.parse(
-    await readFile(`./taste-test-variables.json`, "utf-8"),
-  );
+  const refreshedData = JSON.parse(await readFile(path, "utf-8"));
 
   if (!isEqual(newData, refreshedData)) {
     throw new Error("Did not update taste test variable!");
@@ -141,8 +226,7 @@ export const updateTasteTestVariables = async (
   return true;
 };
 
-export const getWalletsPath = () =>
-  `${getConfigFilePath()}/wallets.${getNetwork()}.json`;
+export const getWalletsPath = () => `${getConfigFilePath()}/wallets.json`;
 export const getWallets = async (): Promise<IWallet[]> => {
   const path = getWalletsPath();
   if (!existsSync(path)) {
@@ -156,6 +240,10 @@ export const getWallets = async (): Promise<IWallet[]> => {
 export const saveWallets = async (data: IWallet[]) => {
   const path = getWalletsPath();
   if (existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
     const { walletOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -176,19 +264,17 @@ export const saveWallets = async (data: IWallet[]) => {
   console.log(`Done! Fund this wallet first: ${data[0].address}`);
 };
 
-export const getTTConfigPath = () =>
-  `${getConfigFilePath()}/config.${getNetwork()}.json`;
+export const getTTConfigPath = () => `${getConfigFilePath()}/config.json`;
 export const getConfig = async (): Promise<ITTConfigJSON> => {
   const path = getTTConfigPath();
   if (!existsSync(path)) {
     throw new Error(
-      "Could not find configuration path. Please run `yarn setup-config` and try again.",
+      "Could not find configuration path. Please run `yarn create-tt` and try again.",
     );
   }
 
-  const data = await readFile(path, "utf-8");
-
-  return JSON.parse(data) as ITTConfigJSON;
+  const data: ITTConfigJSON = JSON.parse(await readFile(path, "utf-8"));
+  return data;
 };
 
 export const saveConfig = async (config: ITTConfigJSON) => {

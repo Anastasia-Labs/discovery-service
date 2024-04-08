@@ -8,6 +8,7 @@
     "build": "tsc",
     "get-balance": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/getAddresses.ts",
     "create-tt": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/createTasteTest.ts",
+    "create-wallets": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/createWallets.ts",
     "build-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/buildLiquidityScripts.ts",
     "deploy-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/deployLiquidityScripts.ts",
     "deploy-scripts:preview": "NODE_ENV=preview NODE_NO_WARNINGS=1 ts-node --esm src/commands/deployLiquidityScripts.ts",

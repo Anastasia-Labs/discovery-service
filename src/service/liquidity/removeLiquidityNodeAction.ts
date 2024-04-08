@@ -9,7 +9,7 @@ import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
 import { WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
-import { getDeployedScripts } from "../../utils/files.js";
+import { getPublishedPolicyOutRefs } from "../../utils/files.js";
 
 export const removeLiquidityNodeAction = async (
   lucid: Lucid,
@@ -17,7 +17,7 @@ export const removeLiquidityNodeAction = async (
   emulatorDeadline?: number,
 ) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
 
   const refNodePolicy = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,

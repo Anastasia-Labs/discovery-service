@@ -1,8 +1,8 @@
-import "./env.js";
-
 import inquirer from "inquirer";
 import { generateSeedPhrase, Lucid } from "price-discovery-offchain";
-import { IWallet } from "../@types/files.js";
+import "./env.js";
+
+import { IWallet } from "../@types/json.js";
 import { saveWallets } from "./files.js";
 import { refundWalletsAction } from "./refundWalletAction.js";
 

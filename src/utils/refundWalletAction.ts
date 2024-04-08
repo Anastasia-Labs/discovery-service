@@ -3,8 +3,9 @@ import "./env.js";
 import { Assets, Lucid } from "price-discovery-offchain";
 
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
+import { isDryRun } from "./args.js";
 import { getWallets } from "./files.js";
-import { isDryRun, lovelaceAtAddress } from "./misc.js";
+import { lovelaceAtAddress } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export const refundWalletsAction = async (lucid: Lucid) => {

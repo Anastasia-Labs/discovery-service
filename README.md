@@ -3,7 +3,7 @@
 1. All commands support the following flags:
    1. `--[network]` Used either `preview` or `mainnet`.
    2. `--dry` Builds the transaction and saves it in the generated folder. Must be run before submitting.
-2. Run `yarn create-config` to boot up a new taste test and config file. Update the configuration file as needed.
+2. Run `yarn create-tt` to boot up a new taste test and config file. Update the configuration file as needed.
 3. Run `yarn create-wallets` (it will ask you if you want to refund previous wallets. Say yes only if you know you don't need it.)
 4. Once complete, fund the wallet it prints out with funds (at least 1,000 ADA).
 5. If required, run `yarn fund-wallets` to fund other wallets in a batch.

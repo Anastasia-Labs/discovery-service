@@ -8,12 +8,15 @@ import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
 
   const spendToProxyConfig: SpendToProxyConfig = {
     currenTime: emulator?.now() ?? Date.now(),

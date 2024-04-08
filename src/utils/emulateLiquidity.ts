@@ -29,7 +29,7 @@ import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidity
 import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { startTasteTest } from "../service/startTasteTestAction.js";
-import { getTokenHolderSubmitTx, getWallets } from "./files.js";
+import { getTokenHolderSubmitTransaction, getWallets } from "./files.js";
 import { selectLucidWallet } from "./wallet.js";
 
 const emulateLiquidity = async () => {
@@ -167,7 +167,7 @@ const emulateLiquidity = async () => {
 
     console.log("\n\n\nEMULATOR: Initializing Token Holder...");
     await initTokenHolderAction(lucidInstance);
-    const thSubmit = await getTokenHolderSubmitTx();
+    const thSubmit = await getTokenHolderSubmitTransaction();
     await selectLucidWallet(lucidInstance, 0);
     const txSigned = await lucidInstance
       .fromTx(thSubmit.cbor)

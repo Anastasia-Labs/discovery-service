@@ -15,7 +15,10 @@ import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+} from "../../utils/files.js";
 import { isDryRun, sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
@@ -24,7 +27,7 @@ export const foldLiquidityNodesAction = async (
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
   await selectLucidWallet(lucid, 2);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(

@@ -15,7 +15,7 @@ import {
   getAppliedScripts,
   getConfig,
   getConfigFilePath,
-  getDeployedScripts,
+  getPublishedPolicyOutRefs,
   getWallets,
 } from "./files.js";
 
@@ -79,7 +79,7 @@ export const getEmulatorLedger = async (
 ): Promise<EmulatorAccount[]> => {
   const wallets = await getWallets();
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
   const snapshotSlug = `${getConfigFilePath()}/blockfrost-ledger.json`;
 
   const restAccounts: EmulatorAccount[] = [...wallets]

@@ -9,7 +9,7 @@ import {
 
 import { getScripts } from "../../utils/scripts.js";
 
-import { IAppliedScriptsJSON } from "../../@types/files.js";
+import { IAppliedScriptsJSON } from "../../@types/json.js";
 import { isDryRun } from "../../utils/args.js";
 import {
   getConfig,

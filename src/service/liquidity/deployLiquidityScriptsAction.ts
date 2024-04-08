@@ -16,7 +16,7 @@ import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type:
 import { MIN_ADA_DEPLOY_WALLET } from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts, getDeployUtxoMap } from "../../utils/files.js";
+import { getAppliedScripts, getFragmentedUtxosMap } from "../../utils/files.js";
 import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
@@ -114,7 +114,7 @@ export const deployLiquidityScriptsAction = async (
     }
   }
 
-  const deployUtxos = await getDeployUtxoMap();
+  const deployUtxos = await getFragmentedUtxosMap();
 
   const deploy1Input = (
     await lucid.provider.getUtxosByOutRef([deployUtxos.TasteTestPolicy])

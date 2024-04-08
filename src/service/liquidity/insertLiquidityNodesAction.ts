@@ -7,7 +7,10 @@ import {
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const insertLiquidityNodesAction = async (
@@ -15,7 +18,7 @@ export const insertLiquidityNodesAction = async (
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
 
   const refNodePolicy = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,

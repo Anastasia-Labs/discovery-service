@@ -7,7 +7,7 @@ import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
-  getDeployedScripts,
+  getPublishedPolicyOutRefs,
   getTasteTestVariables,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -17,7 +17,7 @@ export const initLiquidityRewardServiceAction = async (
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
   const { projectTokenAssetName, projectTokenPolicyId, lpTokenAssetName } =
     await getTasteTestVariables();
 

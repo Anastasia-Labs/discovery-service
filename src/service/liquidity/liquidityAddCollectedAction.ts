@@ -8,7 +8,10 @@ import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const liquidityAddCollectedAction = async (
@@ -16,7 +19,7 @@ export const liquidityAddCollectedAction = async (
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
 
   const addCollectedConfig: AddCollectedConfig = {
     currenTime: emulator?.now() ?? Date.now(),
