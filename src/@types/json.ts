@@ -147,10 +147,6 @@ import { OutRef } from "price-discovery-offchain";
 export interface ITTConfigJSON {
   deadline: number;
   scriptType: "optimized" | "tracing" | "binds";
-  blockfrost: {
-    apiKey: string;
-    endpoint: string;
-  };
   reservedUtxos?: {
     initTasteTest?: OutRef[];
     initTokenHolder?: OutRef[];

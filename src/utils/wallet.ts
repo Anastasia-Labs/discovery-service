@@ -15,15 +15,13 @@ import {
   getAppliedScripts,
   getConfigFilePath,
   getPublishedPolicyOutRefs,
-  getTTConfig,
   getWallets,
 } from "./files.js";
 
 let lucidInstance: Lucid;
 
 export const getNewBlockfrostInstance = async () => {
-  const config = await getTTConfig();
-  return new Blockfrost(config.blockfrost.endpoint, config.blockfrost.apiKey);
+  return new Blockfrost(process.env.API_URL!, process.env.API_KEY!);
 };
 
 export const getLucidInstance = async () => {

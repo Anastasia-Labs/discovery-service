@@ -19,10 +19,6 @@ export const createTasteTestAction = async () => {
   const wallets = await getWallets();
 
   const data: ITTConfigJSON = {
-    blockfrost: {
-      apiKey: process.env.API_KEY!,
-      endpoint: process.env.API_URL!,
-    },
     deadline: Date.now() + 1000 * 60 * 60 * 2, // Defaults to 2 hours
     project: {
       addresses: {

@@ -21,6 +21,55 @@ import {
 import { selectLucidWallet } from "../../utils/wallet.js";
 import { validatorsByIndex } from "./fragmentPublishWalletAction.js";
 
+const submitPublishLiquidityScriptsAction = async (lucid: Lucid) => {
+  const applied = await getAppliedScripts();
+  const signedTxs = await Promise.all(
+    validatorsByIndex.map(async (name, index) => {
+      const cbor = await getPublishScriptTx(index);
+      if (!cbor) {
+        throw new Error(
+          `Could not find a built transaction for script for ${name} as index ${index}.`,
+        );
+      }
+
+      return await lucid.fromTx(cbor).sign().complete();
+    }),
+  );
+
+  const txHashes = await Promise.all(
+    signedTxs.map(async (signedTx, index) => {
+      const txHash = await signedTx.submit();
+      console.log(`Submitting reference input #${index}...`);
+      await lucid.awaitTx(txHash);
+      console.log(`Deployed Reference Input: ${txHash}`);
+      return txHash;
+    }),
+  );
+
+  const scriptsRef: Record<string, OutRef> = {};
+
+  validatorsByIndex.forEach((name, index) => {
+    scriptsRef[name] = {
+      txHash: txHashes[index],
+      outputIndex: index,
+    };
+  });
+
+  const data: IPublishedPolicyJSON = {
+    policy: lucid.utils.mintingPolicyToId({
+      type: "PlutusV2",
+      script: applied.scripts.liquidityPolicy,
+    }),
+    scriptsRef: scriptsRef as unknown as IPublishedPolicyJSON["scriptsRef"],
+  };
+
+  await savePublishedPolicyOutRefs(data);
+
+  console.log(`Waiting for confirmation that Blockfrost can find UTxOs...`);
+  await Promise.all(txHashes.map(async (hash) => await lucid.awaitTx(hash)));
+  console.log(`Done!`);
+};
+
 export const publishLiquidityScriptsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
@@ -28,52 +77,8 @@ export const publishLiquidityScriptsAction = async (
   await selectLucidWallet(lucid, 2);
   const applied = await getAppliedScripts();
 
-  if (!isDryRun()) {
-    const signedTxs = await Promise.all(
-      validatorsByIndex.map(async (name, index) => {
-        const cbor = await getPublishScriptTx(index);
-        if (!cbor) {
-          throw new Error(
-            `Could not find a built transaction for script for ${name} as index ${index}.`,
-          );
-        }
-
-        return await lucid.fromTx(cbor).sign().complete();
-      }),
-    );
-
-    const txHashes = await Promise.all(
-      signedTxs.map(async (signedTx, index) => {
-        const txHash = await signedTx.submit();
-        console.log(`Submitting reference input #${index}...`);
-        await lucid.awaitTx(txHash);
-        console.log(`Deployed Reference Input: ${txHash}`);
-        return txHash;
-      }),
-    );
-
-    const scriptsRef: Record<string, OutRef> = {};
-
-    validatorsByIndex.forEach((name, index) => {
-      scriptsRef[name] = {
-        txHash: txHashes[index],
-        outputIndex: index,
-      };
-    });
-
-    const data: IPublishedPolicyJSON = {
-      policy: lucid.utils.mintingPolicyToId({
-        type: "PlutusV2",
-        script: applied.scripts.liquidityPolicy,
-      }),
-      scriptsRef: scriptsRef as unknown as IPublishedPolicyJSON["scriptsRef"],
-    };
-
-    await savePublishedPolicyOutRefs(data);
-
-    console.log(`Waiting for confirmation...`);
-    await Promise.all(txHashes.map(async (hash) => await lucid.awaitTx(hash)));
-    console.log(`Done!`);
+  if (!isDryRun() && !emulator) {
+    await submitPublishLiquidityScriptsAction(lucid);
     return;
   }
 
@@ -310,4 +315,8 @@ export const publishLiquidityScriptsAction = async (
       }
     }),
   );
+
+  if (emulator) {
+    await submitPublishLiquidityScriptsAction(lucid);
+  }
 };

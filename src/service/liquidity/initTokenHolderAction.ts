@@ -1,4 +1,5 @@
 import {
+  Emulator,
   InitLiquidityTokenHolderConfig,
   Lucid,
   initLqTokenHolder,
@@ -14,7 +15,28 @@ import {
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const initTokenHolderAction = async (lucid: Lucid) => {
+const submitInitTokenHolderAction = async (lucid: Lucid) => {
+  const initTokenHolderTx = await getInitTokenHolderTx();
+  if (!initTokenHolderTx) {
+    throw new Error(
+      `Could not find a token holder transaction to submit. Please run "yarn init-token-holder --dry".`,
+    );
+  }
+
+  const initTokenHolderSigned = await lucid
+    .fromTx(initTokenHolderTx)
+    .sign()
+    .complete();
+  const initTokenHolderHash = await initTokenHolderSigned.submit();
+  await loggerDD(`Submitting: ${initTokenHolderHash}`);
+  await lucid.awaitTx(initTokenHolderHash);
+  console.log("Done!");
+};
+
+export const initTokenHolderAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
   const applied = await getAppliedScripts();
   const {
     project: { token },
@@ -34,21 +56,7 @@ export const initTokenHolderAction = async (lucid: Lucid) => {
   }
 
   if (!isDryRun()) {
-    const initTokenHolderTx = await getInitTokenHolderTx();
-    if (!initTokenHolderTx) {
-      throw new Error(
-        `Could not find a token holder transaction to submit. Please run "yarn init-token-holder --dry".`,
-      );
-    }
-
-    const initTokenHolderSigned = await lucid
-      .fromTx(initTokenHolderTx)
-      .sign()
-      .complete();
-    const initTokenHolderHash = await initTokenHolderSigned.submit();
-    await loggerDD(`Submitting: ${initTokenHolderHash}`);
-    await lucid.awaitTx(initTokenHolderHash);
-    console.log("Done!");
+    await submitInitTokenHolderAction(lucid);
     return;
   }
 
@@ -72,4 +80,8 @@ export const initTokenHolderAction = async (lucid: Lucid) => {
   }
 
   await saveInitTokenHolderTx(initTokenHolderUnsigned.data.toString());
+
+  if (emulator) {
+    await submitInitTokenHolderAction(lucid);
+  }
 };

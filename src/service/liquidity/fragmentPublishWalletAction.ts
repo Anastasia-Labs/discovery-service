@@ -1,5 +1,5 @@
 import inquirer from "inquirer";
-import { Lucid, OutRef } from "price-discovery-offchain";
+import { Emulator, Lucid, OutRef } from "price-discovery-offchain";
 
 import { IFragmentedUtxosMapJSON } from "../../@types/json.js";
 import { PUBLISH_WALLET_ADA } from "../../constants/utils.js";
@@ -39,28 +39,44 @@ export const validatorsByIndex = [
   "RewardStake",
 ];
 
-export const fragmentPublishWalletAction = async (lucid: Lucid) => {
+const submitFragmentPublishWallet = async (
+  lucid: Lucid,
+  fragmentWalletTx?: string,
+) => {
+  if (!fragmentWalletTx) {
+    throw new Error(
+      `We could not find a fragmentWallet transaction to submit.`,
+    );
+  }
+
+  const signed = await lucid.fromTx(fragmentWalletTx).sign().complete();
+  const txHash = await signed.submit();
+  console.log(`Submitting: ${txHash}`);
+  await lucid.awaitTx(txHash);
+  console.log(`Done!`);
+
+  const scriptsRef: Record<string, OutRef> = {};
+  for (const name of validatorsByIndex) {
+    scriptsRef[name] = {
+      txHash,
+      outputIndex: validatorsByIndex.indexOf(name),
+    };
+  }
+
+  await saveFragmentedUtxosMapPath(
+    scriptsRef as unknown as IFragmentedUtxosMapJSON,
+  );
+};
+
+export const fragmentPublishWalletAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
   await selectLucidWallet(lucid, 2);
   const fragmentWalletTx = await getFragmentWalletTx();
 
-  if (!isDryRun() && fragmentWalletTx) {
-    const signed = await lucid.fromTx(fragmentWalletTx).sign().complete();
-    const txHash = await signed.submit();
-    console.log(`Submitting: ${txHash}`);
-    await lucid.awaitTx(txHash);
-    console.log(`Done!`);
-
-    const scriptsRef: Record<string, OutRef> = {};
-    for (const name of validatorsByIndex) {
-      scriptsRef[name] = {
-        txHash,
-        outputIndex: validatorsByIndex.indexOf(name),
-      };
-    }
-
-    await saveFragmentedUtxosMapPath(
-      scriptsRef as unknown as IFragmentedUtxosMapJSON,
-    );
+  if (!isDryRun() && !emulator) {
+    await submitFragmentPublishWallet(lucid);
     return;
   }
 
@@ -75,7 +91,7 @@ export const fragmentPublishWalletAction = async (lucid: Lucid) => {
   }
 
   const splitTx = lucid.newTx();
-  if (fragmentWalletTx) {
+  if (!emulator && fragmentWalletTx) {
     const { continueFragmentation } = await inquirer.prompt([
       {
         name: "This wallet has already built a fragmentation transaction that can be submitted. Overwrite?",
@@ -98,6 +114,9 @@ export const fragmentPublishWalletAction = async (lucid: Lucid) => {
   });
 
   const txComplete = await splitTx.complete();
-
   await saveFragmentWalletTx(txComplete.toString());
+
+  if (emulator) {
+    await submitFragmentPublishWallet(lucid, await getFragmentWalletTx());
+  }
 };

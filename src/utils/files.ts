@@ -23,10 +23,10 @@ export const getConfigFilePath = () =>
 export const getTransactionFilesPath = () =>
   `${getConfigFilePath()}/transactions`;
 
-export const getFragmentationTransactionPath = () =>
+export const getFragmentationTxPath = () =>
   `${getTransactionFilesPath()}/fragmentation.txt`;
-export const getFragmentationTransaction = async () => {
-  const path = getFragmentationTransactionPath();
+export const getFragmentationTx = async () => {
+  const path = getFragmentationTxPath();
   if (!existsSync(path)) {
     if (isDryRun()) {
       return undefined;
@@ -41,17 +41,17 @@ export const getFragmentationTransaction = async () => {
   return cbor;
 };
 
-export const saveFragmentationFileTransaction = async (cbor: string) => {
-  const path = getFragmentationTransactionPath();
+export const saveFragmentationFileTx = async (cbor: string) => {
+  const path = getFragmentationTxPath();
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
 };
 
-export const getTokenHolderSubmitTransactionPath = () =>
-  `${getConfigFilePath()}/token-holder-submit.txt`;
-export const getTokenHolderSubmitTransaction = async () => {
-  const path = getTokenHolderSubmitTransactionPath();
+export const getTokenHolderSubmitTxPath = () =>
+  `${getTransactionFilesPath()}/token-holder-submit.txt`;
+export const getTokenHolderSubmitTx = async () => {
+  const path = getTokenHolderSubmitTxPath();
   if (!existsSync(path)) {
     if (isDryRun()) {
       return undefined;
@@ -66,10 +66,10 @@ export const getTokenHolderSubmitTransaction = async () => {
   return cbor;
 };
 
-export const saveTokenHolderSubmitTransaction = async (cbor: string) => {
-  const path = getTokenHolderSubmitTransactionPath();
+export const saveTokenHolderSubmitTx = async (cbor: string) => {
+  const path = getTokenHolderSubmitTxPath();
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
 };
 
@@ -189,8 +189,7 @@ export const savePublishedPolicyOutRefs = async (
   console.log(`Done!`);
 };
 
-export const getTTVariablesPath = () =>
-  `${getConfigFilePath()}/tt-variables.json`;
+export const getTTVariablesPath = () => `${getConfigFilePath()}/variables.json`;
 export const getTTVariables = async (): Promise<ITasteTestVariablesJSON> => {
   const fileContents = await readFile(getTTVariablesPath(), {
     encoding: "utf-8",
@@ -243,7 +242,7 @@ export const updateTTVariables = async (
   const refreshedData = JSON.parse(await readFile(path, "utf-8"));
 
   if (!isEqual(newData, refreshedData)) {
-    throw new Error("Did not update taste test variable!");
+    throw new Error("Did not update taste test variables!");
   }
 
   return true;
@@ -326,7 +325,7 @@ export const saveConfig = async (config: ITTConfigJSON) => {
 };
 
 export const getFundWalletsTxPath = () =>
-  `${getConfigFilePath()}/transactions/fundWallets.txt`;
+  `${getTransactionFilesPath()}/fundWallets.txt`;
 export const getFundWalletsTx = async () => {
   const path = getFundWalletsTxPath();
   if (!existsSync(path)) {
@@ -356,13 +355,13 @@ export const saveFundWalletsTx = async (cbor: string) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done! -->`, `"${cbor}"`);
 };
 
 export const getMintTokenTxPath = () =>
-  `${getConfigFilePath()}/transactions/mintToken.txt`;
+  `${getTransactionFilesPath()}/mintToken.txt`;
 export const getMintTokenTx = async () => {
   const path = getMintTokenTxPath();
   if (!existsSync(path)) {
@@ -392,13 +391,13 @@ export const saveMintTokenTx = async (cbor: string) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done!`, `"${cbor}"`);
 };
 
 export const getFragmentWalletTxPath = () =>
-  `${getConfigFilePath()}/transactions/fragmentWallet.txt`;
+  `${getTransactionFilesPath()}/fragmentWallet.txt`;
 export const getFragmentWalletTx = async () => {
   const path = getFragmentWalletTxPath();
   if (!existsSync(path)) {
@@ -432,13 +431,13 @@ export const saveFragmentWalletTx = async (cbor: string) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done!`, `"${cbor}"`);
 };
 
 export const getPublishScriptTxPath = (index: number) =>
-  `${getConfigFilePath()}/transactions/publishScript-${index}.txt`;
+  `${getTransactionFilesPath()}/publishScript-${index}.txt`;
 export const getPublishScriptTx = async (index: number) => {
   const path = getPublishScriptTxPath(index);
   if (!existsSync(path)) {
@@ -472,13 +471,13 @@ export const savePublishScriptTx = async (cbor: string, index: number) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done! Wrote transaction at index: ${index} -->`, `"${cbor}"`);
 };
 
 export const getInitTokenHolderTxPath = () =>
-  `${getConfigFilePath()}/transactions/initTokenHolder.txt`;
+  `${getTransactionFilesPath()}/initTokenHolder.txt`;
 export const getInitTokenHolderTx = async () => {
   const path = getInitTokenHolderTxPath();
   if (!existsSync(path)) {
@@ -512,13 +511,13 @@ export const saveInitTokenHolderTx = async (cbor: string) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done!`, `"${cbor}"`);
 };
 
 export const getRegisterStakeTxPath = () =>
-  `${getConfigFilePath()}/transactions/registerStake.txt`;
+  `${getTransactionFilesPath()}/registerStake.txt`;
 export const getRegisterStakeTx = async () => {
   const path = getRegisterStakeTxPath();
   if (!existsSync(path)) {
@@ -552,13 +551,13 @@ export const saveRegisterStakeTx = async (cbor: string) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done!`, `"${cbor}"`);
 };
 
 export const getInitTTTxPath = () =>
-  `${getConfigFilePath()}/transactions/initTasteTest.txt`;
+  `${getTransactionFilesPath()}/initTasteTest.txt`;
 export const getInitTTTx = async () => {
   const path = getInitTTTxPath();
   if (!existsSync(path)) {
@@ -592,7 +591,7 @@ export const saveInitTTTx = async (cbor: string) => {
     }
   }
 
-  await mkdir(getConfigFilePath(), { recursive: true });
+  await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done!`, `"${cbor}"`);
 };

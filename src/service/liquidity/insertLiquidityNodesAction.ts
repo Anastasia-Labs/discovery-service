@@ -1,4 +1,9 @@
-import { Emulator, Lucid, insertLqNode } from "price-discovery-offchain";
+import {
+  Emulator,
+  Lucid,
+  TxSigned,
+  insertLqNode,
+} from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
@@ -20,17 +25,17 @@ export const insertLiquidityNodesAction = async (
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 
-  const refNodePolicy = await lucid.provider.getUtxosByOutRef([
+  const [refNodePolicy] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,
   ]);
-  const refNodeValidator = await lucid.provider.getUtxosByOutRef([
+  const [refNodeValidator] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestValidator,
   ]);
 
-  let loop = true;
-  let walletIdx = WALLET_GROUP_START_INDEX;
-  while (loop) {
-    await selectLucidWallet(lucid, walletIdx);
+  const insertTxs: { tx: TxSigned; index: number }[] = [];
+
+  for (let i = WALLET_GROUP_START_INDEX; i <= MAX_WALLET_GROUP_COUNT; i++) {
+    await selectLucidWallet(lucid, i);
     // Emulator needs this to refresh some random data.
     if (emulator) {
       await setTimeout(200);
@@ -45,8 +50,8 @@ export const insertLiquidityNodesAction = async (
         nodeValidator: applied.scripts.liquidityValidator,
       },
       refScripts: {
-        nodePolicy: refNodePolicy?.[0],
-        nodeValidator: refNodeValidator?.[0],
+        nodePolicy: refNodePolicy,
+        nodeValidator: refNodeValidator,
       },
     });
 
@@ -56,24 +61,15 @@ export const insertLiquidityNodesAction = async (
 
     if (isDryRun()) {
       console.log(tx.data.toString());
-      loop = false;
+      continue;
     } else {
-      console.log(`Depositing 1 ADA to TT with wallet: ${walletIdx}`);
       try {
-        const txComplete = await tx.data.sign().complete();
-        const txHash = await txComplete.submit();
-        console.log(`Submitting: ${txHash}`);
-        await lucid.awaitTx(txHash);
-
-        if (walletIdx === MAX_WALLET_GROUP_COUNT) {
-          loop = false;
-          console.log("Done!");
-        } else {
-          walletIdx++;
-        }
+        const signedTx = await tx.data.sign().complete();
+        console.log(`Depositing 1 ADA to TT with wallet: ${i}`);
+        insertTxs.push({ tx: signedTx, index: i });
       } catch (e) {
         console.log(
-          "Failed to fund TT with wallet: " + walletIdx,
+          "Failed to fund TT with wallet: " + i,
           (e as Error).message,
         );
         console.log("Waiting to try again...");
@@ -81,4 +77,14 @@ export const insertLiquidityNodesAction = async (
       }
     }
   }
+
+  console.log(`Submitting insert transactions...`);
+  await Promise.all(
+    insertTxs.map(async ({ tx, index }) => {
+      const txHash = await tx.submit();
+      console.log(`Submitting for wallet ${index}: ${txHash}`);
+      await lucid.awaitTx(txHash);
+      console.log(`Done!`);
+    }),
+  );
 };

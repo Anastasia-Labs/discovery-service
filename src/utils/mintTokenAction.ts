@@ -1,6 +1,7 @@
 import "./env.js";
 
 import {
+  Emulator,
   fromText,
   Lucid,
   MintingPolicy,
@@ -17,19 +18,23 @@ import {
 } from "./files.js";
 import { selectLucidWallet } from "./wallet.js";
 
-export async function mintTokenAction(lucid: Lucid) {
+const submitMintTokenAction = async (lucid: Lucid) => {
+  const completedTx = lucid.fromTx(await getMintTokenTx());
+  const signed = await completedTx.sign().complete();
+  const txHash = await signed.submit();
+  console.log(`Submitting: ${txHash}`);
+  await lucid.awaitTx(txHash);
+  console.log(`Done!`);
+};
+
+export async function mintTokenAction(lucid: Lucid, emulator?: Emulator) {
   const {
     project: { token },
   } = await getTTConfig();
   await selectLucidWallet(lucid, 1);
 
-  if (!isDryRun()) {
-    const completedTx = lucid.fromTx(await getMintTokenTx());
-    const signed = await completedTx.sign().complete();
-    const txHash = await signed.submit();
-    console.log(`Submitting: ${txHash}`);
-    await lucid.awaitTx(txHash);
-    console.log(`Done!`);
+  if (!isDryRun() && !emulator) {
+    await submitMintTokenAction(lucid);
     return;
   }
 
@@ -63,5 +68,10 @@ export async function mintTokenAction(lucid: Lucid) {
   await updateTTVariables({
     projectTokenPolicyId: policyId,
   });
+
   await saveMintTokenTx((await tx.complete()).toString());
+
+  if (emulator) {
+    await submitMintTokenAction(lucid);
+  }
 }
