@@ -152,8 +152,8 @@ export interface ITTConfigJSON {
     endpoint: string;
   };
   reservedUtxos?: {
-    initTasteTest?: OutRef;
-    initTokenHolder?: OutRef;
+    initTasteTest?: OutRef[];
+    initTokenHolder?: OutRef[];
   };
   project: {
     name: string;
@@ -163,6 +163,7 @@ export interface ITTConfigJSON {
       withdrawPenalty: string;
       cleanupRefund: string;
       tokenHolder: string;
+      publishScripts: string;
     };
     token: {
       readableName: string;

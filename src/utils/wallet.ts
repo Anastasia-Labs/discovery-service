@@ -59,7 +59,7 @@ export const fetchFromBlockfrost = async (slug: string) => {
 export const posixToSlot = (timestamp: number | string) =>
   Math.floor(
     Math.trunc(Math.floor(Number(timestamp) / 1000)) -
-      ((process.env.NODE_ENV as string).includes("mainnet")
+      (getNetwork() === "mainnet"
         ? Number(MAINNET_OFFSET)
         : Number(PREVIEW_OFFSET)),
   );
@@ -67,7 +67,7 @@ export const posixToSlot = (timestamp: number | string) =>
 export const slotToPosix = (slot: number | string) =>
   Math.floor(
     Math.trunc(Math.floor(Number(slot) * 1000)) +
-      ((process.env.NODE_ENV as string).includes("mainnet")
+      (getNetwork() === "mainnet"
         ? Number(MAINNET_OFFSET)
         : Number(PREVIEW_OFFSET)),
   );

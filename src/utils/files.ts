@@ -6,6 +6,7 @@ import { existsSync } from "fs";
 import inquirer from "inquirer";
 import path from "path";
 
+import { IDynamoTTEntry } from "../@types/db.js";
 import {
   IAppliedScriptsJSON,
   IFragmentedUtxosMapJSON,
@@ -88,10 +89,6 @@ export const getAppliedScripts = async (): Promise<IAppliedScriptsJSON> => {
 export const saveAppliedScripts = async (data: IAppliedScriptsJSON) => {
   const path = getAppliedScriptsPath();
   if (existsSync(path)) {
-    if (isDryRun()) {
-      return undefined;
-    }
-
     const { appliedScriptsOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -126,7 +123,7 @@ export const getFragmentedUtxosMap =
 export const saveFragmentedUtxosMapPath = async (
   data: IFragmentedUtxosMapJSON,
 ) => {
-  const path = getAppliedScriptsPath();
+  const path = getFragmentedUtxosMapPath();
   if (existsSync(path)) {
     if (isDryRun()) {
       return undefined;
@@ -329,7 +326,7 @@ export const saveConfig = async (config: ITTConfigJSON) => {
 };
 
 export const getFundWalletsTxPath = () =>
-  `${getConfigFilePath()}/fundWallets.txt`;
+  `${getConfigFilePath()}/transactions/fundWallets.txt`;
 export const getFundWalletsTx = async () => {
   const path = getFundWalletsTxPath();
   if (!existsSync(path)) {
@@ -361,10 +358,11 @@ export const saveFundWalletsTx = async (cbor: string) => {
 
   await mkdir(getConfigFilePath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done!`, `"${cbor}"`);
+  console.log(`Done! -->`, `"${cbor}"`);
 };
 
-export const getMintTokenTxPath = () => `${getConfigFilePath()}/mintToken.txt`;
+export const getMintTokenTxPath = () =>
+  `${getConfigFilePath()}/transactions/mintToken.txt`;
 export const getMintTokenTx = async () => {
   const path = getMintTokenTxPath();
   if (!existsSync(path)) {
@@ -397,4 +395,228 @@ export const saveMintTokenTx = async (cbor: string) => {
   await mkdir(getConfigFilePath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
   console.log(`Done!`, `"${cbor}"`);
+};
+
+export const getFragmentWalletTxPath = () =>
+  `${getConfigFilePath()}/transactions/fragmentWallet.txt`;
+export const getFragmentWalletTx = async () => {
+  const path = getFragmentWalletTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find fragmentWallet.txt. Please run "yarn fragment-publish-wallet --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveFragmentWalletTx = async (cbor: string) => {
+  const path = getFragmentWalletTxPath();
+  if (existsSync(path)) {
+    const { fragmentWalletOverride } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "fragmentWalletOverride",
+        message: `A fragmentWallet transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!fragmentWalletOverride) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done!`, `"${cbor}"`);
+};
+
+export const getPublishScriptTxPath = (index: number) =>
+  `${getConfigFilePath()}/transactions/publishScript-${index}.txt`;
+export const getPublishScriptTx = async (index: number) => {
+  const path = getPublishScriptTxPath(index);
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find publishScript-${index}.txt. Please run "yarn publish-scripts --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const savePublishScriptTx = async (cbor: string, index: number) => {
+  const path = getPublishScriptTxPath(index);
+  if (existsSync(path)) {
+    const { publishScriptOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "publishScriptOverwrite",
+        message: `A publishScript-${index} transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!publishScriptOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done! Wrote transaction at index: ${index} -->`, `"${cbor}"`);
+};
+
+export const getInitTokenHolderTxPath = () =>
+  `${getConfigFilePath()}/transactions/initTokenHolder.txt`;
+export const getInitTokenHolderTx = async () => {
+  const path = getInitTokenHolderTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find initTokenHolder.txt. Please run "yarn init-token-holder --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveInitTokenHolderTx = async (cbor: string) => {
+  const path = getInitTokenHolderTxPath();
+  if (existsSync(path)) {
+    const { initTokenHolderOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "initTokenHolderOverwrite",
+        message: `An initTokenHolder transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!initTokenHolderOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done!`, `"${cbor}"`);
+};
+
+export const getRegisterStakeTxPath = () =>
+  `${getConfigFilePath()}/transactions/registerStake.txt`;
+export const getRegisterStakeTx = async () => {
+  const path = getRegisterStakeTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find registerStake.txt. Please run "yarn register-stake --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveRegisterStakeTx = async (cbor: string) => {
+  const path = getRegisterStakeTxPath();
+  if (existsSync(path)) {
+    const { registerStakeOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "registerStakeOverwrite",
+        message: `An registerStake transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!registerStakeOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done!`, `"${cbor}"`);
+};
+
+export const getInitTTTxPath = () =>
+  `${getConfigFilePath()}/transactions/initTasteTest.txt`;
+export const getInitTTTx = async () => {
+  const path = getInitTTTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find initTasteTest.txt. Please run "yarn start-tt --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveInitTTTx = async (cbor: string) => {
+  const path = getInitTTTxPath();
+  if (existsSync(path)) {
+    const { initTTOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "initTTOverwrite",
+        message: `An initTT transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!initTTOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done!`, `"${cbor}"`);
+};
+
+export const getDynamoDBPath = () => `${getConfigFilePath()}/dynamo-db.json`;
+export const saveDynamoDB = async (data: IDynamoTTEntry) => {
+  const path = getDynamoDBPath();
+  if (existsSync(path)) {
+    const { dynamoDBOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "dynamoDBOverwrite",
+        message: `A DynamoDB table has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!dynamoDBOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, JSON.stringify(data, null, 2), "utf-8");
+  console.log(`Done!`);
 };

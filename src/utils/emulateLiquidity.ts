@@ -10,13 +10,12 @@ import { setTimeout } from "timers/promises";
 import "./env.js";
 
 import {
-  DEPLOY_WALLET_ADA,
   MIN_ADA_INSERT_WALLET,
+  PUBLISH_WALLET_ADA,
 } from "../constants/utils.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
 import { claimLiquidityNodeAction } from "../service/liquidity/claimLiquidityNodeAction.js";
 import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
-import { deployLiquidityScriptsAction } from "../service/liquidity/deployLiquidityScriptsAction.js";
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
 import { foldLiquidityRewardsAction } from "../service/liquidity/foldLiquidityRewardsAction.js";
 import { initLiquidityFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
@@ -26,6 +25,7 @@ import { initializeLiquidityAction } from "../service/liquidity/initializeLiquid
 import { insertLiquidityNodesAction } from "../service/liquidity/insertLiquidityNodesAction.js";
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
 import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidityNodesAction.js";
+import { publishLiquidityScriptsAction } from "../service/liquidity/publishLiquidityScriptsAction.js";
 import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { startTasteTest } from "../service/startTasteTestAction.js";
@@ -75,7 +75,7 @@ const emulateLiquidity = async () => {
     {
       address: wallets[2].address,
       assets: {
-        lovelace: DEPLOY_WALLET_ADA,
+        lovelace: PUBLISH_WALLET_ADA,
       },
     },
     ...restAccounts,
@@ -161,7 +161,7 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Deploying Liquidity Scripts...");
-    await deployLiquidityScriptsAction(lucidInstance, emulator);
+    await publishLiquidityScriptsAction(lucidInstance, emulator);
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 

@@ -1,4 +1,4 @@
-export interface DynamoTTEntry {
+export interface IDynamoTTEntry {
   pk: {
     S: string;
   };

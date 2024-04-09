@@ -39,9 +39,9 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
 
   let initUtxo: UTxO;
   if (config.reservedUtxos?.initTasteTest) {
-    const res = await lucid.provider.getUtxosByOutRef([
+    const res = await lucid.provider.getUtxosByOutRef(
       config.reservedUtxos.initTasteTest,
-    ]);
+    );
 
     initUtxo = res[0];
   } else {
@@ -52,9 +52,9 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
 
   let tokenHolderUtxo: UTxO;
   if (config.reservedUtxos?.initTokenHolder) {
-    const res = await lucid.provider.getUtxosByOutRef([
+    const res = await lucid.provider.getUtxosByOutRef(
       config.reservedUtxos.initTokenHolder,
-    ]);
+    );
 
     tokenHolderUtxo = res[0];
   } else {

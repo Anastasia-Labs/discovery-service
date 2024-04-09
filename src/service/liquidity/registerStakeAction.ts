@@ -1,11 +1,31 @@
 import { Lucid } from "price-discovery-offchain";
-import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getRegisterStakeTx,
+  saveRegisterStakeTx,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const registerStakeAction = async (lucid: Lucid) => {
   await selectLucidWallet(lucid, 2);
+
+  if (!isDryRun()) {
+    const tx = await getRegisterStakeTx();
+    if (!tx) {
+      throw new Error(
+        `Could not find a registerStake transaction to submit. Run "yarn register-stake --dry" to generate one.`,
+      );
+    }
+
+    const signed = await lucid.fromTx(tx).sign().complete();
+    const txHash = await signed.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
+    console.log(`Done!`);
+    return;
+  }
+
   const applied = await getAppliedScripts();
 
   const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
@@ -24,13 +44,5 @@ export const registerStakeAction = async (lucid: Lucid) => {
     .registerStake(rewardStakeRewardAddress!)
     .complete();
 
-  if (isDryRun()) {
-    console.log(registerStakeTx.toString());
-  } else {
-    const registerStakeSignedTx = await registerStakeTx.sign().complete();
-    const registerStakeHash = await registerStakeSignedTx.submit();
-
-    await loggerDD(`Submitting Registration: ${registerStakeHash}`);
-    await lucid.awaitTx(registerStakeHash);
-  }
+  await saveRegisterStakeTx(registerStakeTx.toString());
 };

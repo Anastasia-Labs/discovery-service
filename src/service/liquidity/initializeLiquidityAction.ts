@@ -1,32 +1,50 @@
 import "../../utils/env.js";
 
-import { writeFile } from "fs/promises";
-import {
-  InitNodeConfig,
-  Lucid,
-  UTxO,
-  initLqNode,
-} from "price-discovery-offchain";
+import { InitNodeConfig, Lucid, initLqNode } from "price-discovery-offchain";
 
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getInitTTTx,
+  getPublishedPolicyOutRefs,
+  saveInitTTTx,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const initializeLiquidityAction = async (lucid: Lucid) => {
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
+
+  if (!isDryRun()) {
+    const tx = await getInitTTTx();
+    if (!tx) {
+      throw new Error(
+        `An initTT transaction was not found. Run "yarn start-tt --dry" to generate one, and try again.`,
+      );
+    }
+
+    const signed = await lucid.fromTx(tx).sign().complete();
+    const initNodeHash = await signed.submit();
+    await loggerDD(`Submitting: ${initNodeHash}`);
+    await lucid.awaitTx(initNodeHash);
+    await loggerDD(`Done!`);
+    return;
+  }
 
   const initNodeConfig: InitNodeConfig = {
     initUTXO: (
       await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])
-    ).find(
-      ({ outputIndex }) =>
-        outputIndex === applied.discoveryPolicy.initOutRef.outputIndex,
-    ) as UTxO,
+    )?.[0],
     scripts: {
       nodePolicy: applied.scripts.liquidityPolicy,
       nodeValidator: applied.scripts.liquidityValidator,
+    },
+    refScripts: {
+      nodePolicy: (
+        await lucid.utxosByOutRef([deployed.scriptsRef.TasteTestPolicy])
+      )?.[0],
     },
   };
 
@@ -36,30 +54,5 @@ export const initializeLiquidityAction = async (lucid: Lucid) => {
     throw initNodeUnsigned.error;
   }
 
-  if (isDryRun()) {
-    console.log(initNodeUnsigned.data.toString());
-    return;
-  }
-
-  await loggerDD(`Building initNode Tx...`);
-  const signedTransaction = await initNodeUnsigned.data.sign().complete();
-  const signedCbor = Buffer.from(
-    signedTransaction.txSigned.to_bytes(),
-  ).toString("hex");
-  const signedTxHash = signedTransaction.toHash();
-
-  await writeFile(
-    `./init-tx.json`,
-    JSON.stringify(
-      {
-        cbor: initNodeUnsigned.data.toString(),
-        signedCbor,
-        txHash: signedTxHash,
-      },
-      undefined,
-      2,
-    ),
-  );
-
-  console.log(`Done!`);
+  await saveInitTTTx(initNodeUnsigned.data.toString());
 };

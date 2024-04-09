@@ -1,13 +1,17 @@
-import { writeFile } from "fs";
 import { Lucid } from "price-discovery-offchain";
 import "../../utils/env.js";
 
-import appliedScripts from "../../../applied-scripts.json" assert { type: "json" };
-import deployedPolicy from "../../../deployed-policy.json" assert { type: "json" };
-import tx from "../../../init-tx.json" assert { type: "json" };
-import { DynamoTTEntry } from "../../@types/db.js";
+import { IDynamoTTEntry } from "../../@types/db.js";
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../../constants/network.js";
-import { getAppliedScripts, getTTVariables } from "../../utils/files.js";
+import { getNetwork } from "../../utils/args.js";
+import {
+  getAppliedScripts,
+  getInitTTTx,
+  getPublishedPolicyOutRefs,
+  getTTConfig,
+  getTTVariables,
+  saveDynamoDB,
+} from "../../utils/files.js";
 import {
   fetchFromBlockfrost,
   posixToSlot,
@@ -17,10 +21,20 @@ import {
 const TWENTY_FOUR_HOURS_POSIX = 1000 * 60 * 60 * 24;
 
 export const generateDBEntryAction = async (lucid: Lucid) => {
+  const appliedScripts = await getAppliedScripts();
+  const deployedPolicy = await getPublishedPolicyOutRefs();
+  const initTx = await getInitTTTx();
+  const { project, deadline, ...config } = await getTTConfig();
   const { projectTokenAssetName, projectTokenPolicyId } =
     await getTTVariables();
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
+
+  if (!initTx) {
+    throw new Error(
+      `This TT has not been initialized yet. Run "yarn start-tt --dry", then try again.`,
+    );
+  }
 
   const startSlot = (
     await fetchFromBlockfrost(
@@ -28,7 +42,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     )
   ).slot as number;
 
-  const entry: Partial<DynamoTTEntry> = {
+  const entry: Partial<IDynamoTTEntry> = {
     pk: {
       S: deployedPolicy.policy,
     },
@@ -53,7 +67,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: Buffer.from(projectTokenAssetName, "hex").toString("utf-8"),
         },
         Decimals: {
-          N: process.env.PROJECT_TN_DECIMALS as string,
+          N: project.token.decimals.toString(),
         },
         Logo: {
           NULL: true,
@@ -64,9 +78,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
               S: "119557909",
             },
             SlotOffset: {
-              N: process.env.NODE_ENV?.includes("mainnet")
-                ? MAINNET_OFFSET
-                : PREVIEW_OFFSET,
+              N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
             },
           },
         },
@@ -87,24 +99,20 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: startSlot.toString(),
         },
         SlotOffset: {
-          N: process.env.NODE_ENV?.includes("mainnet")
-            ? MAINNET_OFFSET
-            : PREVIEW_OFFSET,
+          N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
         },
       },
     },
     creationTxHash: {
-      S: tx.txHash,
+      S: lucid.fromTx(initTx).toHash(),
     },
     endDate: {
       M: {
         Slot: {
-          S: posixToSlot(process.env.DEADLINE as string).toString(),
+          S: posixToSlot(deadline).toString(),
         },
         SlotOffset: {
-          N: process.env.NODE_ENV?.includes("mainnet")
-            ? MAINNET_OFFSET
-            : PREVIEW_OFFSET,
+          N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
         },
       },
     },
@@ -128,14 +136,10 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     lastCallDate: {
       M: {
         Slot: {
-          S: posixToSlot(
-            Number(process.env.DEADLINE as string) - TWENTY_FOUR_HOURS_POSIX,
-          ).toString(),
+          S: posixToSlot(deadline - TWENTY_FOUR_HOURS_POSIX).toString(),
         },
         SlotOffset: {
-          N: process.env.NODE_ENV?.includes("mainnet")
-            ? MAINNET_OFFSET
-            : PREVIEW_OFFSET,
+          N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
         },
       },
     },
@@ -145,28 +149,26 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: startSlot.toString(),
         },
         SlotOffset: {
-          N: process.env.NODE_ENV?.includes("mainnet")
-            ? MAINNET_OFFSET
-            : PREVIEW_OFFSET,
+          N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
         },
       },
     },
     parameters: {
       M: {
         beneficiaryAddress: {
-          S: process.env.PROJECT_ADDRESS as string,
+          S: project.addresses.liquidityDestination,
         },
         foldFee: {
           N: "2000000",
         },
         poolPolicyId: {
-          S: process.env.POOL_POLICY_ID!,
+          S: config.v1PoolData.policyId,
         },
         minUTXO: {
           N: "3000000",
         },
         penaltyAddress: {
-          S: process.env.PENALTY_ADDRESS as string,
+          S: project.addresses.withdrawPenalty,
         },
         penaltyPercentage: {
           N: "0.25",
@@ -409,7 +411,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
       },
     },
     projectTokens: {
-      N: process.env.PROJECT_AMNT as string,
+      N: project.token.suppliedAmount.toString(),
     },
     scripts: {
       M: {
@@ -649,8 +651,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           M: {
             Slot: {
               S: posixToSlot(
-                Number(process.env.DEADLINE!) +
-                  1000 * 60 * 60 * 24 * 30 * month,
+                deadline + 1000 * 60 * 60 * 24 * 30 * month,
               ).toString(),
             },
             SlotOffset: {
@@ -682,11 +683,5 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     }
   }
 
-  writeFile(
-    `./dynamodb-template.json`,
-    JSON.stringify(entry, undefined, 2),
-    (error) => {
-      error ? console.log(error) : console.log(`DynamoDB template saved!`);
-    },
-  );
+  await saveDynamoDB(entry as IDynamoTTEntry);
 };
