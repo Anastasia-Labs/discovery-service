@@ -2,15 +2,15 @@ import { mkdir, readFile, writeFile } from "fs/promises";
 import isEqual from "lodash/isEqual.js";
 // @ts-ignore
 import branchName from "current-git-branch";
-
 import { existsSync } from "fs";
 import inquirer from "inquirer";
 import path from "path";
-import { ITTConfigJSON } from "../@types/config.js";
+
 import {
   IAppliedScriptsJSON,
   IFragmentedUtxosMapJSON,
   IPublishedPolicyJSON,
+  ITTConfigJSON,
   ITasteTestVariablesJSON,
   IWallet,
 } from "../@types/json.js";
@@ -192,21 +192,47 @@ export const savePublishedPolicyOutRefs = async (
   console.log(`Done!`);
 };
 
-export const getTasteTestVariablesPath = () =>
+export const getTTVariablesPath = () =>
   `${getConfigFilePath()}/tt-variables.json`;
-export const getTasteTestVariables =
-  async (): Promise<ITasteTestVariablesJSON> => {
-    const fileContents = await readFile(getTasteTestVariablesPath(), {
-      encoding: "utf-8",
-    });
-    const data: ITasteTestVariablesJSON = JSON.parse(fileContents);
-    return data;
-  };
+export const getTTVariables = async (): Promise<ITasteTestVariablesJSON> => {
+  const fileContents = await readFile(getTTVariablesPath(), {
+    encoding: "utf-8",
+  });
+  const data: ITasteTestVariablesJSON = JSON.parse(fileContents);
+  return data;
+};
 
-export const updateTasteTestVariables = async (
+export const saveTTVariables = async (data: ITasteTestVariablesJSON) => {
+  const path = getTTVariablesPath();
+  if (existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    const { overwriteTTVariables } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "overwriteTTVariables",
+        message: `A TT variables file has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!overwriteTTVariables) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, JSON.stringify(data, null, 2), "utf-8");
+  console.log(`Done!`);
+};
+
+export const updateTTVariables = async (
   values: Partial<ITasteTestVariablesJSON>,
 ): Promise<true> => {
-  const path = getTasteTestVariablesPath();
+  const path = getTTVariablesPath();
   const fileContents = await readFile(path, "utf-8");
   const data: ITasteTestVariablesJSON = JSON.parse(fileContents);
 
@@ -265,7 +291,7 @@ export const saveWallets = async (data: IWallet[]) => {
 };
 
 export const getTTConfigPath = () => `${getConfigFilePath()}/config.json`;
-export const getConfig = async (): Promise<ITTConfigJSON> => {
+export const getTTConfig = async (): Promise<ITTConfigJSON> => {
   const path = getTTConfigPath();
   if (!existsSync(path)) {
     throw new Error(
@@ -300,4 +326,75 @@ export const saveConfig = async (config: ITTConfigJSON) => {
   await mkdir(getConfigFilePath(), { recursive: true });
   await writeFile(path, JSON.stringify(config, null, 2), "utf-8");
   console.log(`Saved template to ${path}. Please update with real values!`);
+};
+
+export const getFundWalletsTxPath = () =>
+  `${getConfigFilePath()}/fundWallets.txt`;
+export const getFundWalletsTx = async () => {
+  const path = getFundWalletsTxPath();
+  if (!existsSync(path)) {
+    throw new Error(
+      `Could not find fundWallets.txt at ${path}. Please run "yarn fund-wallets --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveFundWalletsTx = async (cbor: string) => {
+  const path = getFundWalletsTxPath();
+  if (existsSync(path)) {
+    const { fundWalletsOverride } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "fundWalletsOverride",
+        message: `A fundWallets transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!fundWalletsOverride) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done!`, `"${cbor}"`);
+};
+
+export const getMintTokenTxPath = () => `${getConfigFilePath()}/mintToken.txt`;
+export const getMintTokenTx = async () => {
+  const path = getMintTokenTxPath();
+  if (!existsSync(path)) {
+    throw new Error(
+      `Could not find mintToken.txt at ${path}. Please run "yarn mint-token --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveMintTokenTx = async (cbor: string) => {
+  const path = getMintTokenTxPath();
+  if (existsSync(path)) {
+    const { mintTokenOverride } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "mintTokenOverride",
+        message: `A mintToken transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!mintTokenOverride) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getConfigFilePath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  console.log(`Done!`, `"${cbor}"`);
 };

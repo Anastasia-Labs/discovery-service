@@ -9,15 +9,15 @@ import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
-  getTasteTestVariables,
-  updateTasteTestVariables,
+  getTTVariables,
+  updateTTVariables,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
   const { projectTokenAssetName, projectTokenPolicyId } =
-    await getTasteTestVariables();
+    await getTTVariables();
   await selectLucidWallet(lucid, 0);
 
   const datums = getDatumsObject(emulator);
@@ -56,7 +56,7 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
     console.log(`Submitting: ${txHash}`);
     await lucid.awaitTx(txHash);
 
-    await updateTasteTestVariables({
+    await updateTTVariables({
       lpTokenAssetName: unsignedTx.data.poolLpTokenName,
     });
     console.log("Done! Saved LP token data to taste-test-variables.json.");

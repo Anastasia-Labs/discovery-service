@@ -20,7 +20,7 @@ import { loggerDD } from "../../logs/datadog-service.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
-  getTasteTestVariables,
+  getTTVariables,
 } from "../../utils/files.js";
 import { isDryRun, sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -29,7 +29,7 @@ export const foldLiquidityRewardsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  const { lpTokenAssetName } = await getTasteTestVariables();
+  const { lpTokenAssetName } = await getTTVariables();
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();

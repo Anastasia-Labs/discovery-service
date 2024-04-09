@@ -7,7 +7,7 @@ import deployedPolicy from "../../../deployed-policy.json" assert { type: "json"
 import tx from "../../../init-tx.json" assert { type: "json" };
 import { DynamoTTEntry } from "../../@types/db.js";
 import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../../constants/network.js";
-import { getAppliedScripts, getTasteTestVariables } from "../../utils/files.js";
+import { getAppliedScripts, getTTVariables } from "../../utils/files.js";
 import {
   fetchFromBlockfrost,
   posixToSlot,
@@ -18,7 +18,7 @@ const TWENTY_FOUR_HOURS_POSIX = 1000 * 60 * 60 * 24;
 
 export const generateDBEntryAction = async (lucid: Lucid) => {
   const { projectTokenAssetName, projectTokenPolicyId } =
-    await getTasteTestVariables();
+    await getTTVariables();
   await selectLucidWallet(lucid, 0);
   const applied = await getAppliedScripts();
 

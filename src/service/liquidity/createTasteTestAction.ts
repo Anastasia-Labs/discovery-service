@@ -1,7 +1,7 @@
-import { ITTConfigJSON } from "../../@types/config.js";
+import { ITTConfigJSON, ITasteTestVariablesJSON } from "../../@types/json.js";
 import { getNetwork } from "../../utils/args.js";
 import "../../utils/env.js";
-import { saveConfig } from "../../utils/files.js";
+import { saveConfig, saveTTVariables } from "../../utils/files.js";
 
 const v1PoolPolicyIdPreview =
   "4086577ed57c514f8e29b78f42ef4f379363355a3b65b9a032ee30c9";
@@ -49,5 +49,14 @@ export const createTasteTestAction = async () => {
     },
   };
 
+  const tasteTestVariables: ITasteTestVariablesJSON = {
+    lpTokenAssetName: "",
+    projectTokenAssetName: Buffer.from(
+      data.project.token.readableName,
+    ).toString("hex"),
+    projectTokenPolicyId: "",
+  };
+
+  await saveTTVariables(tasteTestVariables);
   await saveConfig(data);
 };

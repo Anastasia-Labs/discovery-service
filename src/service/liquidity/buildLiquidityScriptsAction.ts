@@ -12,14 +12,14 @@ import { getScripts } from "../../utils/scripts.js";
 import { IAppliedScriptsJSON } from "../../@types/json.js";
 import { isDryRun } from "../../utils/args.js";
 import {
-  getConfig,
-  getTasteTestVariables,
+  getTTConfig,
+  getTTVariables,
   saveAppliedScripts,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
-  const config = await getConfig();
+  const config = await getTTConfig();
 
   const {
     collectionFoldPolicy,
@@ -35,7 +35,7 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
   } = getScripts();
 
   const { projectTokenPolicyId, projectTokenAssetName } =
-    await getTasteTestVariables();
+    await getTTVariables();
 
   let initUtxo: UTxO;
   if (config.reservedUtxos?.initTasteTest) {

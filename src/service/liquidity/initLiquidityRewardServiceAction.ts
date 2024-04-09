@@ -8,7 +8,7 @@ import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
-  getTasteTestVariables,
+  getTTVariables,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
@@ -19,7 +19,7 @@ export const initLiquidityRewardServiceAction = async (
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
   const { projectTokenAssetName, projectTokenPolicyId, lpTokenAssetName } =
-    await getTasteTestVariables();
+    await getTTVariables();
 
   const datums = getDatumsObject(emulator);
 
