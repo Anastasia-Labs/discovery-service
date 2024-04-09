@@ -6,10 +6,11 @@
   "type": "module",
   "scripts": {
     "build": "tsc",
-    "get-balance": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/getBalance.ts",
+    "balance": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/getBalance.ts",
     "create-tt": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/createTasteTest.ts",
     "create-wallets": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/createWallets.ts",
     "fund-wallets": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/fundWallets.ts",
+    "refund-wallets": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/refundWallets.ts",
     "mint-token": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/mintToken.ts",
     "build-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/buildLiquidityScripts.ts",
     "fragment-publish-wallet": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/fragmentPublishWallet.ts",

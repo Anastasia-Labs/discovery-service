@@ -1,7 +1,7 @@
 import { ITTConfigJSON, ITasteTestVariablesJSON } from "../../@types/json.js";
 import { getNetwork } from "../../utils/args.js";
 import "../../utils/env.js";
-import { saveConfig, saveTTVariables } from "../../utils/files.js";
+import { getWallets, saveConfig, saveTTVariables } from "../../utils/files.js";
 
 const v1PoolPolicyIdPreview =
   "4086577ed57c514f8e29b78f42ef4f379363355a3b65b9a032ee30c9";
@@ -16,19 +16,21 @@ const v1PoolValidatorScriptPreview =
 
 export const createTasteTestAction = async () => {
   const network = getNetwork();
+  const wallets = await getWallets();
 
   const data: ITTConfigJSON = {
     blockfrost: {
       apiKey: process.env.API_KEY!,
       endpoint: process.env.API_URL!,
     },
-    deadline: 0,
+    deadline: Date.now() + 1000 * 60 * 60 * 2, // Defaults to 2 hours
     project: {
       addresses: {
         cleanupRefund: "",
-        liquidityDestination: "",
-        tokenHolder: "",
-        withdrawPenalty: "",
+        liquidityDestination: wallets[0].address,
+        tokenHolder: wallets[1].address,
+        withdrawPenalty: wallets[0].address,
+        publishScripts: wallets[2].address,
       },
       description: "",
       name: "",

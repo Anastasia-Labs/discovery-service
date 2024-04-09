@@ -1,16 +1,19 @@
 import "./env.js";
 
-import { Assets, Lucid } from "price-discovery-offchain";
+import { Assets, Lucid, TxSigned } from "price-discovery-offchain";
 
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
 import { isDryRun } from "./args.js";
-import { getWallets } from "./files.js";
+import { getTTConfig, getWallets } from "./files.js";
 import { lovelaceAtAddress } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export const refundWalletsAction = async (lucid: Lucid) => {
   const wallets = await getWallets();
+  const { project } = await getTTConfig();
   const walletEntries = [...wallets.entries()].slice(0, MAX_WALLET_GROUP_COUNT);
+
+  const signedTxs: { tx: TxSigned; index: number }[] = [];
 
   for (const [index, wallet] of walletEntries) {
     await selectLucidWallet(lucid, index);
@@ -43,16 +46,11 @@ export const refundWalletsAction = async (lucid: Lucid) => {
       continue;
     }
 
-    console.log({
-      totalLovelace,
-      assets,
-    });
-
     try {
       const tx = lucid
         .newTx()
         .collectFrom(utxos)
-        .payToAddress(process.env.PROJECT_REFUND_ADDRESS!, assets);
+        .payToAddress(project.addresses.cleanupRefund, assets);
 
       const preSigned = await (await tx.complete()).sign().complete();
       const preSignedTxFee = preSigned.txSigned.body().fee();
@@ -65,7 +63,7 @@ export const refundWalletsAction = async (lucid: Lucid) => {
       const realTx = await lucid
         .newTx()
         .collectFrom(utxos)
-        .payToAddress(process.env.PROJECT_REFUND_ADDRESS!, newAssets)
+        .payToAddress(project.addresses.cleanupRefund, newAssets)
         .complete();
 
       if (isDryRun()) {
@@ -78,10 +76,12 @@ export const refundWalletsAction = async (lucid: Lucid) => {
           continue;
         }
       } else {
-        const txHash = await (await realTx.sign().complete()).submit();
-        console.log(`Refunding wallet #${index}:  ${txHash}`);
-        await lucid.awaitTx(txHash);
-        console.log("Done!");
+        const signedTx = await realTx.sign().complete();
+        console.log(`Stored signed Tx for wallet: ${index}`);
+        signedTxs.push({
+          tx: signedTx,
+          index,
+        });
       }
     } catch (e) {
       console.log(
@@ -89,4 +89,18 @@ export const refundWalletsAction = async (lucid: Lucid) => {
       );
     }
   }
+
+  if (isDryRun()) {
+    return;
+  }
+
+  await Promise.all(
+    signedTxs.map(async ({ tx, index }) => {
+      const txHash = await tx.submit();
+      console.log(`Refunding wallet #${index}:  ${txHash}`);
+      await lucid.awaitTx(txHash);
+    }),
+  );
+
+  console.log("Done!");
 };
