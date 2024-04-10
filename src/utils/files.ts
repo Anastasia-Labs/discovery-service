@@ -86,9 +86,12 @@ export const getAppliedScripts = async (): Promise<IAppliedScriptsJSON> => {
   return data;
 };
 
-export const saveAppliedScripts = async (data: IAppliedScriptsJSON) => {
+export const saveAppliedScripts = async (
+  data: IAppliedScriptsJSON,
+  emulator?: boolean,
+) => {
   const path = getAppliedScriptsPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { appliedScriptsOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -122,9 +125,10 @@ export const getFragmentedUtxosMap =
 
 export const saveFragmentedUtxosMapPath = async (
   data: IFragmentedUtxosMapJSON,
+  emulator?: boolean,
 ) => {
   const path = getFragmentedUtxosMapPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     if (isDryRun()) {
       return undefined;
     }
@@ -162,9 +166,10 @@ export const getPublishedPolicyOutRefs =
 
 export const savePublishedPolicyOutRefs = async (
   data: IPublishedPolicyJSON,
+  emulator?: boolean,
 ) => {
   const path = getPublishedPolicyOutRefsPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     if (isDryRun()) {
       return undefined;
     }
@@ -373,9 +378,9 @@ export const getMintTokenTx = async () => {
   return await readFile(path, "utf-8");
 };
 
-export const saveMintTokenTx = async (cbor: string) => {
+export const saveMintTokenTx = async (cbor: string, emulator?: boolean) => {
   const path = getMintTokenTxPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { mintTokenOverride } = await inquirer.prompt([
       {
         type: "confirm",
@@ -393,7 +398,9 @@ export const saveMintTokenTx = async (cbor: string) => {
 
   await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done!`, `"${cbor}"`);
+  if (!emulator) {
+    console.log(cbor);
+  }
 };
 
 export const getFragmentWalletTxPath = () =>
@@ -413,9 +420,12 @@ export const getFragmentWalletTx = async () => {
   return await readFile(path, "utf-8");
 };
 
-export const saveFragmentWalletTx = async (cbor: string) => {
+export const saveFragmentWalletTx = async (
+  cbor: string,
+  emulator?: boolean,
+) => {
   const path = getFragmentWalletTxPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { fragmentWalletOverride } = await inquirer.prompt([
       {
         type: "confirm",
@@ -433,7 +443,9 @@ export const saveFragmentWalletTx = async (cbor: string) => {
 
   await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done!`, `"${cbor}"`);
+  if (!emulator) {
+    console.log(cbor);
+  }
 };
 
 export const getPublishScriptTxPath = (index: number) =>
@@ -453,9 +465,13 @@ export const getPublishScriptTx = async (index: number) => {
   return await readFile(path, "utf-8");
 };
 
-export const savePublishScriptTx = async (cbor: string, index: number) => {
+export const savePublishScriptTx = async (
+  cbor: string,
+  index: number,
+  emulator?: boolean,
+) => {
   const path = getPublishScriptTxPath(index);
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { publishScriptOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -473,7 +489,9 @@ export const savePublishScriptTx = async (cbor: string, index: number) => {
 
   await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done! Wrote transaction at index: ${index} -->`, `"${cbor}"`);
+  if (!emulator) {
+    console.log(cbor);
+  }
 };
 
 export const getInitTokenHolderTxPath = () =>
@@ -493,9 +511,12 @@ export const getInitTokenHolderTx = async () => {
   return await readFile(path, "utf-8");
 };
 
-export const saveInitTokenHolderTx = async (cbor: string) => {
+export const saveInitTokenHolderTx = async (
+  cbor: string,
+  emulator?: boolean,
+) => {
   const path = getInitTokenHolderTxPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { initTokenHolderOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -513,7 +534,9 @@ export const saveInitTokenHolderTx = async (cbor: string) => {
 
   await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done!`, `"${cbor}"`);
+  if (!emulator) {
+    console.log(cbor);
+  }
 };
 
 export const getRegisterStakeTxPath = () =>
@@ -533,9 +556,9 @@ export const getRegisterStakeTx = async () => {
   return await readFile(path, "utf-8");
 };
 
-export const saveRegisterStakeTx = async (cbor: string) => {
+export const saveRegisterStakeTx = async (cbor: string, emulator?: boolean) => {
   const path = getRegisterStakeTxPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { registerStakeOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -553,7 +576,9 @@ export const saveRegisterStakeTx = async (cbor: string) => {
 
   await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done!`, `"${cbor}"`);
+  if (!emulator) {
+    console.log(cbor);
+  }
 };
 
 export const getInitTTTxPath = () =>
@@ -573,9 +598,9 @@ export const getInitTTTx = async () => {
   return await readFile(path, "utf-8");
 };
 
-export const saveInitTTTx = async (cbor: string) => {
+export const saveInitTTTx = async (cbor: string, emulator?: boolean) => {
   const path = getInitTTTxPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { initTTOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -593,7 +618,9 @@ export const saveInitTTTx = async (cbor: string) => {
 
   await mkdir(getTransactionFilesPath(), { recursive: true });
   await writeFile(path, cbor, "utf-8");
-  console.log(`Done!`, `"${cbor}"`);
+  if (!emulator) {
+    console.log(cbor);
+  }
 };
 
 export const getDynamoDBPath = () => `${getConfigFilePath()}/dynamo-db.json`;

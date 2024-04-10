@@ -1,6 +1,7 @@
 import "../../utils/env.js";
 
 import {
+  Emulator,
   Lucid,
   UTxO,
   buildLiquidityScripts,
@@ -18,7 +19,10 @@ import {
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
+export const buildLiquidityScriptsAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
   const config = await getTTConfig();
 
   const {
@@ -158,10 +162,10 @@ export const buildLiquidityScriptsAction = async (lucid: Lucid) => {
     ...parameters,
   };
 
-  if (isDryRun()) {
-    console.log(data);
+  if (isDryRun() && !emulator) {
+    console.log(JSON.stringify(data));
     return;
   }
 
-  await saveAppliedScripts(data);
+  await saveAppliedScripts(data, Boolean(emulator));
 };

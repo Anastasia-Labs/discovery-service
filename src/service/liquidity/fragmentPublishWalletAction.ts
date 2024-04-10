@@ -18,8 +18,8 @@ export const refScriptAmountsByIndex = [
   25_000_000n,
   14_000_000n,
   24_000_000n,
-  20_000_000n,
   30_000_000n,
+  35_000_000n,
   8_000_000n,
   18_000_000n,
   4_000_000n,
@@ -42,6 +42,7 @@ export const validatorsByIndex = [
 const submitFragmentPublishWallet = async (
   lucid: Lucid,
   fragmentWalletTx?: string,
+  emulator?: Emulator,
 ) => {
   if (!fragmentWalletTx) {
     throw new Error(
@@ -53,7 +54,7 @@ const submitFragmentPublishWallet = async (
   const txHash = await signed.submit();
   console.log(`Submitting: ${txHash}`);
   await lucid.awaitTx(txHash);
-  console.log(`Done!`);
+  console.log("Done!");
 
   const scriptsRef: Record<string, OutRef> = {};
   for (const name of validatorsByIndex) {
@@ -63,8 +64,10 @@ const submitFragmentPublishWallet = async (
     };
   }
 
+  console.log(`Saving resulting outputs...`);
   await saveFragmentedUtxosMapPath(
     scriptsRef as unknown as IFragmentedUtxosMapJSON,
+    Boolean(emulator),
   );
 };
 
@@ -114,9 +117,13 @@ export const fragmentPublishWalletAction = async (
   });
 
   const txComplete = await splitTx.complete();
-  await saveFragmentWalletTx(txComplete.toString());
+  await saveFragmentWalletTx(txComplete.toString(), Boolean(emulator));
 
   if (emulator) {
-    await submitFragmentPublishWallet(lucid, await getFragmentWalletTx());
+    await submitFragmentPublishWallet(
+      lucid,
+      await getFragmentWalletTx(),
+      emulator,
+    );
   }
 };

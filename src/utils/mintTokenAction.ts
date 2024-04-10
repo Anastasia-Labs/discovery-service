@@ -33,6 +33,12 @@ export async function mintTokenAction(lucid: Lucid, emulator?: Emulator) {
   } = await getTTConfig();
   await selectLucidWallet(lucid, 1);
 
+  if (token.suppliedAmount === 0) {
+    throw new Error(
+      "The supplied amount of project tokens is set to `0`. Please update and try again.",
+    );
+  }
+
   if (!isDryRun() && !emulator) {
     await submitMintTokenAction(lucid);
     return;
@@ -69,9 +75,12 @@ export async function mintTokenAction(lucid: Lucid, emulator?: Emulator) {
     projectTokenPolicyId: policyId,
   });
 
-  await saveMintTokenTx((await tx.complete()).toString());
+  const txCbor = (await tx.complete()).toString();
 
   if (emulator) {
+    await saveMintTokenTx(txCbor, true);
     await submitMintTokenAction(lucid);
+  } else {
+    await saveMintTokenTx(txCbor);
   }
 }

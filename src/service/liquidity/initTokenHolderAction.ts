@@ -42,6 +42,13 @@ export const initTokenHolderAction = async (
     project: { token },
     reservedUtxos,
   } = await getTTConfig();
+
+  if (token.suppliedAmount === 0) {
+    throw new Error(
+      "The supplied amount of project tokens is set to `0`. Please update and try again.",
+    );
+  }
+
   if (reservedUtxos?.initTokenHolder) {
     const utxos = await lucid.provider.getUtxosByOutRef(
       reservedUtxos.initTokenHolder,
@@ -55,7 +62,7 @@ export const initTokenHolderAction = async (
     await selectLucidWallet(lucid, 1);
   }
 
-  if (!isDryRun()) {
+  if (!isDryRun() && !emulator) {
     await submitInitTokenHolderAction(lucid);
     return;
   }
@@ -79,7 +86,10 @@ export const initTokenHolderAction = async (
     throw initTokenHolderUnsigned.error;
   }
 
-  await saveInitTokenHolderTx(initTokenHolderUnsigned.data.toString());
+  await saveInitTokenHolderTx(
+    initTokenHolderUnsigned.data.toString(),
+    Boolean(emulator),
+  );
 
   if (emulator) {
     await submitInitTokenHolderAction(lucid);

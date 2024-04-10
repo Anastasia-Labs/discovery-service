@@ -59,7 +59,7 @@ export const insertLiquidityNodesAction = async (
       throw tx.error;
     }
 
-    if (isDryRun()) {
+    if (isDryRun() && !emulator) {
       console.log(tx.data.toString());
       continue;
     } else {
