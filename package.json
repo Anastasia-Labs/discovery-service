@@ -21,10 +21,7 @@
     "generate-db": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/generateDynamoDB.ts",
     "insert-nodes": "NODE_NO_WARNINGS=1 ts-node --esm src/commands/insertLiquidityNodes.ts",
     "get-scripts": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/getScriptData.ts",
-    "emulate-liquidity": "NODE_ENV=emulator NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts",
-    "emulate-liquidity:mainnet": "NODE_ENV=emulator.mainnet NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts",
-    "emulate-snapshot:preview": "NODE_ENV=emulator NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquiditySnapshot.ts",
-    "emulate-snapshot:mainnet": "NODE_ENV=emulator.mainnet NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidityAtSnapshot.ts",
+    "emulate-liquidity": "NODE_NO_WARNINGS=1 ts-node --esm src/utils/emulateLiquidity.ts",
     "test": "NODE_ENV=mainnet NODE_NO_WARNINGS=1 ts-node --esm src/tempCommands/testtx.ts"
   },
   "author": "",
