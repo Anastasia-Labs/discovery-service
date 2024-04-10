@@ -21,10 +21,8 @@ export const claimLiquidityNodeAction = async (
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 
-  const refNodePolicy = await lucid.utxosByOutRef([
+  const [refNodePolicy, refNodeValidator] = await lucid.utxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,
-  ]);
-  const refNodeValidator = await lucid.utxosByOutRef([
     deployed.scriptsRef.TasteTestValidator,
   ]);
 
@@ -42,8 +40,8 @@ export const claimLiquidityNodeAction = async (
         rewardFoldPolicy: applied.scripts.rewardFoldPolicy,
       },
       refScripts: {
-        liquidityPolicy: refNodePolicy?.[0],
-        liquidityValidator: refNodeValidator?.[0],
+        liquidityPolicy: refNodePolicy,
+        liquidityValidator: refNodeValidator,
       },
     });
 
@@ -64,7 +62,7 @@ export const claimLiquidityNodeAction = async (
       throw tx.error;
     }
 
-    if (isDryRun()) {
+    if (isDryRun() && !emulator) {
       console.log(tx.data.toString());
 
       if (walletIdx === MAX_WALLET_GROUP_COUNT) {

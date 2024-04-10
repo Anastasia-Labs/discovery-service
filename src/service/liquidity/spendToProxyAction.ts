@@ -12,6 +12,7 @@ import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
   getSpendToProxyTx,
+  getTTConfig,
   saveSpendToProxyTx,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -35,6 +36,7 @@ const submitSpendToProxyAction = async (lucid: Lucid) => {
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
+  const { v1PoolData } = await getTTConfig();
 
   if (isDryRun() && !emulator) {
     await submitSpendToProxyAction(lucid);
@@ -51,7 +53,7 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
       liquidityTokenHolderPolicy: deployed.scriptsRef.TokenHolderPolicy,
       liquidityTokenHolderValidator: deployed.scriptsRef.TokenHolderValidator,
     },
-    v1PoolPolicyId: process.env.POOL_POLICY_ID!,
+    v1PoolPolicyId: v1PoolData.policyId,
   };
 
   await selectLucidWallet(lucid, 0);

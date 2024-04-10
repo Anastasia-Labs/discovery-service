@@ -74,7 +74,7 @@ export const foldLiquidityRewardsAction = async (
 
   const chunks = chunkArray(
     sortByKeys(unprocessedNodes, firstNode.datum.key),
-    35,
+    30,
   );
 
   const [ttValidatorRef, rwStakeRef, rwPolicyRef, rwValidatorRef] =
@@ -135,9 +135,9 @@ export const foldLiquidityRewardsAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    if (isDryRun()) {
+    if (isDryRun() && !emulator) {
       console.log(multiFoldUnsigned.data.toString());
-      continue;
+      break;
     } else {
       try {
         const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();

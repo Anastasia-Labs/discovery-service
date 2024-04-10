@@ -6,14 +6,19 @@ import {
   PROTOCOL_PARAMETERS_DEFAULT,
   ProtocolParameters,
 } from "price-discovery-offchain";
-import { setTimeout } from "timers/promises";
 import "./env.js";
+
+import { existsSync } from "fs";
+import { rm } from "fs/promises";
+import inquirer from "inquirer";
+import { setTimeout } from "timers/promises";
 
 import {
   MIN_ADA_INSERT_WALLET,
-  PUBLISH_WALLET_ADA,
+  getPublishWalletAda,
 } from "../constants/utils.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
+import { claimLiquidityNodeAction } from "../service/liquidity/claimLiquidityNodeAction.js";
 import { createTasteTestAction } from "../service/liquidity/createTasteTestAction.js";
 import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
 import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
@@ -31,7 +36,7 @@ import { registerStakeAction } from "../service/liquidity/registerStakeAction.js
 import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { getNetwork } from "./args.js";
-import { getTTConfig, getWallets } from "./files.js";
+import { getTTConfig, getTransactionFilesPath, getWallets } from "./files.js";
 import { mintTokenAction } from "./mintTokenAction.js";
 import { posixToSlot } from "./wallet.js";
 
@@ -77,7 +82,7 @@ const emulateLiquidity = async () => {
     {
       address: wallets[2].address,
       assets: {
-        lovelace: PUBLISH_WALLET_ADA,
+        lovelace: await getPublishWalletAda(),
       },
     },
     ...restAccounts,
@@ -113,9 +118,26 @@ const emulateLiquidity = async () => {
   const emulator = new Emulator(utxos, protocolParams);
   const network = getNetwork() === "mainnet" ? "Mainnet" : "Preview";
   const lucidInstance = await Lucid.new(emulator, network);
-  const DELAY = 0;
+  const DELAY = 250;
 
   try {
+    if (existsSync(getTransactionFilesPath())) {
+      const data = await inquirer.prompt([
+        {
+          type: "confirm",
+          name: "proceedWithRemoval",
+          message:
+            "Transactions already exist. Clean the folder for emulating?",
+          default: true,
+        },
+      ]);
+
+      if (data.proceedWithRemoval) {
+        console.log("\n\n\nEMULATOR: Cleaning transaction folder...");
+        await rm(getTransactionFilesPath(), { recursive: true, force: true });
+      }
+    }
+
     console.log("\n\n\nEMULATOR: Building New Config...");
     await createTasteTestAction(emulator);
     console.log("Moving to next step...");
@@ -207,9 +229,9 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Claiming a Reward...");
-    // await claimLiquidityNodeAction(lucidInstance, emulator);
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Claiming a Reward...");
+    await claimLiquidityNodeAction(lucidInstance, emulator);
+    await setTimeout(DELAY);
   } catch (e) {
     console.log("Something went wrong. Error:", e);
     return;

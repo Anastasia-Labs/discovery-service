@@ -15,6 +15,7 @@ import {
   getAppliedScripts,
   getConfigFilePath,
   getPublishedPolicyOutRefs,
+  getTTConfig,
   getWallets,
 } from "./files.js";
 
@@ -72,9 +73,11 @@ export const slotToPosix = (slot: number | string) =>
 
 export const getEmulatorLedger = async (
   lucid: Lucid,
-  fromBlockfrost?: boolean,
-  inConsole?: boolean,
 ): Promise<EmulatorAccount[]> => {
+  const {
+    project: { addresses },
+    v1PoolData,
+  } = await getTTConfig();
   const wallets = await getWallets();
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
@@ -89,98 +92,83 @@ export const getEmulatorLedger = async (
       },
     }));
 
-  if (!inConsole && fromBlockfrost) {
-    const { regenerate } = await inquirer.prompt([
-      {
-        type: "confirm",
-        name: "regenerate",
-        message: "Regenerate ledger from Blockfrost (this can take some time)?",
-        default: false,
-      },
-    ]);
+  const { regenerate } = await inquirer.prompt([
+    {
+      type: "confirm",
+      name: "regenerate",
+      message: "Regenerate ledger from Blockfrost (this can take some time)?",
+      default: false,
+    },
+  ]);
 
-    if (regenerate) {
-      console.log("Fetching from " + process.env.NODE_ENV);
-      const utxos: EmulatorAccount[] = await Promise.all([
-        lucid.provider.getUtxos(process.env.PROJECT_ADDRESS!),
-        lucid.provider.getUtxos(process.env.PENALTY_ADDRESS!),
-        lucid.provider.getUtxos(process.env.REF_SCRIPTS_ADDRESS!),
-        lucid.provider.getUtxos(process.env.POOL_ADDRESS!),
-        lucid.provider
-          .getUtxoByUnit(process.env.V1_FACTORY_TOKEN!.replace(".", ""))
-          .then(async (res) => {
-            const datum = await lucid.provider.getDatum(
-              res.datumHash as string,
-            );
+  if (regenerate) {
+    console.log("Fetching from " + process.env.NODE_ENV);
+    const utxos: EmulatorAccount[] = await Promise.all([
+      lucid.provider.getUtxos(addresses.liquidityDestination),
+      lucid.provider.getUtxos(addresses.withdrawPenalty),
+      lucid.provider.getUtxos(addresses.publishScripts),
+      lucid.provider.getUtxos(v1PoolData.address),
+      lucid.provider
+        .getUtxoByUnit(v1PoolData.factoryToken.replace(".", ""))
+        .then(async (res) => {
+          const datum = await lucid.provider.getDatum(res.datumHash as string);
 
-            // Replace the datum hash with the real inline datum.
-            return [
-              {
-                ...res,
-                datumHash: undefined,
-                datum,
-              },
-            ];
-          }),
-        lucid.provider.getUtxosByOutRef([applied.discoveryPolicy.initOutRef]),
-        lucid.provider.getUtxosByOutRef([
-          applied.projectTokenHolder.initOutRef,
-        ]),
-        ...restAccounts.map(({ address }) => lucid.provider.getUtxos(address)),
-        ...Object.values(deployed.scriptsRef).map(async (outRef) =>
-          lucid.provider.getUtxosByOutRef([outRef]),
-        ),
-        ...Object.entries(applied.scripts).map(async ([key, script]) =>
-          lucid.provider.getUtxos(
-            lucid.utils.validatorToAddress({
-              type:
-                key === "proxyTokenHolderValidator" ? "PlutusV1" : "PlutusV2",
-              script,
-            }),
-          ),
-        ),
-      ]).then((res) =>
-        res.flatMap((d) =>
-          d.map((utxo) => {
-            return {
-              txHash: utxo.txHash,
-              txIndex: utxo.outputIndex.toString(),
-              address: utxo.address,
-              assets: utxo.assets,
-              outputData: {
-                hash: utxo.datumHash ?? undefined,
-                inline: utxo.datum ?? undefined,
-                scriptRef: utxo.scriptRef ?? undefined,
-              },
-            };
+          // Replace the datum hash with the real inline datum.
+          return [
+            {
+              ...res,
+              datumHash: undefined,
+              datum,
+            },
+          ];
+        }),
+      lucid.provider.getUtxosByOutRef([applied.discoveryPolicy.initOutRef]),
+      lucid.provider.getUtxosByOutRef([applied.projectTokenHolder.initOutRef]),
+      ...restAccounts.map(({ address }) => lucid.provider.getUtxos(address)),
+      ...Object.values(deployed.scriptsRef).map(async (outRef) =>
+        lucid.provider.getUtxosByOutRef([outRef]),
+      ),
+      ...Object.entries(applied.scripts).map(async ([key, script]) =>
+        lucid.provider.getUtxos(
+          lucid.utils.validatorToAddress({
+            type: key === "proxyTokenHolderValidator" ? "PlutusV1" : "PlutusV2",
+            script,
           }),
         ),
-      );
-
-      await writeFile(
-        snapshotSlug,
-        JSON.stringify(
-          utxos,
-          (_, v) => (typeof v === "bigint" ? `${v}n` : v),
-          2,
-        ),
-        "utf-8",
-      );
-      console.log("Done!");
-    }
-  }
-
-  if (fromBlockfrost) {
-    const utxos: EmulatorAccount[] = JSON.parse(
-      await readFile(snapshotSlug, "utf-8"),
-      (_, v) =>
-        typeof v === "string" && v.indexOf("n") === v.length - 1
-          ? BigInt(v.replace("n", ""))
-          : v,
+      ),
+    ]).then((res) =>
+      res.flatMap((d) =>
+        d.map((utxo) => {
+          return {
+            txHash: utxo.txHash,
+            txIndex: utxo.outputIndex.toString(),
+            address: utxo.address,
+            assets: utxo.assets,
+            outputData: {
+              hash: utxo.datumHash ?? undefined,
+              inline: utxo.datum ?? undefined,
+              scriptRef: utxo.scriptRef ?? undefined,
+            },
+          };
+        }),
+      ),
     );
 
-    return utxos;
+    await writeFile(
+      snapshotSlug,
+      JSON.stringify(utxos, (_, v) => (typeof v === "bigint" ? `${v}n` : v), 2),
+      "utf-8",
+    );
+    console.log("Done!");
   }
 
-  return restAccounts;
+  const utxos: EmulatorAccount[] = JSON.parse(
+    await readFile(snapshotSlug, "utf-8"),
+    (_, v) =>
+      typeof v === "string" && v.indexOf("n") === v.length - 1
+        ? BigInt(v.replace("n", ""))
+        : v,
+  );
+
+  return utxos;
 };

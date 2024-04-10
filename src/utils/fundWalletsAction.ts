@@ -5,7 +5,7 @@ import { Lucid } from "price-discovery-offchain";
 import {
   MAX_WALLET_GROUP_COUNT,
   MIN_ADA_INSERT_WALLET,
-  PUBLISH_WALLET_ADA,
+  getPublishWalletAda,
 } from "../constants/utils.js";
 import { isDryRun } from "./args.js";
 import {
@@ -49,8 +49,11 @@ export async function fundWalletsAction(lucid: Lucid) {
 
     // We need at least 200 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log(`Sending 180 ADA to wallet: ${index}.`);
-      tx.payToAddress(wallet.address, { lovelace: PUBLISH_WALLET_ADA });
+      const lovelace = await getPublishWalletAda();
+      console.log(`Sending ${lovelace / 6n} ADA to wallet: ${index}.`);
+      tx.payToAddress(wallet.address, {
+        lovelace,
+      });
       continue;
     }
 

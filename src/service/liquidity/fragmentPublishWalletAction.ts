@@ -2,7 +2,7 @@ import inquirer from "inquirer";
 import { Emulator, Lucid, OutRef } from "price-discovery-offchain";
 
 import { IFragmentedUtxosMapJSON } from "../../@types/json.js";
-import { PUBLISH_WALLET_ADA } from "../../constants/utils.js";
+import { getPublishWalletAda } from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
@@ -122,7 +122,7 @@ export const fragmentPublishWalletAction = async (
 
   const deployWalletAddress = await lucid.wallet.address();
   const deployWalletFunds = await lovelaceAtAddress(lucid);
-  if (deployWalletFunds < PUBLISH_WALLET_ADA) {
+  if (deployWalletFunds < (await getPublishWalletAda())) {
     console.log(
       `Not enough funds ${deployWalletFunds}, ${deployWalletAddress}`,
     );

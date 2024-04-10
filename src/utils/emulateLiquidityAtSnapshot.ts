@@ -14,7 +14,7 @@ import { getEmulatorLedger, getLucidInstance, posixToSlot } from "./wallet.js";
 
 const emulateLiquidity = async () => {
   const lucid = await getLucidInstance();
-  const utxos = await getEmulatorLedger(lucid, true);
+  const utxos = await getEmulatorLedger(lucid);
   const emulator = new Emulator(utxos);
   const deadline = posixToSlot(process.env.DEADLINE!);
   const network = process.env.NODE_ENV?.includes("mainnet")
