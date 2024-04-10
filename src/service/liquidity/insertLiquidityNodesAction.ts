@@ -40,6 +40,7 @@ export const insertLiquidityNodesAction = async (
     if (emulator) {
       await setTimeout(200);
       await lucid.wallet.getUtxos();
+      await lucid.wallet.getUtxos();
     }
 
     const tx = await insertLqNode(lucid, {

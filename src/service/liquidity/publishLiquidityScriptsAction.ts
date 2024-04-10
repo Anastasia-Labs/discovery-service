@@ -54,7 +54,7 @@ const submitPublishLiquidityScriptsAction = async (
   validatorsByIndex.forEach((name, index) => {
     scriptsRef[name] = {
       txHash: txHashes[index],
-      outputIndex: index,
+      outputIndex: 0,
     };
   });
 
