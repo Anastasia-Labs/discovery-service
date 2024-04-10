@@ -35,6 +35,7 @@ import tokenHolderPolicyWithTracing from "../compiledLiquidityTracing/liquidityT
 import tokenHolderValidatorWithTracing from "../compiledLiquidityTracing/liquidityTokenHolderValidator.json" assert { type: "json" };
 import liquidityValidatorWithTracing from "../compiledLiquidityTracing/liquidityValidator.json" assert { type: "json" };
 import proxyTokenHolderValidatorWithTracing from "../compiledLiquidityTracing/proxyTokenHolderV1.json" assert { type: "json" };
+import { getTTConfig } from "./files.js";
 
 const Optimized = {
   collectionFoldPolicy,
@@ -75,10 +76,11 @@ const WithTracing = {
   tokenHolderValidator: tokenHolderValidatorWithTracing,
 };
 
-export const getScripts = (): typeof Optimized => {
+export const getScripts = async (): Promise<typeof Optimized> => {
+  const { scriptType } = await getTTConfig();
   let scripts: typeof Optimized | undefined;
-  switch (process.env.SCRIPT_TYPE) {
-    case "traces":
+  switch (scriptType) {
+    case "tracing":
       scripts = WithTracing;
       break;
     case "binds":

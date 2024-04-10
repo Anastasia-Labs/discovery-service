@@ -36,7 +36,7 @@ export const buildLiquidityScriptsAction = async (
     proxyTokenHolderValidator,
     tokenHolderPolicy,
     tokenHolderValidator,
-  } = getScripts();
+  } = await getScripts();
 
   const { projectTokenPolicyId, projectTokenAssetName } =
     await getTTVariables();
@@ -78,17 +78,16 @@ export const buildLiquidityScriptsAction = async (
     );
   }
 
-  const deadline = config.deadline;
   console.log(
     "Deadline UTC",
-    deadline,
-    `${new Date(deadline).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(deadline).toLocaleTimeString()}`,
+    config.deadline,
+    `${new Date(config.deadline).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(config.deadline).toLocaleTimeString()}`,
   );
 
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {
       initUTXO: initUtxo,
-      deadline,
+      deadline: config.deadline,
       penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardFoldValidator: {
@@ -126,7 +125,7 @@ export const buildLiquidityScriptsAction = async (
         txHash: initUtxo.txHash,
         outputIndex: initUtxo.outputIndex,
       },
-      deadline: deadline,
+      deadline: config.deadline,
       penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardValidator: {
