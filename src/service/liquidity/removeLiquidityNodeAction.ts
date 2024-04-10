@@ -2,7 +2,7 @@ import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
 import "../../utils/env.js";
 
 import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts } from "../../utils/files.js";
+import { getAppliedScripts, getTTConfig } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 import { setTimeout } from "timers/promises";
@@ -14,15 +14,18 @@ import { getPublishedPolicyOutRefs } from "../../utils/files.js";
 export const removeLiquidityNodeAction = async (
   lucid: Lucid,
   emulator?: Emulator,
-  emulatorDeadline?: number,
 ) => {
+  const {
+    deadline,
+    project: { addresses },
+  } = await getTTConfig();
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 
-  const refNodePolicy = await lucid.provider.getUtxosByOutRef([
+  const [refNodePolicy] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,
   ]);
-  const refNodeValidator = await lucid.provider.getUtxosByOutRef([
+  const [refNodeValidator] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestValidator,
   ]);
 
@@ -33,15 +36,15 @@ export const removeLiquidityNodeAction = async (
     await selectLucidWallet(lucid, walletIdx);
     const tx = await removeLqNode(lucid, {
       currenTime: emulator?.now() ?? Date.now(),
-      penaltyAddress: process.env.PENALTY_ADDRESS as string,
-      deadline: emulatorDeadline ?? (Number(process.env.DEADLINE) as number),
+      penaltyAddress: addresses.withdrawPenalty,
+      deadline,
       scripts: {
         nodePolicy: applied.scripts.liquidityPolicy,
         nodeValidator: applied.scripts.liquidityValidator,
       },
       refScripts: {
-        nodePolicy: refNodePolicy?.[0],
-        nodeValidator: refNodeValidator?.[0],
+        nodePolicy: refNodePolicy,
+        nodeValidator: refNodeValidator,
       },
     });
 
@@ -49,10 +52,10 @@ export const removeLiquidityNodeAction = async (
       throw tx.error;
     }
 
-    if (isDryRun()) {
+    if (isDryRun() && !emulator) {
       console.log(tx.data.toString());
 
-      if (walletIdx === 3) {
+      if (walletIdx === WALLET_GROUP_START_INDEX + 3) {
         loop = false;
         console.log("Done!");
       } else {
@@ -65,7 +68,7 @@ export const removeLiquidityNodeAction = async (
         const txHash = await txComplete.submit();
         console.log(`Submitting: ${txHash}`);
 
-        if (walletIdx === 3) {
+        if (walletIdx === WALLET_GROUP_START_INDEX + 3) {
           loop = false;
           console.log("Done!");
         } else {

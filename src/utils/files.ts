@@ -203,9 +203,12 @@ export const getTTVariables = async (): Promise<ITasteTestVariablesJSON> => {
   return data;
 };
 
-export const saveTTVariables = async (data: ITasteTestVariablesJSON) => {
+export const saveTTVariables = async (
+  data: ITasteTestVariablesJSON,
+  emulator?: boolean,
+) => {
   const path = getTTVariablesPath();
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     if (isDryRun()) {
       return undefined;
     }
@@ -304,11 +307,11 @@ export const getTTConfig = async (): Promise<ITTConfigJSON> => {
   return data;
 };
 
-export const saveConfig = async (config: ITTConfigJSON) => {
+export const saveConfig = async (config: ITTConfigJSON, emulator?: boolean) => {
   const path = getTTConfigPath();
   const network = getNetwork();
 
-  if (existsSync(path)) {
+  if (existsSync(path) && !emulator) {
     const { ttConfigOverwrite } = await inquirer.prompt([
       {
         type: "confirm",
@@ -645,4 +648,220 @@ export const saveDynamoDB = async (data: IDynamoTTEntry) => {
   await mkdir(getConfigFilePath(), { recursive: true });
   await writeFile(path, JSON.stringify(data, null, 2), "utf-8");
   console.log(`Done!`);
+};
+
+export const getInitLiquidityFoldTxPath = () =>
+  `${getTransactionFilesPath()}/initLiquidityFold.txt`;
+export const getInitLiquidityFoldTx = async () => {
+  const path = getInitLiquidityFoldTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find initLiquidityFold.txt. Please run "yarn init-fold --dry", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveInitLiquidityFoldTx = async (
+  cbor: string,
+  emulator?: boolean,
+) => {
+  const path = getInitLiquidityFoldTxPath();
+  if (existsSync(path) && !emulator) {
+    const { initLiquidityFoldOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "initLiquidityFoldOverwrite",
+        message: `An initLiquidityFold transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!initLiquidityFoldOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getTransactionFilesPath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  if (!emulator) {
+    console.log(cbor);
+  }
+};
+
+export const getAddCollectedTxPath = () =>
+  `${getTransactionFilesPath()}/addCollected.txt`;
+export const getAddCollectedTx = async () => {
+  const path = getAddCollectedTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find addCollected.txt. Please run "yarn add-collected", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveAddCollectedTx = async (cbor: string, emulator?: boolean) => {
+  const path = getAddCollectedTxPath();
+  if (existsSync(path) && !emulator) {
+    const { addCollectedOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "addCollectedOverwrite",
+        message: `An addCollected transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!addCollectedOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getTransactionFilesPath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  if (!emulator) {
+    console.log(cbor);
+  }
+};
+
+export const getSpendToProxyTxPath = () =>
+  `${getTransactionFilesPath()}/spendToProxy.txt`;
+export const getSpendToProxyTx = async () => {
+  const path = getSpendToProxyTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find spendToProxy.txt. Please run "yarn spend-to-proxy", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveSpendToProxyTx = async (cbor: string, emulator?: boolean) => {
+  const path = getSpendToProxyTxPath();
+  if (existsSync(path) && !emulator) {
+    const { spendToProxyOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "spendToProxyOverwrite",
+        message: `A spendToProxy transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!spendToProxyOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getTransactionFilesPath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  if (!emulator) {
+    console.log(cbor);
+  }
+};
+
+export const getCreateV1PoolTxPath = () =>
+  `${getTransactionFilesPath()}/createV1Pool.txt`;
+export const getCreateV1PoolTx = async () => {
+  const path = getCreateV1PoolTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find createV1Pool.txt. Please run "yarn create-v1-pool", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveCreateV1PoolTx = async (cbor: string, emulator?: boolean) => {
+  const path = getCreateV1PoolTxPath();
+  if (existsSync(path) && !emulator) {
+    const { createV1PoolTxOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "createV1PoolTxOverwrite",
+        message: `A createV1Pool transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!createV1PoolTxOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getTransactionFilesPath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  if (!emulator) {
+    console.log(cbor);
+  }
+};
+
+export const getInitLiquidityRewardsFoldTxPath = () =>
+  `${getTransactionFilesPath()}/initLiquidityRewardsFold.txt`;
+export const getInitLiquidityRewardsFoldTx = async () => {
+  const path = getInitLiquidityRewardsFoldTxPath();
+  if (!existsSync(path)) {
+    if (isDryRun()) {
+      return undefined;
+    }
+
+    throw new Error(
+      `Could not find initLiquidityRewardsFold.txt. Please run "yarn init-rewards", and then try again.`,
+    );
+  }
+
+  return await readFile(path, "utf-8");
+};
+
+export const saveInitLiquidityRewardsFoldTx = async (
+  cbor: string,
+  emulator?: boolean,
+) => {
+  const path = getInitLiquidityRewardsFoldTxPath();
+  if (existsSync(path) && !emulator) {
+    const { InitLiquidityRewardsFoldTxOverwrite } = await inquirer.prompt([
+      {
+        type: "confirm",
+        name: "InitLiquidityRewardsFoldTxOverwrite",
+        message: `A createV1Pool transaction has already been generated once on this branch. Are you sure you want to overwrite?`,
+        default: false,
+      },
+    ]);
+
+    if (!InitLiquidityRewardsFoldTxOverwrite) {
+      console.log("Aborted.");
+      return;
+    }
+  }
+
+  await mkdir(getTransactionFilesPath(), { recursive: true });
+  await writeFile(path, cbor, "utf-8");
+  if (!emulator) {
+    console.log(cbor);
+  }
 };

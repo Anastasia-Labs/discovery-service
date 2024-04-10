@@ -11,12 +11,35 @@ import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
+  getSpendToProxyTx,
+  saveSpendToProxyTx,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+
+const submitSpendToProxyAction = async (lucid: Lucid) => {
+  const spendToProxyTx = await getSpendToProxyTx();
+  if (!spendToProxyTx) {
+    throw new Error("A spendToProxy transaction could not be found to submit.");
+  }
+
+  const spendToProxySigned = await lucid
+    .fromTx(spendToProxyTx)
+    .sign()
+    .complete();
+  const spendToProxyHash = await spendToProxySigned.submit();
+  console.log(`Submitting proxy transaction: ${spendToProxyHash}`);
+  await lucid.awaitTx(spendToProxyHash);
+  await loggerDD(`Done!`);
+};
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
+
+  if (isDryRun() && !emulator) {
+    await submitSpendToProxyAction(lucid);
+    return;
+  }
 
   const spendToProxyConfig: SpendToProxyConfig = {
     currenTime: emulator?.now() ?? Date.now(),
@@ -38,17 +61,12 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     throw spendToProxyUnsigned.error;
   }
 
-  if (isDryRun()) {
-    console.log(spendToProxyUnsigned.data.txComplete.toString());
-  } else {
-    const spendToProxySigned = await spendToProxyUnsigned.data.txComplete
-      .sign()
-      .complete();
-    const spendToProxyHash = await spendToProxySigned.submit();
-    console.log(`Submitting proxy transaction: ${spendToProxyHash}`);
-    await lucid.awaitTx(spendToProxyHash);
-    await loggerDD(`Done!`);
+  await saveSpendToProxyTx(
+    spendToProxyUnsigned.data.txComplete.toString(),
+    Boolean(emulator),
+  );
 
-    return spendToProxyUnsigned.data.datum;
+  if (emulator) {
+    await submitSpendToProxyAction(lucid);
   }
 };

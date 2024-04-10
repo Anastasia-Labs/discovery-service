@@ -20,10 +20,10 @@ export const modifyLiquidityNodesAction = async (
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 
-  const refNodePolicy = await lucid.provider.getUtxosByOutRef([
+  const [refNodePolicy] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,
   ]);
-  const refNodeValidator = await lucid.provider.getUtxosByOutRef([
+  const [refNodeValidator] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestValidator,
   ]);
 
@@ -39,8 +39,8 @@ export const modifyLiquidityNodesAction = async (
         nodeValidator: applied.scripts.liquidityValidator,
       },
       refScripts: {
-        nodePolicy: refNodePolicy?.[0],
-        nodeValidator: refNodeValidator?.[0],
+        nodePolicy: refNodePolicy,
+        nodeValidator: refNodeValidator,
       },
     });
 
@@ -48,7 +48,7 @@ export const modifyLiquidityNodesAction = async (
       throw tx.error;
     }
 
-    if (isDryRun()) {
+    if (isDryRun() && !emulator) {
       console.log(tx.data.toString());
       loop = false;
     } else {

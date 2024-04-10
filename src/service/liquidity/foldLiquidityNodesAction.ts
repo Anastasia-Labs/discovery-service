@@ -15,11 +15,12 @@ import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
 import { loggerDD } from "../../logs/datadog-service.js";
+import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
 } from "../../utils/files.js";
-import { isDryRun, sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
+import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const foldLiquidityNodesAction = async (
@@ -82,6 +83,13 @@ export const foldLiquidityNodesAction = async (
       throw Error("Could not find a UTxO that had at least 2 ADA in it.");
     }
 
+    const [ttStateRef, ttValidatorRef, cfValidatorRef] =
+      await lucid.provider.getUtxosByOutRef([
+        deployed.scriptsRef.TasteTestStakeValidator,
+        deployed.scriptsRef.TasteTestValidator,
+        deployed.scriptsRef.CollectFoldValidator,
+      ]);
+
     const multiFoldConfig: MultiFoldConfig = {
       currenTime: emulator?.now() ?? Date.now(),
       nodeRefInputs: sortedInputs.map((data) => {
@@ -99,21 +107,9 @@ export const foldLiquidityNodesAction = async (
         foldValidator: applied.scripts.collectFoldValidator,
       },
       refInputs: {
-        foldValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.CollectFoldValidator,
-          ])
-        )?.[0] as UTxO,
-        liquidityValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestValidator,
-          ])
-        )?.[0] as UTxO,
-        collectStake: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestStakeValidator,
-          ])
-        )?.[0] as UTxO,
+        collectStake: ttStateRef,
+        foldValidator: cfValidatorRef,
+        liquidityValidator: ttValidatorRef,
       },
     };
 
@@ -123,9 +119,9 @@ export const foldLiquidityNodesAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    if (isDryRun()) {
+    if (isDryRun() && !emulator) {
       console.log(multiFoldUnsigned.data.toString());
-      break;
+      continue;
     } else {
       try {
         const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
@@ -134,9 +130,8 @@ export const foldLiquidityNodesAction = async (
         await lucid.awaitTx(multiFoldHash);
 
         while (foldUtxo.txHash !== multiFoldHash) {
-          if (!emulator) {
-            await setTimeout(3_000);
-          }
+          await setTimeout(3_000);
+
           const [newFoldUtxo] = await utxosAtScript(
             lucid,
             applied.scripts.collectFoldValidator,

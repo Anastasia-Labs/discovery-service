@@ -7,54 +7,96 @@ import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
+  getInitLiquidityRewardsFoldTx,
   getPublishedPolicyOutRefs,
+  getTTConfig,
   getTTVariables,
+  saveInitLiquidityRewardsFoldTx,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
+
+const submitInitLiquidityRewardsServiceAction = async (lucid: Lucid) => {
+  const submitInitLiquidityRewardsTx = await getInitLiquidityRewardsFoldTx();
+  if (!submitInitLiquidityRewardsTx) {
+    throw new Error("Could not find an initLiquidityRewardsFoldTx to submit.");
+  }
+
+  const initRewardFoldSigned = await lucid
+    .fromTx(submitInitLiquidityRewardsTx)
+    .sign()
+    .complete();
+  const initRewardFoldHash = await initRewardFoldSigned.submit();
+  await loggerDD(`Submitting: ${initRewardFoldHash}`);
+  await lucid.awaitTx(initRewardFoldHash);
+  await loggerDD("Done!");
+};
 
 export const initLiquidityRewardServiceAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
+  await selectLucidWallet(lucid, 0);
+
+  if (!isDryRun() && !emulator) {
+    await submitInitLiquidityRewardsServiceAction(lucid);
+    return;
+  }
+
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
   const { projectTokenAssetName, projectTokenPolicyId, lpTokenAssetName } =
     await getTTVariables();
+  const {
+    project: { addresses },
+    v1PoolData,
+  } = await getTTConfig();
 
   const datums = getDatumsObject(emulator);
+
+  const [
+    ttPolicyRef,
+    ttValidatorRef,
+    rwPolicyRef,
+    rwValidatorRef,
+    thPolicyRef,
+    thValidatorRef,
+  ] = await lucid.provider.getUtxosByOutRef([
+    deployed.scriptsRef.TasteTestPolicy,
+    deployed.scriptsRef.TasteTestValidator,
+    deployed.scriptsRef.RewardFoldPolicy,
+    deployed.scriptsRef.RewardFoldValidator,
+    deployed.scriptsRef.TokenHolderPolicy,
+    deployed.scriptsRef.TokenHolderValidator,
+  ]);
 
   const initRewardFoldConfig: InitLiquidityRewardFoldConfig = {
     currenTime: emulator?.now() ?? Date.now(),
     project: {
       policyId: projectTokenPolicyId,
       tokenName: projectTokenAssetName,
-      address: process.env.PROJECT_ADDRESS!,
+      address: addresses.liquidityDestination,
       lpTokenAssetName: lpTokenAssetName,
-      lpTokenPolicyId: process.env.POOL_POLICY_ID!,
+      lpTokenPolicyId: v1PoolData.policyId,
     },
     datums,
     scripts: {
-      liquidityValidator: applied.scripts.liquidityValidator,
       liquidityPolicy: applied.scripts.liquidityPolicy,
+      liquidityValidator: applied.scripts.liquidityValidator,
       rewardFoldPolicy: applied.scripts.rewardFoldPolicy,
       rewardFoldValidator: applied.scripts.rewardFoldValidator,
       tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
       tokenHolderValidator: applied.scripts.tokenHolderValidator,
     },
     refScripts: {
-      rewardFoldPolicy: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.RewardFoldPolicy])
-      )[0],
-      tokenHolderPolicy: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.TokenHolderPolicy])
-      )[0],
-      tokenHolderValidator: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.TokenHolderValidator])
-      )[0],
+      liquidityPolicy: ttPolicyRef,
+      liquidityValidator: ttValidatorRef,
+      rewardFoldPolicy: rwPolicyRef,
+      rewardFoldValidator: rwValidatorRef,
+      tokenHolderPolicy: thPolicyRef,
+      tokenHolderValidator: thValidatorRef,
     },
   };
 
-  await selectLucidWallet(lucid, 0);
   const initRewardFoldUnsigned = await initLqRewardFold(
     lucid,
     initRewardFoldConfig,
@@ -64,15 +106,11 @@ export const initLiquidityRewardServiceAction = async (
     throw initRewardFoldUnsigned.error;
   }
 
-  if (isDryRun()) {
-    console.log(initRewardFoldUnsigned.data.toString());
-  } else {
-    const initRewardFoldSigned = await initRewardFoldUnsigned.data
-      .sign()
-      .complete();
-    const initRewardFoldHash = await initRewardFoldSigned.submit();
-    await loggerDD(`Submitting: ${initRewardFoldHash}`);
-    await lucid.awaitTx(initRewardFoldHash);
-    await loggerDD("Done!");
+  await saveInitLiquidityRewardsFoldTx(
+    initRewardFoldUnsigned.data.toString(),
+    Boolean(emulator),
+  );
+  if (emulator) {
+    await submitInitLiquidityRewardsServiceAction(lucid);
   }
 };

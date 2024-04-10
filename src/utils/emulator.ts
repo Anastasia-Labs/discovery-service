@@ -1,9 +1,10 @@
 import { Emulator } from "price-discovery-offchain";
+import { getNetwork } from "./args.js";
 
 export const getDatumsObject = (emulator?: Emulator) => {
   const datums: { [key: string]: string } = {};
   if (emulator) {
-    if (process.env.NODE_ENV?.includes("mainnet")) {
+    if (getNetwork() === "mainnet") {
       datums[
         "24aa61609c74285e0d02f7adebb258cc9de480e0bd59207cd1a5f76793dc0c07"
       ] =

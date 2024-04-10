@@ -14,18 +14,29 @@ import {
   PUBLISH_WALLET_ADA,
 } from "../constants/utils.js";
 import { buildLiquidityScriptsAction } from "../service/liquidity/buildLiquidityScriptsAction.js";
+import { createTasteTestAction } from "../service/liquidity/createTasteTestAction.js";
+import { createV1PoolAction } from "../service/liquidity/createV1PoolAction.js";
+import { foldLiquidityNodesAction } from "../service/liquidity/foldLiquidityNodesAction.js";
+import { foldLiquidityRewardsAction } from "../service/liquidity/foldLiquidityRewardsAction.js";
 import { fragmentPublishWalletAction } from "../service/liquidity/fragmentPublishWalletAction.js";
+import { initLiquidityFoldServiceAction } from "../service/liquidity/initLiquidityFoldServiceAction.js";
+import { initLiquidityRewardServiceAction } from "../service/liquidity/initLiquidityRewardServiceAction.js";
 import { initTokenHolderAction } from "../service/liquidity/initTokenHolderAction.js";
 import { initializeLiquidityAction } from "../service/liquidity/initializeLiquidityAction.js";
 import { insertLiquidityNodesAction } from "../service/liquidity/insertLiquidityNodesAction.js";
+import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
+import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidityNodesAction.js";
 import { publishLiquidityScriptsAction } from "../service/liquidity/publishLiquidityScriptsAction.js";
 import { registerStakeAction } from "../service/liquidity/registerStakeAction.js";
+import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
+import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { getNetwork } from "./args.js";
 import { getTTConfig, getWallets } from "./files.js";
 import { mintTokenAction } from "./mintTokenAction.js";
+import { posixToSlot } from "./wallet.js";
 
 const emulateLiquidity = async () => {
-  const { deadline } = await getTTConfig();
+  const { scriptType } = await getTTConfig();
   const wallets = await getWallets();
   const restAccounts = [...wallets].slice(3).map(({ address }) => ({
     address,
@@ -34,17 +45,15 @@ const emulateLiquidity = async () => {
     },
   }));
 
-  const protocolParams: ProtocolParameters | undefined = [
-    "binds",
-    "tracing",
-  ].includes(process.env.SCRIPT_TYPE!)
-    ? {
-        ...PROTOCOL_PARAMETERS_DEFAULT,
-        maxTxSize: 20_000_000_000,
-        maxTxExMem: 20_000_000_000n,
-        maxTxExSteps: 20_000_000_000n,
-      }
-    : undefined;
+  const protocolParams: ProtocolParameters | undefined =
+    scriptType === "binds"
+      ? {
+          ...PROTOCOL_PARAMETERS_DEFAULT,
+          maxTxSize: 20_000_000_000,
+          maxTxExMem: 20_000_000_000n,
+          maxTxExSteps: 20_000_000_000n,
+        }
+      : undefined;
 
   const utxos: {
     address: string;
@@ -104,9 +113,14 @@ const emulateLiquidity = async () => {
   const emulator = new Emulator(utxos, protocolParams);
   const network = getNetwork() === "mainnet" ? "Mainnet" : "Preview";
   const lucidInstance = await Lucid.new(emulator, network);
-  const DELAY = 100;
+  const DELAY = 0;
 
   try {
+    console.log("\n\n\nEMULATOR: Building New Config...");
+    await createTasteTestAction(emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
     console.log("\n\n\nEMULATOR: Minting Project Token...");
     await mintTokenAction(lucidInstance, emulator);
     console.log("Moving to next step...");
@@ -147,53 +161,51 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Modifying Deposits...");
-    // await modifyLiquidityNodesAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Modifying Deposits...");
+    await modifyLiquidityNodesAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Removing Some Deposits with Penalty...");
-    // await removeLiquidityNodeAction(lucidInstance, emulator, deadline);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Removing Some Deposits with Penalty...");
+    await removeLiquidityNodeAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Initializing Fold UTXO...");
-    // console.log(emulator.now());
-    // emulator.awaitSlot(120780909 + 1000);
-    // // emulator.awaitBlock(EMULATOR_TT_BLOCK_DURATION); // Ensure TT is done.
-    // await initLiquidityFoldServiceAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Initializing Fold UTXO...");
+    emulator.awaitSlot(posixToSlot((await getTTConfig()).deadline) + 1000);
+    await initLiquidityFoldServiceAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Fold Liquidity Nodes...");
-    // await foldLiquidityNodesAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Fold Liquidity Nodes...");
+    await foldLiquidityNodesAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Adding Liquidity to Token Holder...");
-    // await liquidityAddCollectedAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Adding Liquidity to Token Holder...");
+    await liquidityAddCollectedAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Spending to Proxy Token Holder...");
-    // await spendToProxyAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Spending to Proxy Token Holder...");
+    await spendToProxyAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Creating V1 Pool...");
-    // await createV1PoolAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Creating V1 Pool...");
+    await createV1PoolAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Initializing Reward Fold...");
-    // await initLiquidityRewardServiceAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Initializing Reward Fold...");
+    await initLiquidityRewardServiceAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
-    // console.log("\n\n\nEMULATOR: Distributing Rewards...");
-    // await foldLiquidityRewardsAction(lucidInstance, emulator);
-    // console.log("Moving to next step...");
-    // await setTimeout(DELAY);
+    console.log("\n\n\nEMULATOR: Distributing Rewards...");
+    await foldLiquidityRewardsAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
 
     // console.log("\n\n\nEMULATOR: Claiming a Reward...");
     // await claimLiquidityNodeAction(lucidInstance, emulator);

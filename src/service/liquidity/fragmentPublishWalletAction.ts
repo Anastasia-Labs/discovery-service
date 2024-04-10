@@ -7,24 +7,61 @@ import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
   getFragmentWalletTx,
+  getTTConfig,
   saveFragmentWalletTx,
   saveFragmentedUtxosMapPath,
 } from "../../utils/files.js";
 import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const refScriptAmountsByIndex = [
-  32_000_000n,
-  25_000_000n,
-  14_000_000n,
-  24_000_000n,
-  30_000_000n,
-  35_000_000n,
-  8_000_000n,
-  18_000_000n,
-  4_000_000n,
-  4_000_000n,
-];
+export const getRefScriptAmountsByIndex = async () => {
+  const { scriptType } = await getTTConfig();
+  switch (scriptType) {
+    case "binds": {
+      return [
+        200_000_000n,
+        100_000_000n,
+        48_000_000n,
+        96_000_000n,
+        120_000_000n,
+        140_000_000n,
+        32_000_000n,
+        100_000_000n,
+        16_000_000n,
+        16_000_000n,
+      ];
+    }
+    case "tracing": {
+      return [
+        62_000_000n,
+        50_000_000n,
+        28_000_000n,
+        48_000_000n,
+        60_000_000n,
+        70_000_000n,
+        16_000_000n,
+        32_000_000n,
+        8_000_000n,
+        8_000_000n,
+      ];
+    }
+    default:
+    case "optimized": {
+      return [
+        32_000_000n,
+        25_000_000n,
+        14_000_000n,
+        24_000_000n,
+        30_000_000n,
+        35_000_000n,
+        8_000_000n,
+        18_000_000n,
+        4_000_000n,
+        4_000_000n,
+      ];
+    }
+  }
+};
 
 export const validatorsByIndex = [
   "TasteTestPolicy",
@@ -109,6 +146,8 @@ export const fragmentPublishWalletAction = async (
       return;
     }
   }
+
+  const refScriptAmountsByIndex = await getRefScriptAmountsByIndex();
 
   [...new Array(10).keys()].forEach((index) => {
     splitTx.payToAddress(deployWalletAddress, {
