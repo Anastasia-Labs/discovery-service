@@ -1,4 +1,5 @@
 import { Emulator, Lucid } from "price-discovery-offchain";
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
@@ -26,7 +27,7 @@ export const registerStakeAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  await selectLucidWallet(lucid, 2);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
 
   if (!isDryRun() && !emulator) {
     await submitRegisterStakeAction(lucid);

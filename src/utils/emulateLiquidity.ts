@@ -33,7 +33,7 @@ import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCo
 import { modifyLiquidityNodesAction } from "../service/liquidity/modifyLiquidityNodesAction.js";
 import { publishLiquidityScriptsAction } from "../service/liquidity/publishLiquidityScriptsAction.js";
 import { registerStakeAction } from "../service/liquidity/registerStakeAction.js";
-import { removeLiquidityNodeAction } from "../service/liquidity/removeLiquidityNodeAction.js";
+import { removeLiquidityNodesAction } from "../service/liquidity/removeLiquidityNodesAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
 import { getNetwork } from "./args.js";
 import { getTTConfig, getTransactionFilesPath, getWallets } from "./files.js";
@@ -189,7 +189,7 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Removing Some Deposits with Penalty...");
-    await removeLiquidityNodeAction(lucidInstance, emulator);
+    await removeLiquidityNodesAction(lucidInstance, emulator);
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 

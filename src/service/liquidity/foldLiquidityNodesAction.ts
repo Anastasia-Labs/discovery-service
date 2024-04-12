@@ -14,8 +14,8 @@ import {
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
-import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
@@ -27,9 +27,9 @@ export const foldLiquidityNodesAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
-  await selectLucidWallet(lucid, 2);
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
@@ -67,11 +67,14 @@ export const foldLiquidityNodesAction = async (
   console.log(
     `Found a total of ${unprocessedNodes.length} nodes and ${chunks.length} chunks to process.`,
   );
-  for (const [index, chunk] of chunks.entries()) {
+
+  let loop = true;
+  let chunkIdx = 0;
+  while (loop) {
     console.log(
-      `Processing chunk at index #${index}, out of ${chunks.length} chunks...`,
+      `Processing chunk at index #${chunkIdx}, out of ${chunks.length} chunks...`,
     );
-    const sortedInputs = sortByOrefWithIndex(chunk);
+    const sortedInputs = sortByOrefWithIndex(chunks[chunkIdx]);
 
     const walletUtxos = await lucid.wallet.getUtxos();
     const feeInput = walletUtxos.find(
@@ -119,34 +122,39 @@ export const foldLiquidityNodesAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    if (isDryRun() && !emulator) {
-      console.log(multiFoldUnsigned.data.toString());
-      break;
-    } else {
-      try {
-        const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-        const multiFoldHash = await multiFoldSigned.submit();
-        await loggerDD(`Submitting: ${multiFoldHash}`);
-        await lucid.awaitTx(multiFoldHash);
+    try {
+      const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
+      const multiFoldHash = await multiFoldSigned.submit();
+      await loggerDD(`Submitting: ${multiFoldHash}`);
+      await lucid.awaitTx(multiFoldHash);
 
-        while (foldUtxo.txHash !== multiFoldHash) {
+      while (foldUtxo.txHash !== multiFoldHash) {
+        if (!emulator) {
           await setTimeout(3_000);
-
-          const [newFoldUtxo] = await utxosAtScript(
-            lucid,
-            applied.scripts.collectFoldValidator,
-          );
-
-          foldUtxo = newFoldUtxo;
         }
-      } catch (e) {
-        await loggerDD(
-          `Failed to build fold with error: ${(e as Error).message}`,
+
+        const [newFoldUtxo] = await utxosAtScript(
+          lucid,
+          applied.scripts.collectFoldValidator,
         );
-        await loggerDD(`Trying again...`);
-        // offset wallet & blockchain sync
-        await setTimeout(20_000);
+
+        foldUtxo = newFoldUtxo;
       }
+
+      if (chunkIdx === chunks.length - 1) {
+        loop = false;
+        console.log("Done!");
+      } else {
+        chunkIdx++;
+        await lucid.awaitTx(multiFoldHash);
+      }
+    } catch (e) {
+      await loggerDD(
+        `Failed to build fold with error: ${(e as Error).message}`,
+      );
+      await loggerDD(`Trying again...`);
+      // offset wallet & blockchain sync
+      await setTimeout(20_000);
     }
   }
 

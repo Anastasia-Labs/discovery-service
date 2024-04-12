@@ -9,6 +9,7 @@ import {
 
 import { IPublishedPolicyJSON } from "../../@types/json.js";
 import alwaysFailValidator from "../../compiled/alwaysFails.json" assert { type: "json" };
+import { PUBLISH_SCRIPT_WALLET_INDEX } from "../../constants/network.js";
 import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
@@ -77,7 +78,7 @@ export const publishLiquidityScriptsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  await selectLucidWallet(lucid, 2);
+  await selectLucidWallet(lucid, PUBLISH_SCRIPT_WALLET_INDEX);
   const applied = await getAppliedScripts();
 
   if (!isDryRun() && !emulator) {

@@ -10,22 +10,23 @@ import { initLiquidityFoldServiceAction } from "../service/liquidity/initLiquidi
 import { initLiquidityRewardServiceAction } from "../service/liquidity/initLiquidityRewardServiceAction.js";
 import { liquidityAddCollectedAction } from "../service/liquidity/liquidityAddCollectedAction.js";
 import { spendToProxyAction } from "../service/liquidity/spendToProxyAction.js";
+import { getNetwork } from "./args.js";
+import { getTTConfig } from "./files.js";
 import { getEmulatorLedger, getLucidInstance, posixToSlot } from "./wallet.js";
 
 const emulateLiquidity = async () => {
+  const { deadline } = await getTTConfig();
   const lucid = await getLucidInstance();
   const utxos = await getEmulatorLedger(lucid);
   const emulator = new Emulator(utxos);
-  const deadline = posixToSlot(process.env.DEADLINE!);
-  const network = process.env.NODE_ENV?.includes("mainnet")
-    ? "Mainnet"
-    : "Preview";
+  const deadlineSlot = posixToSlot(deadline);
+  const network = getNetwork() === "mainnet" ? "Mainnet" : "Preview";
   const lucidInstance = await Lucid.new(emulator, network);
   const DELAY = 0;
 
   try {
     console.log("\n\n\nEMULATOR: Initializing Fold UTXO...");
-    emulator.awaitSlot(deadline + 1000);
+    emulator.awaitSlot(deadlineSlot + 1000);
     await initLiquidityFoldServiceAction(lucidInstance, emulator);
     console.log("Moving to next step...");
     await setTimeout(DELAY);

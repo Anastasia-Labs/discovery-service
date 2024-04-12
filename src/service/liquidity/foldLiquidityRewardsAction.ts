@@ -15,6 +15,7 @@ import {
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
@@ -32,7 +33,7 @@ export const foldLiquidityRewardsAction = async (
 ) => {
   const { lpTokenAssetName } = await getTTVariables();
   const { v1PoolData } = await getTTConfig();
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
   const changeAddress = await lucid.wallet.address();
@@ -146,7 +147,9 @@ export const foldLiquidityRewardsAction = async (
         await lucid.awaitTx(multiFoldHash);
 
         while (rewardFoldUtxo.txHash !== multiFoldHash) {
-          await setTimeout(3_000);
+          if (!emulator) {
+            await setTimeout(3_000);
+          }
 
           const newFoldUtxo = await lucid.utxoByUnit(
             toUnit(rewardFoldPolicyId, rFold),

@@ -6,6 +6,7 @@ import {
 } from "price-discovery-offchain";
 import "../../utils/env.js";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
@@ -56,7 +57,7 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     v1PoolPolicyId: v1PoolData.policyId,
   };
 
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const spendToProxyUnsigned = await spendToProxy(lucid, spendToProxyConfig);
 
   if (spendToProxyUnsigned.type == "error") {

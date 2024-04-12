@@ -2,6 +2,7 @@ import { Emulator, initLqRewardFold, Lucid } from "price-discovery-offchain";
 import "../../utils/env.js";
 
 import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
@@ -35,7 +36,7 @@ export const initLiquidityRewardServiceAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
 
   if (!isDryRun() && !emulator) {
     await submitInitLiquidityRewardsServiceAction(lucid);

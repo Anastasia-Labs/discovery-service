@@ -1,14 +1,10 @@
-import {
-  Emulator,
-  Lucid,
-  TxSigned,
-  insertLqNode,
-} from "price-discovery-offchain";
+import { Emulator, Lucid, insertLqNode } from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
 import {
   MAX_WALLET_GROUP_COUNT,
+  MIN_ADA_INSERT_WALLET,
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
 import { isDryRun } from "../../utils/args.js";
@@ -16,6 +12,7 @@ import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
 } from "../../utils/files.js";
+import { lovelaceAtAddress } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const insertLiquidityNodesAction = async (
@@ -25,17 +22,20 @@ export const insertLiquidityNodesAction = async (
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 
-  const [refNodePolicy] = await lucid.provider.getUtxosByOutRef([
-    deployed.scriptsRef.TasteTestPolicy,
-  ]);
-  const [refNodeValidator] = await lucid.provider.getUtxosByOutRef([
-    deployed.scriptsRef.TasteTestValidator,
-  ]);
-
-  const insertTxs: { tx: TxSigned; index: number }[] = [];
+  const [refNodePolicy, refNodeValidator] =
+    await lucid.provider.getUtxosByOutRef([
+      deployed.scriptsRef.TasteTestPolicy,
+      deployed.scriptsRef.TasteTestValidator,
+    ]);
 
   for (let i = WALLET_GROUP_START_INDEX; i <= MAX_WALLET_GROUP_COUNT; i++) {
     await selectLucidWallet(lucid, i);
+
+    // Check if wallet does not have the min amount.
+    const lovelace = await lovelaceAtAddress(lucid);
+    if (lovelace !== MIN_ADA_INSERT_WALLET) {
+      continue;
+    }
 
     const tx = await insertLqNode(lucid, {
       currenTime: emulator?.now() ?? Date.now(),
@@ -62,7 +62,7 @@ export const insertLiquidityNodesAction = async (
         const signedTx = await tx.data.sign().complete();
         console.log(`Depositing 1 ADA to TT with wallet ${i}...`);
         const txHash = await signedTx.submit();
-        console.log(`Submitting${i}: ${txHash}`);
+        console.log(`Submitting: ${txHash}`);
         await lucid.awaitTx(txHash);
         console.log(`Done, moving to next wallet...`);
       } catch (e) {

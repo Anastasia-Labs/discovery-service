@@ -1,2 +1,5 @@
 export const PREVIEW_OFFSET = "1666656000";
 export const MAINNET_OFFSET = "1591566291";
+export const SEED_WALLET_INDEX = 0;
+export const MINT_TOKEN_WALLET_INDEX = 1;
+export const PUBLISH_SCRIPT_WALLET_INDEX = 2;

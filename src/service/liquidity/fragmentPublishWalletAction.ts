@@ -2,6 +2,7 @@ import inquirer from "inquirer";
 import { Emulator, Lucid, OutRef } from "price-discovery-offchain";
 
 import { IFragmentedUtxosMapJSON } from "../../@types/json.js";
+import { PUBLISH_SCRIPT_WALLET_INDEX } from "../../constants/network.js";
 import { getPublishWalletAda } from "../../constants/utils.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
@@ -78,13 +79,11 @@ export const validatorsByIndex = [
 
 const submitFragmentPublishWallet = async (
   lucid: Lucid,
-  fragmentWalletTx?: string,
   emulator?: Emulator,
 ) => {
+  const fragmentWalletTx = await getFragmentWalletTx();
   if (!fragmentWalletTx) {
-    throw new Error(
-      `We could not find a fragmentWallet transaction to submit.`,
-    );
+    throw new Error(`Could not find a fragmentWalletTx to submit.`);
   }
 
   const signed = await lucid.fromTx(fragmentWalletTx).sign().complete();
@@ -112,7 +111,7 @@ export const fragmentPublishWalletAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  await selectLucidWallet(lucid, 2);
+  await selectLucidWallet(lucid, PUBLISH_SCRIPT_WALLET_INDEX);
   const fragmentWalletTx = await getFragmentWalletTx();
 
   if (!isDryRun() && !emulator) {
@@ -159,10 +158,6 @@ export const fragmentPublishWalletAction = async (
   await saveFragmentWalletTx(txComplete.toString(), Boolean(emulator));
 
   if (emulator) {
-    await submitFragmentPublishWallet(
-      lucid,
-      await getFragmentWalletTx(),
-      emulator,
-    );
+    await submitFragmentPublishWallet(lucid, emulator);
   }
 };

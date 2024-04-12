@@ -14,9 +14,9 @@ export const getBalanceAction = async (lucid: Lucid) => {
 
   const { getAllWallets } = await inquirer.prompt([
     {
-      name: "Do you want to retrieve just the first 3 wallets?",
       type: "confirm",
-      value: "getAllWallets",
+      name: "getAllWallets",
+      message: "Get all wallets?",
       default: true,
     },
   ]);
@@ -46,7 +46,7 @@ export const getBalanceAction = async (lucid: Lucid) => {
 
     console.log(`Wallet Index: ${i}`, assets);
 
-    if (i === 2) {
+    if (!getAllWallets && i === 2) {
       break;
     }
   }

@@ -270,10 +270,6 @@ export const getWallets = async (): Promise<IWallet[]> => {
 export const saveWallets = async (data: IWallet[]) => {
   const path = getWalletsPath();
   if (existsSync(path)) {
-    if (isDryRun()) {
-      return undefined;
-    }
-
     const { walletOverwrite } = await inquirer.prompt([
       {
         type: "confirm",

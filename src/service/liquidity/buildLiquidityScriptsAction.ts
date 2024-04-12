@@ -11,7 +11,10 @@ import {
 import { getScripts } from "../../utils/scripts.js";
 
 import { IAppliedScriptsJSON } from "../../@types/json.js";
-import { isDryRun } from "../../utils/args.js";
+import {
+  MINT_TOKEN_WALLET_INDEX,
+  SEED_WALLET_INDEX,
+} from "../../constants/network.js";
 import {
   getTTConfig,
   getTTVariables,
@@ -49,7 +52,7 @@ export const buildLiquidityScriptsAction = async (
 
     initUtxo = res[0];
   } else {
-    await selectLucidWallet(lucid, 0);
+    await selectLucidWallet(lucid, SEED_WALLET_INDEX);
     const res = await lucid.wallet.getUtxos();
     initUtxo = res[0];
   }
@@ -62,7 +65,7 @@ export const buildLiquidityScriptsAction = async (
 
     tokenHolderUtxo = res[0];
   } else {
-    await selectLucidWallet(lucid, 1);
+    await selectLucidWallet(lucid, MINT_TOKEN_WALLET_INDEX);
     const res = await lucid.wallet.getUtxos();
     tokenHolderUtxo = res[0];
   }
@@ -160,11 +163,6 @@ export const buildLiquidityScriptsAction = async (
     version: Date.now(),
     ...parameters,
   };
-
-  if (isDryRun() && !emulator) {
-    console.log(JSON.stringify(data));
-    return;
-  }
 
   await saveAppliedScripts(data, Boolean(emulator));
 };

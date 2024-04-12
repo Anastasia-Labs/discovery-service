@@ -6,6 +6,7 @@ import {
 } from "price-discovery-offchain";
 import "../../utils/env.js";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
@@ -33,7 +34,7 @@ export const initLiquidityFoldServiceAction = async (
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
 
   if (!isDryRun() && !emulator) {
     await submitInitLiquidityFoldServiceAction(lucid);

@@ -5,6 +5,7 @@ import {
   Lucid,
   createLiquidityV1Pool,
 } from "price-discovery-offchain";
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
@@ -35,7 +36,7 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
   const applied = await getAppliedScripts();
   const { projectTokenAssetName, projectTokenPolicyId } =
     await getTTVariables();
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
 
   if (!isDryRun() && !emulator) {
     await submitCreateV1PoolAction(lucid);

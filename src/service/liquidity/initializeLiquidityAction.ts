@@ -7,6 +7,7 @@ import {
   initLqNode,
 } from "price-discovery-offchain";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
@@ -36,7 +37,7 @@ export const initializeLiquidityAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 

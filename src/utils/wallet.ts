@@ -102,7 +102,7 @@ export const getEmulatorLedger = async (
   ]);
 
   if (regenerate) {
-    console.log("Fetching from " + process.env.NODE_ENV);
+    console.log(`Fetching from Blockfrost on ${getNetwork()}`);
     const utxos: EmulatorAccount[] = await Promise.all([
       lucid.provider.getUtxos(addresses.liquidityDestination),
       lucid.provider.getUtxos(addresses.withdrawPenalty),

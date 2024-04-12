@@ -2,7 +2,11 @@ import { Lucid } from "price-discovery-offchain";
 import "../../utils/env.js";
 
 import { IDynamoTTEntry } from "../../@types/db.js";
-import { MAINNET_OFFSET, PREVIEW_OFFSET } from "../../constants/network.js";
+import {
+  MAINNET_OFFSET,
+  PREVIEW_OFFSET,
+  SEED_WALLET_INDEX,
+} from "../../constants/network.js";
 import { getNetwork } from "../../utils/args.js";
 import {
   getAppliedScripts,
@@ -27,7 +31,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
   const { project, deadline, ...config } = await getTTConfig();
   const { projectTokenAssetName, projectTokenPolicyId } =
     await getTTVariables();
-  await selectLucidWallet(lucid, 0);
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
 
   if (!initTx) {

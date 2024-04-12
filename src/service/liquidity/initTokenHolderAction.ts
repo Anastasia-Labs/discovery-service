@@ -5,6 +5,7 @@ import {
   initLqTokenHolder,
 } from "price-discovery-offchain";
 
+import { MINT_TOKEN_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
@@ -59,7 +60,7 @@ export const initTokenHolderAction = async (
       utxos,
     });
   } else {
-    await selectLucidWallet(lucid, 1);
+    await selectLucidWallet(lucid, MINT_TOKEN_WALLET_INDEX);
   }
 
   if (!isDryRun() && !emulator) {

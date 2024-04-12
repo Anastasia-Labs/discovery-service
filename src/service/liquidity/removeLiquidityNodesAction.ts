@@ -1,17 +1,17 @@
 import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
-import "../../utils/env.js";
-
-import { isDryRun } from "../../utils/args.js";
-import { getAppliedScripts, getTTConfig } from "../../utils/files.js";
-import { selectLucidWallet } from "../../utils/wallet.js";
-
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
 import { WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
-import { getPublishedPolicyOutRefs } from "../../utils/files.js";
+import { isDryRun } from "../../utils/args.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+  getTTConfig,
+} from "../../utils/files.js";
+import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const removeLiquidityNodeAction = async (
+export const removeLiquidityNodesAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
@@ -32,7 +32,6 @@ export const removeLiquidityNodeAction = async (
   let loop = true;
   let walletIdx = WALLET_GROUP_START_INDEX;
   while (loop) {
-    console.log("Building withdraw with wallet: " + walletIdx);
     await selectLucidWallet(lucid, walletIdx);
     const tx = await removeLqNode(lucid, {
       currenTime: emulator?.now() ?? Date.now(),
@@ -63,7 +62,7 @@ export const removeLiquidityNodeAction = async (
       }
     } else {
       try {
-        console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);
+        console.log("Removing with wallet: " + walletIdx);
         const txComplete = await tx.data.sign().complete();
         const txHash = await txComplete.submit();
         console.log(`Submitting: ${txHash}`);
