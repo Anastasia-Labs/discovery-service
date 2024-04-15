@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
 import path from "path";
+import { getNetwork } from "./args.js";
 
-const suffix =
-  process.env.NODE_ENV === "production" ? "" : `.${process.env.NODE_ENV}`;
-const envPath = path.resolve(process.cwd(), `.env${suffix}`);
+const suffix = getNetwork();
+const envPath = path.resolve(process.cwd(), `.env.${suffix}`);
 const result = dotenv.config({
   path: envPath,
 });

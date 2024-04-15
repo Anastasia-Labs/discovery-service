@@ -1,71 +1,60 @@
+import { Emulator, Lucid, removeLqNode } from "price-discovery-offchain";
+import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
-import { Emulator, Lucid, claimLiquidityNode } from "price-discovery-offchain";
-
-import { setTimeout } from "timers/promises";
-import {
-  MAX_WALLET_GROUP_COUNT,
-  WALLET_GROUP_START_INDEX,
-} from "../../constants/utils.js";
+import { WALLET_GROUP_START_INDEX } from "../../constants/utils.js";
 import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
+  getTTConfig,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const claimLiquidityNodeAction = async (
+export const removeLiquidityNodesAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
+  const {
+    deadline,
+    project: { addresses },
+  } = await getTTConfig();
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
 
-  const [refNodePolicy, refNodeValidator] = await lucid.utxosByOutRef([
+  const [refNodePolicy] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,
+  ]);
+  const [refNodeValidator] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestValidator,
   ]);
 
   let loop = true;
   let walletIdx = WALLET_GROUP_START_INDEX;
   while (loop) {
-    console.log("Building claim with wallet: " + walletIdx);
     await selectLucidWallet(lucid, walletIdx);
-    const tx = await claimLiquidityNode(lucid, {
+    const tx = await removeLqNode(lucid, {
       currenTime: emulator?.now() ?? Date.now(),
-      burnToken: false,
+      penaltyAddress: addresses.withdrawPenalty,
+      deadline,
       scripts: {
-        liquidityPolicy: applied.scripts.liquidityPolicy,
-        liquidityValidator: applied.scripts.liquidityValidator,
-        rewardFoldPolicy: applied.scripts.rewardFoldPolicy,
+        nodePolicy: applied.scripts.liquidityPolicy,
+        nodeValidator: applied.scripts.liquidityValidator,
       },
       refScripts: {
-        liquidityPolicy: refNodePolicy,
-        liquidityValidator: refNodeValidator,
+        nodePolicy: refNodePolicy,
+        nodeValidator: refNodeValidator,
       },
     });
 
     if (tx.type == "error") {
-      if (tx.error.message.includes("missing node")) {
-        if (walletIdx === MAX_WALLET_GROUP_COUNT) {
-          loop = false;
-          continue;
-        }
-
-        walletIdx++;
-        console.log(
-          `Could not find node for wallet ${walletIdx}. Moving on to next wallet...`,
-        );
-        continue;
-      }
-
       throw tx.error;
     }
 
     if (isDryRun() && !emulator) {
       console.log(tx.data.toString());
 
-      if (walletIdx === MAX_WALLET_GROUP_COUNT) {
+      if (walletIdx === WALLET_GROUP_START_INDEX + 3) {
         loop = false;
         console.log("Done!");
       } else {
@@ -73,11 +62,12 @@ export const claimLiquidityNodeAction = async (
       }
     } else {
       try {
+        console.log("Removing with wallet: " + walletIdx);
         const txComplete = await tx.data.sign().complete();
         const txHash = await txComplete.submit();
         console.log(`Submitting: ${txHash}`);
 
-        if (walletIdx === MAX_WALLET_GROUP_COUNT - 1) {
+        if (walletIdx === WALLET_GROUP_START_INDEX + 3) {
           loop = false;
           console.log("Done!");
         } else {
@@ -86,7 +76,7 @@ export const claimLiquidityNodeAction = async (
         }
       } catch (e) {
         console.log(
-          "Failed to claim with wallet: " + walletIdx,
+          "Failed to withdraw with wallet: " + walletIdx,
           (e as Error).message,
         );
         console.log("Waiting to try again...");

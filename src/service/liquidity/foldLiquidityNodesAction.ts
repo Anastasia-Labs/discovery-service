@@ -14,8 +14,12 @@ import {
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+} from "../../utils/files.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
@@ -23,9 +27,9 @@ export const foldLiquidityNodesAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
-  await selectLucidWallet(lucid, 0);
+  const deployed = await getPublishedPolicyOutRefs();
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
@@ -41,7 +45,7 @@ export const foldLiquidityNodesAction = async (
   foldUtxo = foldUtxoRes[0];
 
   if (!foldUtxo) {
-    throw new Error("We don't have a fold utxo! Run `init-fold:lp`");
+    throw new Error("We don't have a fold utxo! Run `init-fold`");
   }
 
   const head = readableUTxOs.find((utxo) => {
@@ -58,18 +62,36 @@ export const foldLiquidityNodesAction = async (
     return datum.commitment === 0n;
   });
 
-  const nodes = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 25);
+  const chunks = chunkArray(sortByKeys(unprocessedNodes, head.datum.key), 35);
 
-  for (const [index, chunk] of nodes.entries()) {
-    console.log(`processing chunk ${index}`);
-    const sortedInputs = sortByOrefWithIndex(chunk);
+  console.log(
+    `Found a total of ${unprocessedNodes.length} nodes and ${chunks.length} chunks to process.`,
+  );
 
-    const feeInput = (await lucid.wallet.getUtxos()).find(
-      ({ assets }) => assets.lovelace > 2_000_000n,
+  let loop = true;
+  let chunkIdx = 0;
+  while (loop) {
+    console.log(
+      `Processing chunk at index #${chunkIdx}, out of ${chunks.length} chunks...`,
     );
+    const sortedInputs = sortByOrefWithIndex(chunks[chunkIdx]);
+
+    const walletUtxos = await lucid.wallet.getUtxos();
+    const feeInput = walletUtxos.find(
+      ({ assets }) =>
+        assets.lovelace > 2_000_000n && Object.keys(assets).length === 1,
+    );
+
     if (!feeInput) {
       throw Error("Could not find a UTxO that had at least 2 ADA in it.");
     }
+
+    const [ttStateRef, ttValidatorRef, cfValidatorRef] =
+      await lucid.provider.getUtxosByOutRef([
+        deployed.scriptsRef.TasteTestStakeValidator,
+        deployed.scriptsRef.TasteTestValidator,
+        deployed.scriptsRef.CollectFoldValidator,
+      ]);
 
     const multiFoldConfig: MultiFoldConfig = {
       currenTime: emulator?.now() ?? Date.now(),
@@ -88,21 +110,9 @@ export const foldLiquidityNodesAction = async (
         foldValidator: applied.scripts.collectFoldValidator,
       },
       refInputs: {
-        foldValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.CollectFoldValidator,
-          ])
-        )?.[0] as UTxO,
-        liquidityValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestValidator,
-          ])
-        )?.[0] as UTxO,
-        collectStake: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestStakeValidator,
-          ])
-        )?.[0] as UTxO,
+        collectStake: ttStateRef,
+        foldValidator: cfValidatorRef,
+        liquidityValidator: ttValidatorRef,
       },
     };
 
@@ -122,12 +132,21 @@ export const foldLiquidityNodesAction = async (
         if (!emulator) {
           await setTimeout(3_000);
         }
+
         const [newFoldUtxo] = await utxosAtScript(
           lucid,
           applied.scripts.collectFoldValidator,
         );
 
         foldUtxo = newFoldUtxo;
+      }
+
+      if (chunkIdx === chunks.length - 1) {
+        loop = false;
+        console.log("Done!");
+      } else {
+        chunkIdx++;
+        await lucid.awaitTx(multiFoldHash);
       }
     } catch (e) {
       await loggerDD(

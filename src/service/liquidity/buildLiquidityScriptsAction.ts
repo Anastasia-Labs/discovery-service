@@ -1,7 +1,7 @@
 import "../../utils/env.js";
 
-import { writeFile } from "fs/promises";
 import {
+  Emulator,
   Lucid,
   UTxO,
   buildLiquidityScripts,
@@ -10,13 +10,24 @@ import {
 
 import { getScripts } from "../../utils/scripts.js";
 
-import { getTasteTestVariables } from "../../utils/files.js";
+import { IAppliedScriptsJSON } from "../../@types/json.js";
+import {
+  MINT_TOKEN_WALLET_INDEX,
+  SEED_WALLET_INDEX,
+} from "../../constants/network.js";
+import {
+  getTTConfig,
+  getTTVariables,
+  saveAppliedScripts,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const buildLiquidityScriptsAction = async (
   lucid: Lucid,
-  emulatorDeadline?: number,
+  emulator?: Emulator,
 ) => {
+  const config = await getTTConfig();
+
   const {
     collectionFoldPolicy,
     collectionFoldValidator,
@@ -28,58 +39,70 @@ export const buildLiquidityScriptsAction = async (
     proxyTokenHolderValidator,
     tokenHolderPolicy,
     tokenHolderValidator,
-  } = getScripts();
+  } = await getScripts();
+
   const { projectTokenPolicyId, projectTokenAssetName } =
-    await getTasteTestVariables();
-  const project0Utxos = await selectLucidWallet(lucid, 0).then(({ wallet }) =>
-    wallet.getUtxos(),
-  );
-  const [wallet1Address, project1Utxos] = await selectLucidWallet(
-    lucid,
-    1,
-  ).then(async ({ wallet }): Promise<[string, UTxO[]]> => {
-    return [await wallet.address(), await wallet.getUtxos()];
-  });
+    await getTTVariables();
 
-  const checkProjectToken = project1Utxos.find((utxo) => {
-    return (
-      utxo.assets[toUnit(projectTokenPolicyId, projectTokenAssetName)] ===
-      BigInt(process.env.PROJECT_AMNT!)
+  let initUtxo: UTxO;
+  if (config.reservedUtxos?.initTasteTest) {
+    const res = await lucid.provider.getUtxosByOutRef(
+      config.reservedUtxos.initTasteTest,
     );
-  });
 
-  if (!checkProjectToken) {
-    console.log("WALLET_PROJECT_1 project token missing");
-    console.log(
-      `Send project ${Number(process.env.PROJECT_AMNT!)} token to: `,
-      wallet1Address,
-    );
-    return;
+    initUtxo = res[0];
+  } else {
+    await selectLucidWallet(lucid, SEED_WALLET_INDEX);
+    const res = await lucid.wallet.getUtxos();
+    initUtxo = res[0];
   }
 
-  const deadline = Number(emulatorDeadline ?? process.env.DEADLINE);
+  let tokenHolderUtxo: UTxO;
+  if (config.reservedUtxos?.initTokenHolder) {
+    const res = await lucid.provider.getUtxosByOutRef(
+      config.reservedUtxos.initTokenHolder,
+    );
+
+    tokenHolderUtxo = res[0];
+  } else {
+    await selectLucidWallet(lucid, MINT_TOKEN_WALLET_INDEX);
+    const res = await lucid.wallet.getUtxos();
+    tokenHolderUtxo = res[0];
+  }
+
+  const projectTokenUnit = toUnit(projectTokenPolicyId, projectTokenAssetName);
+  const projectTokenValid =
+    tokenHolderUtxo.assets[projectTokenUnit] ===
+    BigInt(config.project.token.suppliedAmount);
+
+  if (!projectTokenValid) {
+    throw new Error(
+      `The provided token holder utxo does not have the required amount of: ${config.project.token.suppliedAmount}.`,
+    );
+  }
+
   console.log(
     "Deadline UTC",
-    deadline,
-    `${new Date(deadline).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(deadline).toLocaleTimeString()}`,
+    config.deadline,
+    `${new Date(config.deadline).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(config.deadline).toLocaleTimeString()}`,
   );
 
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {
-      initUTXO: project0Utxos[0],
-      deadline: deadline,
-      penaltyAddress: process.env.PENALTY_ADDRESS!,
+      initUTXO: initUtxo,
+      deadline: config.deadline,
+      penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardFoldValidator: {
       projectCS: projectTokenPolicyId,
-      projectLpPolicyId: process.env.POOL_POLICY_ID!,
-      projectAddr: process.env.PROJECT_ADDRESS!,
+      projectLpPolicyId: config.v1PoolData.policyId,
+      projectAddr: config.project.addresses.liquidityDestination,
     },
     proxyTokenHolderValidator: {
-      poolPolicyId: process.env.POOL_POLICY_ID!,
+      poolPolicyId: config.v1PoolData.policyId,
     },
     projectTokenHolder: {
-      initUTXO: project1Utxos[0],
+      initUTXO: tokenHolderUtxo,
     },
     unapplied: {
       liquidityPolicy: liquidityPolicy.cborHex,
@@ -99,43 +122,47 @@ export const buildLiquidityScriptsAction = async (
     throw scripts.error;
   }
 
-  const currenTime = Date.now();
-
   const parameters = {
     discoveryPolicy: {
       initOutRef: {
-        txHash: project0Utxos[0].txHash,
-        outputIndex: project0Utxos[0].outputIndex,
+        txHash: initUtxo.txHash,
+        outputIndex: initUtxo.outputIndex,
       },
-      deadline: deadline,
-      penaltyAddress: process.env.PENALTY_ADDRESS!,
+      deadline: config.deadline,
+      penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardValidator: {
       projectCS: projectTokenPolicyId,
       projectTN: projectTokenAssetName,
-      projectAddr: process.env.PROJECT_ADDRESS!,
+      projectAddr: config.project.addresses.liquidityDestination,
     },
     projectTokenHolder: {
       initOutRef: {
-        txHash: project1Utxos[0].txHash,
-        outputIndex: project1Utxos[0].outputIndex,
+        txHash: tokenHolderUtxo.txHash,
+        outputIndex: tokenHolderUtxo.outputIndex,
       },
     },
   };
 
-  await writeFile(
-    `./applied-scripts.json`,
-    JSON.stringify(
-      {
-        ...{ scripts: scripts.data },
-        ...{ version: currenTime },
-        ...{ projectAmount: Number(process.env.PROJECT_AMNT) },
-        ...parameters,
-      },
-      undefined,
-      2,
-    ),
+  const scriptHashes = Object.entries(scripts.data).reduce(
+    (acc, [key, script]) => {
+      acc[key] = lucid.utils.validatorToScriptHash({
+        type: key === "proxyTokenHolderValidator" ? "PlutusV1" : "PlutusV2",
+        script,
+      });
+      return acc;
+    },
+    {} as Record<string, string>,
   );
 
-  console.log(`Scripts have been saved , version ${currenTime}\n`);
+  const data: IAppliedScriptsJSON = {
+    scripts: scripts.data,
+    scriptHashes:
+      scriptHashes as unknown as IAppliedScriptsJSON["scriptHashes"],
+    projectAmount: config.project.token.suppliedAmount,
+    version: Date.now(),
+    ...parameters,
+  };
+
+  await saveAppliedScripts(data, Boolean(emulator));
 };

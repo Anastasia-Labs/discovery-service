@@ -6,7 +6,11 @@ import {
   MAX_WALLET_GROUP_COUNT,
   WALLET_GROUP_START_INDEX,
 } from "../../constants/utils.js";
-import { getAppliedScripts, getDeployedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/args.js";
+import {
+  getAppliedScripts,
+  getPublishedPolicyOutRefs,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
 export const modifyLiquidityNodesAction = async (
@@ -14,56 +18,61 @@ export const modifyLiquidityNodesAction = async (
   emulator?: Emulator,
 ) => {
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
 
-  const refNodePolicy = await lucid.provider.getUtxosByOutRef([
+  const [refNodePolicy] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestPolicy,
   ]);
-  const refNodeValidator = await lucid.provider.getUtxosByOutRef([
+  const [refNodeValidator] = await lucid.provider.getUtxosByOutRef([
     deployed.scriptsRef.TasteTestValidator,
   ]);
 
   let loop = true;
   let walletIdx = WALLET_GROUP_START_INDEX;
   while (loop) {
-    try {
-      await selectLucidWallet(lucid, walletIdx);
-      const tx = await modifyLqNode(lucid, {
-        currenTime: emulator?.now() ?? Date.now(),
-        amountLovelace: 1_000_000n,
-        scripts: {
-          nodePolicy: applied.scripts.liquidityPolicy,
-          nodeValidator: applied.scripts.liquidityValidator,
-        },
-        refScripts: {
-          nodePolicy: refNodePolicy?.[0],
-          nodeValidator: refNodeValidator?.[0],
-        },
-      });
+    await selectLucidWallet(lucid, walletIdx);
+    const tx = await modifyLqNode(lucid, {
+      currenTime: emulator?.now() ?? Date.now(),
+      amountLovelace: 1_000_000n,
+      scripts: {
+        nodePolicy: applied.scripts.liquidityPolicy,
+        nodeValidator: applied.scripts.liquidityValidator,
+      },
+      refScripts: {
+        nodePolicy: refNodePolicy,
+        nodeValidator: refNodeValidator,
+      },
+    });
 
-      if (tx.type == "error") {
-        throw tx.error;
+    if (tx.type == "error") {
+      throw tx.error;
+    }
+
+    if (isDryRun() && !emulator) {
+      console.log(tx.data.toString());
+      loop = false;
+    } else {
+      try {
+        console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);
+        const txComplete = await tx.data.sign().complete();
+        const txHash = await txComplete.submit();
+        console.log(`Submitting: ${txHash}`);
+
+        if (walletIdx === MAX_WALLET_GROUP_COUNT) {
+          loop = false;
+          console.log("Done!");
+        } else {
+          walletIdx++;
+          await lucid.awaitTx(txHash);
+        }
+      } catch (e) {
+        console.log(
+          "Failed to fund TT with wallet: " + walletIdx,
+          (e as Error).message,
+        );
+        console.log("Waiting to try again...");
+        await setTimeout(20_000);
       }
-
-      console.log("Updating deposit with 1 ADA using wallet: " + walletIdx);
-      const txComplete = await tx.data.sign().complete();
-      const txHash = await txComplete.submit();
-      console.log(`Submitting: ${txHash}`);
-
-      if (walletIdx === MAX_WALLET_GROUP_COUNT) {
-        loop = false;
-        console.log("Done!");
-      } else {
-        walletIdx++;
-        await lucid.awaitTx(txHash);
-      }
-    } catch (e) {
-      console.log(
-        "Failed to fund TT with wallet: " + walletIdx,
-        (e as Error).message,
-      );
-      console.log("Waiting to try again...");
-      await setTimeout(20_000);
     }
   }
 };

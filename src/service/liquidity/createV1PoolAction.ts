@@ -5,19 +5,43 @@ import {
   Lucid,
   createLiquidityV1Pool,
 } from "price-discovery-offchain";
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
+import { isDryRun } from "../../utils/args.js";
 import { getDatumsObject } from "../../utils/emulator.js";
 import {
   getAppliedScripts,
-  getTasteTestVariables,
-  updateTasteTestVariables,
+  getCreateV1PoolTx,
+  getTTConfig,
+  getTTVariables,
+  saveCreateV1PoolTx,
+  updateTTVariables,
 } from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
+const submitCreateV1PoolAction = async (lucid: Lucid) => {
+  const createV1PoolTx = await getCreateV1PoolTx();
+  if (!createV1PoolTx) {
+    throw new Error("Could not find a createV1Pool transaction to submit.");
+  }
+
+  const signedTx = await lucid.fromTx(createV1PoolTx).sign().complete();
+  const txHash = await signedTx.submit();
+  console.log(`Submitting: ${txHash}`);
+  await lucid.awaitTx(txHash);
+  console.log("Done!");
+};
+
 export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
+  const { v1PoolData } = await getTTConfig();
   const applied = await getAppliedScripts();
   const { projectTokenAssetName, projectTokenPolicyId } =
-    await getTasteTestVariables();
-  await selectLucidWallet(lucid, 0);
+    await getTTVariables();
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
+
+  if (!isDryRun() && !emulator) {
+    await submitCreateV1PoolAction(lucid);
+    return;
+  }
 
   const datums = getDatumsObject(emulator);
 
@@ -25,19 +49,19 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
     currenTime: emulator?.now() ?? Date.now(),
     scripts: {
       proxyTokenHolderScript: applied.scripts.proxyTokenHolderValidator,
-      v1PoolPolicyScript: process.env.V1_POOL_POLICY_SCRIPT!,
-      v1FactoryValidatorScript: process.env.V1_POOL_FACTORY_VALIDATOR!,
+      v1PoolPolicyScript: v1PoolData.policyScriptBytes,
+      v1FactoryValidatorScript: v1PoolData.validatorScriptBytes,
       tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
     },
-    v1PoolAddress: process.env.POOL_ADDRESS!,
-    v1PoolPolicyId: process.env.POOL_POLICY_ID!,
+    v1PoolAddress: v1PoolData.address,
+    v1PoolPolicyId: v1PoolData.policyId,
     projectToken: {
       assetName: projectTokenAssetName,
       policyId: projectTokenPolicyId,
     },
     v1FactoryToken: {
-      policyId: process.env.V1_FACTORY_TOKEN!.split(".")[0],
-      assetName: process.env.V1_FACTORY_TOKEN!.split(".")[1],
+      policyId: v1PoolData.factoryToken.split(".")[0],
+      assetName: v1PoolData.factoryToken.split(".")[1],
     },
     datums,
     emulator: Boolean(emulator),
@@ -47,12 +71,13 @@ export const createV1PoolAction = async (lucid: Lucid, emulator?: Emulator) => {
     throw unsignedTx.error;
   }
 
-  const signedTx = await unsignedTx.data.tx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
-
-  await updateTasteTestVariables({
+  await saveCreateV1PoolTx(unsignedTx.data.tx.toString(), Boolean(emulator));
+  await updateTTVariables({
     lpTokenAssetName: unsignedTx.data.poolLpTokenName,
   });
+  console.log("Done! Saved LP token data to taste-test-variables.json.");
+
+  if (emulator) {
+    await submitCreateV1PoolAction(lucid);
+  }
 };

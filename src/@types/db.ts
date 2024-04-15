@@ -1,4 +1,4 @@
-export interface DynamoTTEntry {
+export interface IDynamoTTEntry {
   pk: {
     S: string;
   };
@@ -193,9 +193,22 @@ export interface DynamoTTEntry {
               S: string;
             }[];
           };
-          Socials: {
-            NULL: true;
-          };
+          Socials:
+            | {
+                L: {
+                  M: {
+                    Name: {
+                      S: string;
+                    };
+                    Url: {
+                      S: string;
+                    };
+                  };
+                }[];
+              }
+            | {
+                NULL: true;
+              };
         };
       };
       Tokenomics: {

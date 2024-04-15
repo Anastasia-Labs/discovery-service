@@ -1,17 +1,48 @@
 import "./env.js";
 
 import {
+  Emulator,
   fromText,
   Lucid,
   MintingPolicy,
   PolicyId,
   toUnit,
 } from "price-discovery-offchain";
-import { updateTasteTestVariables } from "./files.js";
+
+import { isDryRun } from "./args.js";
+import {
+  getMintTokenTx,
+  getTTConfig,
+  saveMintTokenTx,
+  updateTTVariables,
+} from "./files.js";
 import { selectLucidWallet } from "./wallet.js";
 
-export async function mintNFTAction(lucid: Lucid) {
+const submitMintTokenAction = async (lucid: Lucid) => {
+  const completedTx = lucid.fromTx(await getMintTokenTx());
+  const signed = await completedTx.sign().complete();
+  const txHash = await signed.submit();
+  console.log(`Submitting: ${txHash}`);
+  await lucid.awaitTx(txHash);
+  console.log(`Done!`);
+};
+
+export async function mintTokenAction(lucid: Lucid, emulator?: Emulator) {
+  const {
+    project: { token },
+  } = await getTTConfig();
   await selectLucidWallet(lucid, 1);
+
+  if (token.suppliedAmount === 0) {
+    throw new Error(
+      "The supplied amount of project tokens is set to `0`. Please update and try again.",
+    );
+  }
+
+  if (!isDryRun() && !emulator) {
+    await submitMintTokenAction(lucid);
+    return;
+  }
 
   const { paymentCredential } = lucid.utils.getAddressDetails(
     await lucid.wallet.address(),
@@ -29,26 +60,27 @@ export async function mintNFTAction(lucid: Lucid) {
   });
 
   const policyId: PolicyId = lucid.utils.mintingPolicyToId(mintingPolicy);
-  const assetName = fromText(process.env.PROJECT_TN!);
+  const assetName = fromText(token.readableName);
 
   const unit = toUnit(policyId, assetName);
 
   const tx = await lucid
     .newTx()
-    .mintAssets({ [unit]: BigInt(process.env.PROJECT_AMNT!) })
+    .mintAssets({ [unit]: BigInt(token.suppliedAmount) })
     .validTo(Date.now() + 100000)
     .attachMintingPolicy(mintingPolicy)
     .complete();
 
-  const signedTx = await tx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
-
-  await updateTasteTestVariables({
+  await updateTTVariables({
     projectTokenPolicyId: policyId,
-    projectTokenAssetName: assetName,
   });
 
-  console.log(`Done! Saved minted asset data to taste-test-variables.json.`);
+  const txCbor = (await tx.complete()).toString();
+
+  if (emulator) {
+    await saveMintTokenTx(txCbor, true);
+    await submitMintTokenAction(lucid);
+  } else {
+    await saveMintTokenTx(txCbor);
+  }
 }

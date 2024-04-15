@@ -2,47 +2,70 @@ import "./env.js";
 
 import { Lucid } from "price-discovery-offchain";
 
-import wallets from "../../test/wallets.json" assert { type: "json" };
-import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
+import {
+  MAX_WALLET_GROUP_COUNT,
+  MIN_ADA_INSERT_WALLET,
+  getPublishWalletAda,
+} from "../constants/utils.js";
+import { isDryRun } from "./args.js";
+import {
+  getFundWalletsTx,
+  getTTConfig,
+  getWallets,
+  saveFundWalletsTx,
+} from "./files.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export async function fundWalletsAction(lucid: Lucid) {
   await selectLucidWallet(lucid, 0);
 
-  const tx = lucid.newTx();
+  if (!isDryRun()) {
+    const completedTx = lucid.fromTx(await getFundWalletsTx());
+    const signedTx = await completedTx.sign().complete();
+    const txHash = await signedTx.submit();
+    console.log(`Submitting: ${txHash}`);
+    await lucid.awaitTx(txHash);
+    console.log("Done!");
+    return;
+  }
 
+  const wallets = await getWallets();
+  const {
+    project: { addresses },
+  } = await getTTConfig();
+
+  const tx = lucid.newTx();
   for (const [index, wallet] of wallets.entries()) {
     // Skip our seeded wallet.
     if (index === 0) {
-      console.log("Found our seeded wallet!");
       continue;
     }
 
-    if (index === 1) {
+    if (index === 1 && addresses.tokenHolder === wallet.address) {
       console.log("Sending 5 ADA to our token minting wallet.");
       tx.payToAddress(wallet.address, { lovelace: 5_000_000n });
       continue;
     }
 
-    // We need at least 500 ada in the deploy wallet for reference scripts.
+    // We need at least 200 ada in the deploy wallet for reference scripts.
     if (index === 2) {
-      console.log("Sending 500 ADA to our deploy script wallet.");
-      tx.payToAddress(wallet.address, { lovelace: 500_000_000n });
+      const lovelace = await getPublishWalletAda();
+      console.log(`Sending ${lovelace} lovelace to wallet: ${index}.`);
+      tx.payToAddress(wallet.address, {
+        lovelace,
+      });
       continue;
     }
 
-    if (index > MAX_WALLET_GROUP_COUNT) {
+    tx.payToAddress(wallet.address, { lovelace: MIN_ADA_INSERT_WALLET });
+
+    if (index === MAX_WALLET_GROUP_COUNT) {
       break;
     }
-
-    console.log("Sending 15 ADA to wallet: " + index);
-    tx.payToAddress(wallet.address, { lovelace: 15_000_000n });
   }
 
-  const completedTx = await tx.complete();
-  const signedTx = await completedTx.sign().complete();
-  const txHash = await signedTx.submit();
-  console.log(`Submitting: ${txHash}`);
-  await lucid.awaitTx(txHash);
-  console.log("Done!");
+  console.log(`Sending 10 ADA to ${MAX_WALLET_GROUP_COUNT - 2} other wallets.`);
+
+  const txCbor = (await tx.complete()).toString();
+  await saveFundWalletsTx(txCbor);
 }

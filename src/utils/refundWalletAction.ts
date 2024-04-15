@@ -1,39 +1,106 @@
 import "./env.js";
 
-import { Lucid } from "price-discovery-offchain";
+import { Assets, Lucid, TxSigned } from "price-discovery-offchain";
 
+import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
+import { isDryRun } from "./args.js";
+import { getTTConfig, getWallets } from "./files.js";
 import { lovelaceAtAddress } from "./misc.js";
 import { selectLucidWallet } from "./wallet.js";
 
 export const refundWalletsAction = async (lucid: Lucid) => {
-  await selectLucidWallet(lucid, 0);
-  const balance = await lovelaceAtAddress(lucid);
+  const wallets = await getWallets();
+  const { project } = await getTTConfig();
+  const walletEntries = [...wallets.entries()].slice(0, MAX_WALLET_GROUP_COUNT);
 
-  const tx = await lucid
-    .newTx()
-    .payToAddress(
-      "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s",
-      { lovelace: balance - 2_000_000n },
-    )
-    .complete();
-  const txHash = await (await tx.sign().complete()).submit();
+  const signedTxs: { tx: TxSigned; index: number }[] = [];
 
-  console.log(
-    `Refunded seed wallet of ${balance - 500_000n} lovelace:  ${txHash}`,
+  for (const [index, wallet] of walletEntries) {
+    await selectLucidWallet(lucid, index);
+    const utxos = await lucid.provider.getUtxos(wallet.address);
+    const totalLovelace = await lovelaceAtAddress(lucid);
+    const assets: Assets = {
+      lovelace: totalLovelace - 650_000n,
+    };
+
+    for (const utxo of utxos) {
+      for (const [id, amount] of Object.entries(utxo.assets)) {
+        if (id === "lovelace") {
+          continue;
+        }
+
+        if (assets[id]) {
+          assets[id] += amount;
+        } else {
+          assets[id] = amount;
+        }
+      }
+    }
+
+    if (totalLovelace === 0n && Object.keys(assets).length > 1) {
+      console.log(
+        `Wallet has no ADA, but other assets. Consider funding to withdraw them.`,
+      );
+      continue;
+    } else if (totalLovelace === 0n) {
+      continue;
+    }
+
+    try {
+      const tx = lucid
+        .newTx()
+        .collectFrom(utxos)
+        .payToAddress(project.addresses.cleanupRefund, assets);
+
+      const preSigned = await (await tx.complete()).sign().complete();
+      const preSignedTxFee = preSigned.txSigned.body().fee();
+
+      const newAssets = {
+        ...assets,
+        lovelace: totalLovelace - BigInt(preSignedTxFee.to_str()),
+      };
+
+      const realTx = await lucid
+        .newTx()
+        .collectFrom(utxos)
+        .payToAddress(project.addresses.cleanupRefund, newAssets)
+        .complete();
+
+      if (isDryRun()) {
+        console.log(realTx.toString());
+
+        if (index === MAX_WALLET_GROUP_COUNT) {
+          console.log("Done!");
+          break;
+        } else {
+          continue;
+        }
+      } else {
+        const signedTx = await realTx.sign().complete();
+        console.log(`Stored signed Tx for wallet: ${index}`);
+        signedTxs.push({
+          tx: signedTx,
+          index,
+        });
+      }
+    } catch (e) {
+      console.log(
+        `Could not build refund transaction for wallet ${index}. Got error: ${e}. Moving to next wallet...`,
+      );
+    }
+  }
+
+  if (isDryRun()) {
+    return;
+  }
+
+  await Promise.all(
+    signedTxs.map(async ({ tx, index }) => {
+      const txHash = await tx.submit();
+      console.log(`Refunding wallet #${index}:  ${txHash}`);
+      await lucid.awaitTx(txHash);
+    }),
   );
 
-  await selectLucidWallet(lucid, 2);
-  const newBalance = await lovelaceAtAddress(lucid);
-  const newTx = await lucid
-    .newTx()
-    .payToAddress(
-      "addr_test1qrp8nglm8d8x9w783c5g0qa4spzaft5z5xyx0kp495p8wksjrlfzuz6h4ssxlm78v0utlgrhryvl2gvtgp53a6j9zngqtjfk6s",
-      { lovelace: newBalance - 2_000_000n },
-    )
-    .complete();
-  const newTxHash = await (await newTx.sign().complete()).submit();
-
-  console.log(
-    `Refunded deploy wallet of ${newBalance - 1_000_000n} lovelace:  ${newTxHash}`,
-  );
+  console.log("Done!");
 };

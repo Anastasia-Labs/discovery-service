@@ -6,7 +6,6 @@ import {
   Lucid,
   MintingPolicy,
   RewardLiquidityFoldConfig,
-  UTxO,
   chunkArray,
   liquidityFoldRewards,
   parseUTxOsAtScript,
@@ -16,11 +15,14 @@ import {
 import { setTimeout } from "timers/promises";
 import "../../utils/env.js";
 
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
+import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
-  getDeployedScripts,
-  getTasteTestVariables,
+  getPublishedPolicyOutRefs,
+  getTTConfig,
+  getTTVariables,
 } from "../../utils/files.js";
 import { sortByKeys, sortByOrefWithIndex } from "../../utils/misc.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
@@ -29,10 +31,11 @@ export const foldLiquidityRewardsAction = async (
   lucid: Lucid,
   emulator?: Emulator,
 ) => {
-  const { lpTokenAssetName } = await getTasteTestVariables();
-  await selectLucidWallet(lucid, 0);
+  const { lpTokenAssetName } = await getTTVariables();
+  const { v1PoolData } = await getTTConfig();
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
-  const deployed = await getDeployedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
   const changeAddress = await lucid.wallet.address();
   const readableUTxOs = await parseUTxOsAtScript<LiquiditySetNode>(
     lucid,
@@ -65,18 +68,29 @@ export const foldLiquidityRewardsAction = async (
     throw new Error("Could not find a first node to begin with.");
   }
 
-  const lpTokenAssetId = toUnit(process.env.POOL_POLICY_ID!, lpTokenAssetName);
+  const lpTokenAssetId = toUnit(v1PoolData.policyId, lpTokenAssetName);
   const unprocessedNodes = readableUTxOs.filter(({ assets }) => {
     return !assets[lpTokenAssetId];
   });
 
-  const nodes = chunkArray(
+  const chunks = chunkArray(
     sortByKeys(unprocessedNodes, firstNode.datum.key),
-    1,
+    30,
   );
 
-  for (const [index, chunk] of nodes.entries()) {
-    console.log(`processing chunk ${index}`);
+  const [ttValidatorRef, rwStakeRef, rwPolicyRef, rwValidatorRef] =
+    await lucid.provider.getUtxosByOutRef([
+      deployed.scriptsRef.TasteTestValidator,
+      deployed.scriptsRef.RewardStake,
+      deployed.scriptsRef.RewardFoldPolicy,
+      deployed.scriptsRef.RewardFoldValidator,
+    ]);
+
+  console.log(`Found a total of ${chunks.length} chunks to process.`);
+  for (const [index, chunk] of chunks.entries()) {
+    console.log(
+      `Processing chunk at index #${index} out of ${chunks.length} chunks...`,
+    );
     const sortedInputs = sortByOrefWithIndex(chunk);
 
     const feeInput = (await lucid.wallet.getUtxos()).find(
@@ -104,29 +118,13 @@ export const foldLiquidityRewardsAction = async (
         rewardFoldPolicy: applied.scripts.rewardFoldPolicy,
       },
       refInputs: {
-        rewardStake: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.RewardStake,
-          ])
-        )?.[0] as UTxO,
-        liquidityValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.TasteTestValidator,
-          ])
-        )?.[0] as UTxO,
-        rewardFoldValidator: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.RewardFoldValidator,
-          ])
-        )?.[0] as UTxO,
-        rewardFoldPolicy: (
-          await lucid.provider.getUtxosByOutRef([
-            deployed.scriptsRef.RewardFoldPolicy,
-          ])
-        )?.[0] as UTxO,
+        rewardStake: rwStakeRef,
+        rewardFoldPolicy: rwPolicyRef,
+        rewardFoldValidator: rwValidatorRef,
+        liquidityValidator: ttValidatorRef,
       },
       lpTokenAssetId,
-      disableNativeUplc: false,
+      disableNativeUplc: !Boolean(emulator),
     };
 
     const multiFoldUnsigned = await liquidityFoldRewards(
@@ -138,30 +136,35 @@ export const foldLiquidityRewardsAction = async (
       throw multiFoldUnsigned.error;
     }
 
-    try {
-      const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
-      const multiFoldHash = await multiFoldSigned.submit();
-      await loggerDD(`Submitting: ${multiFoldHash}`);
-      await lucid.awaitTx(multiFoldHash);
+    if (isDryRun() && !emulator) {
+      console.log(multiFoldUnsigned.data.toString());
+      break;
+    } else {
+      try {
+        const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
+        const multiFoldHash = await multiFoldSigned.submit();
+        await loggerDD(`Submitting: ${multiFoldHash}`);
+        await lucid.awaitTx(multiFoldHash);
 
-      while (rewardFoldUtxo.txHash !== multiFoldHash) {
-        if (!emulator) {
-          await setTimeout(3_000);
+        while (rewardFoldUtxo.txHash !== multiFoldHash) {
+          if (!emulator) {
+            await setTimeout(3_000);
+          }
+
+          const newFoldUtxo = await lucid.utxoByUnit(
+            toUnit(rewardFoldPolicyId, rFold),
+          );
+
+          rewardFoldUtxo = newFoldUtxo;
         }
-
-        const newFoldUtxo = await lucid.utxoByUnit(
-          toUnit(rewardFoldPolicyId, rFold),
+      } catch (e) {
+        await loggerDD(
+          `Failed to build fold with error: ${(e as Error).message}`,
         );
-
-        rewardFoldUtxo = newFoldUtxo;
+        await loggerDD(`Trying again...`);
+        // offset wallet & blockchain sync
+        await setTimeout(20_000);
       }
-    } catch (e) {
-      await loggerDD(
-        `Failed to build fold with error: ${(e as Error).message}`,
-      );
-      await loggerDD(`Trying again...`);
-      // offset wallet & blockchain sync
-      await setTimeout(20_000);
     }
   }
 

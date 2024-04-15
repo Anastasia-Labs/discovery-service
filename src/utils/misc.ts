@@ -1,7 +1,12 @@
-import { Lucid, TxComplete } from "price-discovery-offchain";
-import { ReadableUTxO, Result } from "price-discovery-offchain";
+import {
+  Lucid,
+  ReadableUTxO,
+  Result,
+  TxComplete,
+} from "price-discovery-offchain";
 import { setTimeout } from "timers/promises";
 import { match } from "ts-pattern";
+import "./env.js";
 
 export const lovelaceAtAddress = async (lucid: Lucid, address?: string) => {
   address ? lucid.selectWalletFrom({ address: address }) : null;

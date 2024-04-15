@@ -1,5 +1,5 @@
-import { getAddressesAction } from "../utils/getAddressesAction.js";
+import { getBalanceAction } from "../utils/getBalanceAction.js";
 import { getLucidInstance } from "../utils/wallet.js";
 
 const lucid = await getLucidInstance();
-getAddressesAction(lucid);
+getBalanceAction(lucid);

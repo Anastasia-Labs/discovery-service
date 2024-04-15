@@ -1,161 +1,76 @@
 import "../../utils/env.js";
 
-import { writeFileSync } from "fs";
 import {
+  Emulator,
   InitNodeConfig,
-  InitTokenHolderConfig,
   Lucid,
-  UTxO,
   initLqNode,
-  initLqTokenHolder,
 } from "price-discovery-offchain";
 
-import inquirer from "inquirer";
+import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
-import { getAppliedScripts } from "../../utils/files.js";
+import { isDryRun } from "../../utils/args.js";
+import {
+  getAppliedScripts,
+  getInitTTTx,
+  getPublishedPolicyOutRefs,
+  saveInitTTTx,
+} from "../../utils/files.js";
 import { selectLucidWallet } from "../../utils/wallet.js";
 
-export const initializeLiquidityAction = async (
-  lucid: Lucid,
-  externalTokenProvider?: boolean,
-) => {
-  await selectLucidWallet(lucid, 2);
-  const applied = await getAppliedScripts();
-
-  const liquidityStakeRewardAddress = lucid.utils.validatorToRewardAddress({
-    type: "PlutusV2",
-    script: applied.scripts.collectStake,
-  });
-
-  const rewardStakeRewardAddress = lucid.utils.validatorToRewardAddress({
-    type: "PlutusV2",
-    script: applied.scripts.rewardStake,
-  });
-
-  const registerStakeHash = await (
-    await (
-      await lucid
-        .newTx()
-        .registerStake(liquidityStakeRewardAddress!)
-        .registerStake(rewardStakeRewardAddress!)
-        .complete()
-    )
-      .sign()
-      .complete()
-  ).submit();
-
-  await loggerDD(`Submitting Registration: ${registerStakeHash}`);
-  await lucid.awaitTx(registerStakeHash);
-
-  const tokenHolderUtxo = await lucid.utxosByOutRef([
-    applied.projectTokenHolder.initOutRef,
-  ]);
-  const initUtxo = tokenHolderUtxo.find(
-    ({ outputIndex }) =>
-      outputIndex === applied.projectTokenHolder.initOutRef.outputIndex,
-  ) as UTxO;
-
-  if (!initUtxo) {
+const submitInitLiquidityAction = async (lucid: Lucid) => {
+  const tx = await getInitTTTx();
+  if (!tx) {
     throw new Error(
-      "Aborting. Could not find an initUTXO to initialize the token holder with!",
+      `An initTT transaction was not found. Run "yarn start-tt --dry" to generate one, and try again.`,
     );
   }
 
-  let collectFrom: UTxO[] | undefined;
-  if (externalTokenProvider) {
-    const [address, tokenAsset] = await inquirer.prompt([
-      {
-        message: "What is the user's wallet address?",
-      },
-      {
-        message: "What is the token asset ID?",
-      },
-    ]);
+  const signed = await lucid.fromTx(tx).sign().complete();
+  const initNodeHash = await signed.submit();
+  await loggerDD(`Submitting: ${initNodeHash}`);
+  await lucid.awaitTx(initNodeHash);
+  await loggerDD(`Done!`);
+};
 
-    if (!address || !tokenAsset) {
-      throw new Error("Can not initialize token holder with empty values.");
-    }
+export const initializeLiquidityAction = async (
+  lucid: Lucid,
+  emulator?: Emulator,
+) => {
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
+  const applied = await getAppliedScripts();
+  const deployed = await getPublishedPolicyOutRefs();
 
-    collectFrom = await lucid.provider.getUtxosWithUnit(address, tokenAsset);
-  } else {
-    // Collect from our own wallet.
-    await selectLucidWallet(lucid, 1);
+  if (!isDryRun() && !emulator) {
+    await submitInitLiquidityAction(lucid);
+    return;
   }
 
-  const initTokenHolderConfig: InitTokenHolderConfig = {
-    initUTXO: initUtxo,
-    projectCS: applied.rewardValidator.projectCS,
-    projectTN: applied.rewardValidator.projectTN,
-    projectAmount: Number(process.env.PROJECT_AMNT),
-    scripts: {
-      tokenHolderPolicy: applied.scripts.tokenHolderPolicy,
-      tokenHolderValidator: applied.scripts.tokenHolderValidator,
-    },
-  };
+  const [initUTXO, nodePolicy] = await lucid.utxosByOutRef([
+    applied.discoveryPolicy.initOutRef,
+    deployed.scriptsRef.TasteTestPolicy,
+  ]);
 
-  const initTokenHolderUnsigned = await initLqTokenHolder(
-    lucid,
-    initTokenHolderConfig,
-  );
-
-  if (initTokenHolderUnsigned.type === "error") {
-    throw initTokenHolderUnsigned.error;
-  }
-
-  if (externalTokenProvider) {
-    // print file
-  } else {
-    const initTokenHolderSigned = await initTokenHolderUnsigned.data
-      .sign()
-      .complete();
-    const initTokenHolderHash = await initTokenHolderSigned.submit();
-    await loggerDD(`Submitting TokenHolder: ${initTokenHolderHash}`);
-    await lucid.awaitTx(initTokenHolderHash);
-  }
-
-  // // //NOTE: INIT NODE
   const initNodeConfig: InitNodeConfig = {
-    initUTXO: (
-      await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])
-    ).find(
-      ({ outputIndex }) =>
-        outputIndex === applied.discoveryPolicy.initOutRef.outputIndex,
-    ) as UTxO,
+    initUTXO,
     scripts: {
       nodePolicy: applied.scripts.liquidityPolicy,
       nodeValidator: applied.scripts.liquidityValidator,
     },
+    refScripts: {
+      nodePolicy,
+    },
   };
 
-  await selectLucidWallet(lucid, 0);
   const initNodeUnsigned = await initLqNode(lucid, initNodeConfig);
 
   if (initNodeUnsigned.type == "error") {
     throw initNodeUnsigned.error;
   }
 
-  await loggerDD(`Building initNode Tx...`);
-  const unsignedCbor = Buffer.from(
-    initNodeUnsigned.data.txComplete.to_bytes(),
-  ).toString("hex");
-  const signedTransaction = await initNodeUnsigned.data.sign().complete();
-  const signedCbor = Buffer.from(
-    signedTransaction.txSigned.to_bytes(),
-  ).toString("hex");
-  const signedTxHash = signedTransaction.toHash();
+  await saveInitTTTx(initNodeUnsigned.data.toString(), Boolean(emulator));
 
-  writeFileSync(
-    `./init-tx.json`,
-    JSON.stringify(
-      {
-        cbor: unsignedCbor,
-        signedCbor,
-        txHash: signedTxHash,
-      },
-      undefined,
-      2,
-    ),
-  );
-
-  console.log(`Done!`);
+  if (emulator) {
+    await submitInitLiquidityAction(lucid);
+  }
 };
