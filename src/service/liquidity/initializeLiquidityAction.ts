@@ -46,18 +46,19 @@ export const initializeLiquidityAction = async (
     return;
   }
 
+  const [initUTXO, nodePolicy] = await lucid.utxosByOutRef([
+    applied.discoveryPolicy.initOutRef,
+    deployed.scriptsRef.TasteTestPolicy,
+  ]);
+
   const initNodeConfig: InitNodeConfig = {
-    initUTXO: (
-      await lucid.utxosByOutRef([applied.discoveryPolicy.initOutRef])
-    )?.[0],
+    initUTXO,
     scripts: {
       nodePolicy: applied.scripts.liquidityPolicy,
       nodeValidator: applied.scripts.liquidityValidator,
     },
     refScripts: {
-      nodePolicy: (
-        await lucid.utxosByOutRef([deployed.scriptsRef.TasteTestPolicy])
-      )?.[0],
+      nodePolicy,
     },
   };
 
