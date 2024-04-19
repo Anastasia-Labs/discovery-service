@@ -35,11 +35,12 @@ const submitSpendToProxyAction = async (lucid: Lucid) => {
 };
 
 export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
+  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const applied = await getAppliedScripts();
   const deployed = await getPublishedPolicyOutRefs();
   const { v1PoolData } = await getTTConfig();
 
-  if (isDryRun() && !emulator) {
+  if (!isDryRun() && !emulator) {
     await submitSpendToProxyAction(lucid);
     return;
   }
@@ -57,7 +58,6 @@ export const spendToProxyAction = async (lucid: Lucid, emulator?: Emulator) => {
     v1PoolPolicyId: v1PoolData.policyId,
   };
 
-  await selectLucidWallet(lucid, SEED_WALLET_INDEX);
   const spendToProxyUnsigned = await spendToProxy(lucid, spendToProxyConfig);
 
   if (spendToProxyUnsigned.type == "error") {
