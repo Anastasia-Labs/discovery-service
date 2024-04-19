@@ -101,7 +101,6 @@ export const foldLiquidityRewardsAction = async (
     }
 
     const rewardFoldConfig: RewardLiquidityFoldConfig = {
-      // disableNativeUplc: emulator ? false : true,
       currenTime: emulator?.now() ?? Date.now(),
       nodeRefInputs: sortedInputs.map((data) => {
         return data.value.outRef;
@@ -124,7 +123,7 @@ export const foldLiquidityRewardsAction = async (
         liquidityValidator: ttValidatorRef,
       },
       lpTokenAssetId,
-      disableNativeUplc: !Boolean(emulator),
+      disableNativeUplc: false,
     };
 
     const multiFoldUnsigned = await liquidityFoldRewards(

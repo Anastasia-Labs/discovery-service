@@ -1,7 +1,11 @@
-import { Emulator, initLqRewardFold, Lucid } from "price-discovery-offchain";
+import {
+  Emulator,
+  InitLiquidityRewardFoldConfig,
+  Lucid,
+  initLqRewardFold,
+} from "price-discovery-offchain";
 import "../../utils/env.js";
 
-import { InitLiquidityRewardFoldConfig } from "price-discovery-offchain";
 import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
