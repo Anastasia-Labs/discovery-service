@@ -16,6 +16,7 @@ import "../../utils/env.js";
 
 import { SEED_WALLET_INDEX } from "../../constants/network.js";
 import { loggerDD } from "../../logs/datadog-service.js";
+import { isDryRun } from "../../utils/args.js";
 import {
   getAppliedScripts,
   getPublishedPolicyOutRefs,
@@ -123,6 +124,11 @@ export const foldLiquidityNodesAction = async (
     }
 
     try {
+      if (isDryRun()) {
+        console.log(multiFoldUnsigned.data.toString());
+        break;
+      }
+
       const multiFoldSigned = await multiFoldUnsigned.data.sign().complete();
       const multiFoldHash = await multiFoldSigned.submit();
       await loggerDD(`Submitting: ${multiFoldHash}`);

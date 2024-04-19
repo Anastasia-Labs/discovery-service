@@ -14,7 +14,7 @@
 10. Once done, run `yarn init-token-holder` to spend the project tokens to the token holder validator.
 11. Next, run `yarn register-stake` to spend the project tokens to the token holder validator.
 12. Next, run `yarn init-liquidity` to build the transaction for the first head node.
-13. (**Optional**): Run `yarn generate-dynamo` to generate a DynamoDB JSON file (found in `generated/{branchName}/{network}/dynamodb-template.json`). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
+13. (**Optional**): Run `yarn generate-db` to generate a DynamoDB JSON file (found in `generated/{branchName}/{network}/dynamodb-template.json`). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
 14. Now you can run `yarn init-liquidity --submit` to submit the signed transaction and officially allow deposits.
 15. Your Taste Test is live!
 

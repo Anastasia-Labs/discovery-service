@@ -1,6 +1,7 @@
 import { Lucid } from "price-discovery-offchain";
 import "../../utils/env.js";
 
+import kebabCase from "lodash/kebabCase.js";
 import { IDynamoTTEntry } from "../../@types/db.js";
 import {
   MAINNET_OFFSET,
@@ -90,7 +91,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           S: projectTokenPolicyId,
         },
         Ticker: {
-          S: "CLARITY",
+          S: project.token.readableName,
         },
         TotalSupply: {
           S: "2000000000000000",
@@ -195,13 +196,13 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     projectDetails: {
       M: {
         Description: {
-          S: "Clarity is a decentralized governance protocol that enables DAOs and other tokenized projects to formalize on-chain governance.",
+          S: project.description,
         },
         Handle: {
           S: "yes",
         },
         Name: {
-          S: "ClarityDAO",
+          S: project.name,
         },
         Socials: {
           L: [
@@ -629,7 +630,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
       },
     },
     slug: {
-      S: "clarity",
+      S: kebabCase(project.name),
     },
     type: {
       S: "Liquidity",

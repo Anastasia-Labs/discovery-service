@@ -51,9 +51,10 @@ export const initTokenHolderAction = async (
   }
 
   if (reservedUtxos?.initTokenHolder) {
-    const utxos = await lucid.provider.getUtxosByOutRef(
-      reservedUtxos.initTokenHolder,
-    );
+    const utxos = await lucid.provider.getUtxosByOutRef([
+      ...reservedUtxos.initTokenHolder,
+      // Add more if needed.
+    ]);
 
     lucid.selectWalletFrom({
       address: utxos[0].address,
