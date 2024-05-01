@@ -145,7 +145,8 @@ export interface IPublishedPolicyJSON {
 import { OutRef } from "price-discovery-offchain";
 
 export interface ITTConfigJSON {
-  deadline: number;
+  startDate: number;
+  endDate: number;
   scriptType: "optimized" | "tracing" | "binds";
   reservedUtxos?: {
     initTasteTest?: OutRef[];

@@ -16,7 +16,7 @@ export const removeLiquidityNodesAction = async (
   emulator?: Emulator,
 ) => {
   const {
-    deadline,
+    endDate: deadline,
     project: { addresses },
   } = await getTTConfig();
   const applied = await getAppliedScripts();

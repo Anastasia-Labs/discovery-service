@@ -12,16 +12,16 @@
 8. After this, run `yarn fragment-publish-wallet`.
 9. Then run `yarn publish-scripts` to publish reference inputs.
 10. Once done, run `yarn init-token-holder` to spend the project tokens to the token holder validator.
-11. Next, run `yarn register-stake` to spend the project tokens to the token holder validator.
-12. Next, run `yarn init-liquidity` to build the transaction for the first head node.
-13. (**Optional**): Run `yarn generate-db` to generate a DynamoDB JSON file (found in `generated/{branchName}/{network}/dynamodb-template.json`). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
-14. Now you can run `yarn init-liquidity --submit` to submit the signed transaction and officially allow deposits.
+11. Next, run `yarn init-liquidity` to build the transaction for the first head node.
+12. (**Optional**): Run `yarn generate-db` to generate a DynamoDB JSON file (found in `generated/{branchName}/{network}/dynamodb-template.json`). You should paste this into a new entry into the appropriate Taste Test DynamoDB table so that we pick up the transaction once submitted (avoiding replays).
+13. Now you can run `yarn init-liquidity --submit` to submit the signed transaction and officially allow deposits.
+14. Next, run `yarn register-stake` to ensure staking rewards.
 15. Your Taste Test is live!
 
 ## Interacting With a Taste Test
 
 1. Once a Taste Test has started, you can test funding it.
-2. Run `yarn insert-nodes` to deposit 10 ADA into the TT.
+2. Run `yarn insert-nodes` to deposit 1 ADA into the TT.
 3. Run `yarn modify-nodes` to update each deposit position by 1 ADA.
 4. Run `yarn remove-nodes` to withdraw a few positions.
 

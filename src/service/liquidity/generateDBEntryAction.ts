@@ -29,7 +29,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
   const appliedScripts = await getAppliedScripts();
   const deployedPolicy = await getPublishedPolicyOutRefs();
   const initTx = await getInitTTTx();
-  const { project, deadline, ...config } = await getTTConfig();
+  const { project, endDate, startDate, ...config } = await getTTConfig();
   const { projectTokenAssetName, projectTokenPolicyId } =
     await getTTVariables();
   await selectLucidWallet(lucid, SEED_WALLET_INDEX);
@@ -114,7 +114,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     endDate: {
       M: {
         Slot: {
-          S: posixToSlot(deadline).toString(),
+          S: posixToSlot(endDate).toString(),
         },
         SlotOffset: {
           N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
@@ -141,7 +141,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     lastCallDate: {
       M: {
         Slot: {
-          S: posixToSlot(deadline - TWENTY_FOUR_HOURS_POSIX).toString(),
+          S: posixToSlot(endDate - TWENTY_FOUR_HOURS_POSIX).toString(),
         },
         SlotOffset: {
           N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
@@ -151,7 +151,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
     openDate: {
       M: {
         Slot: {
-          S: startSlot.toString(),
+          S: posixToSlot(startDate).toString(),
         },
         SlotOffset: {
           N: getNetwork() === "mainnet" ? MAINNET_OFFSET : PREVIEW_OFFSET,
@@ -656,7 +656,7 @@ export const generateDBEntryAction = async (lucid: Lucid) => {
           M: {
             Slot: {
               S: posixToSlot(
-                deadline + 1000 * 60 * 60 * 24 * 30 * month,
+                endDate + 1000 * 60 * 60 * 24 * 30 * month,
               ).toString(),
             },
             SlotOffset: {

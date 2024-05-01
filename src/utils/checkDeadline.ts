@@ -3,7 +3,7 @@ import { getTTConfig } from "./files.js";
 
 const checkDeadline = async () => {
   const {
-    deadline,
+    endDate: deadline,
     project: { name },
   } = await getTTConfig();
   console.log(

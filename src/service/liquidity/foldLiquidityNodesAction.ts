@@ -63,7 +63,7 @@ export const foldLiquidityNodesAction = async (
     return datum.commitment === 0n;
   });
 
-  if (unprocessedNodes[0].datum.key === null) {
+  if (unprocessedNodes.length === 0 && unprocessedNodes[0].datum.key === null) {
     console.log("You've already finished all folds!");
     return;
   }

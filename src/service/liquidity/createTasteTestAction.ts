@@ -12,7 +12,8 @@ export const createTasteTestAction = async (emulator?: Emulator) => {
     : Date.now() + 1000 * 60 * 60 * 2; // Defaults to 2 hours
 
   const data: ITTConfigJSON = {
-    deadline,
+    startDate: 0, // placeholder
+    endDate: deadline,
     project: {
       addresses: {
         cleanupRefund: emulator ? wallets[0].address : "",

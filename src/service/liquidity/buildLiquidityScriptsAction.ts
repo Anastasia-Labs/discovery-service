@@ -10,6 +10,7 @@ import {
 
 import { getScripts } from "../../utils/scripts.js";
 
+import inquirer from "inquirer";
 import { IAppliedScriptsJSON } from "../../@types/json.js";
 import {
   MINT_TOKEN_WALLET_INDEX,
@@ -81,16 +82,26 @@ export const buildLiquidityScriptsAction = async (
     );
   }
 
-  console.log(
-    "Deadline UTC",
-    config.deadline,
-    `${new Date(config.deadline).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(config.deadline).toLocaleTimeString()}`,
-  );
+  if (!emulator) {
+    const { confirmContinue } = await inquirer.prompt([
+      {
+        message: `This will set the end of the Taste Test to ${new Date(config.endDate).toLocaleDateString("en-US", { dateStyle: "full" })} at ${new Date(config.endDate).toLocaleTimeString()}. Confirm Yes to continue...`,
+        type: "confirm",
+        name: "confirmContinue",
+        default: false,
+      },
+    ]);
+
+    if (!confirmContinue) {
+      console.log("Aborted.");
+      return;
+    }
+  }
 
   const scripts = buildLiquidityScripts(lucid, {
     liquidityPolicy: {
       initUTXO: initUtxo,
-      deadline: config.deadline,
+      deadline: config.endDate,
       penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardFoldValidator: {
@@ -128,7 +139,7 @@ export const buildLiquidityScriptsAction = async (
         txHash: initUtxo.txHash,
         outputIndex: initUtxo.outputIndex,
       },
-      deadline: config.deadline,
+      deadline: config.endDate,
       penaltyAddress: config.project.addresses.withdrawPenalty,
     },
     rewardValidator: {

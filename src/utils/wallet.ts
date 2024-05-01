@@ -83,15 +83,6 @@ export const getEmulatorLedger = async (
   const deployed = await getPublishedPolicyOutRefs();
   const snapshotSlug = `${getConfigFilePath()}/blockfrost-ledger.json`;
 
-  const restAccounts: EmulatorAccount[] = [...wallets]
-    .slice(0, MAX_WALLET_GROUP_COUNT)
-    .map(({ address }) => ({
-      address,
-      assets: {
-        lovelace: MIN_ADA_INSERT_WALLET,
-      },
-    }));
-
   const { regenerate } = await inquirer.prompt([
     {
       type: "confirm",
@@ -102,6 +93,15 @@ export const getEmulatorLedger = async (
   ]);
 
   if (regenerate) {
+    const restAccounts: EmulatorAccount[] = [...wallets]
+      .slice(0, MAX_WALLET_GROUP_COUNT)
+      .map(({ address }) => ({
+        address,
+        assets: {
+          lovelace: MIN_ADA_INSERT_WALLET,
+        },
+      }));
+
     console.log(`Fetching from Blockfrost on ${getNetwork()}`);
     const utxos: EmulatorAccount[] = await Promise.all([
       lucid.provider.getUtxos(addresses.liquidityDestination),

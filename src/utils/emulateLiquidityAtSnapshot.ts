@@ -15,7 +15,7 @@ import { getTTConfig } from "./files.js";
 import { getEmulatorLedger, getLucidInstance, posixToSlot } from "./wallet.js";
 
 const emulateLiquidity = async () => {
-  const { deadline } = await getTTConfig();
+  const { endDate: deadline } = await getTTConfig();
   const lucid = await getLucidInstance();
   const utxos = await getEmulatorLedger(lucid);
   const emulator = new Emulator(utxos);

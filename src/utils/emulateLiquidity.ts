@@ -163,11 +163,6 @@ const emulateLiquidity = async () => {
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
-    console.log("\n\n\nEMULATOR: Initializing Liquidity TT...");
-    await registerStakeAction(lucidInstance, emulator);
-    console.log("Moving to next step...");
-    await setTimeout(DELAY);
-
     console.log("\n\n\nEMULATOR: Initializing Token Holder...");
     await initTokenHolderAction(lucidInstance, emulator);
     console.log("Moving to next step...");
@@ -175,6 +170,11 @@ const emulateLiquidity = async () => {
 
     console.log("\n\n\nEMULATOR: Starting TT...");
     await initializeLiquidityAction(lucidInstance, emulator);
+    console.log("Moving to next step...");
+    await setTimeout(DELAY);
+
+    console.log("\n\n\nEMULATOR: Initializing Liquidity TT...");
+    await registerStakeAction(lucidInstance, emulator);
     console.log("Moving to next step...");
     await setTimeout(DELAY);
 
@@ -194,7 +194,7 @@ const emulateLiquidity = async () => {
     await setTimeout(DELAY);
 
     console.log("\n\n\nEMULATOR: Initializing Fold UTXO...");
-    emulator.awaitSlot(posixToSlot((await getTTConfig()).deadline) + 1000);
+    emulator.awaitSlot(posixToSlot((await getTTConfig()).endDate) + 1000);
     await initLiquidityFoldServiceAction(lucidInstance, emulator);
     console.log("Moving to next step...");
     await setTimeout(DELAY);

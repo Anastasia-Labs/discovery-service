@@ -54,6 +54,11 @@ export const initTokenHolderAction = async (
     const utxos = await lucid.provider.getUtxosByOutRef([
       ...reservedUtxos.initTokenHolder,
       // Add more if needed.
+      {
+        txHash:
+          "a0e0858d366c3c07c15d93dba03b6f48471f72e0e040ac72651da7e8de451299",
+        outputIndex: 1,
+      },
     ]);
 
     lucid.selectWalletFrom({
