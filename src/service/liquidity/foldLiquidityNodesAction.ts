@@ -129,7 +129,7 @@ export const foldLiquidityNodesAction = async (
     }
 
     try {
-      if (isDryRun()) {
+      if (isDryRun() && !emulator) {
         console.log(multiFoldUnsigned.data.toString());
         break;
       }
