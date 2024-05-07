@@ -1,10 +1,8 @@
-import inquirer from "inquirer";
 import { Emulator, Lucid, OutRef } from "price-discovery-offchain";
 
 import { IFragmentedUtxosMapJSON } from "../../@types/json.js";
 import { PUBLISH_SCRIPT_WALLET_INDEX } from "../../constants/network.js";
 import { getPublishWalletAda } from "../../constants/utils.js";
-import { loggerDD } from "../../logs/datadog-service.js";
 import { isDryRun } from "../../utils/args.js";
 import {
   getFragmentWalletTx,
@@ -112,7 +110,6 @@ export const fragmentPublishWalletAction = async (
   emulator?: Emulator,
 ) => {
   await selectLucidWallet(lucid, PUBLISH_SCRIPT_WALLET_INDEX);
-  const fragmentWalletTx = await getFragmentWalletTx();
 
   if (!isDryRun() && !emulator) {
     await submitFragmentPublishWallet(lucid);
@@ -121,31 +118,15 @@ export const fragmentPublishWalletAction = async (
 
   const deployWalletAddress = await lucid.wallet.address();
   const deployWalletFunds = await lovelaceAtAddress(lucid);
-  if (deployWalletFunds < (await getPublishWalletAda())) {
+  const requiredAda = await getPublishWalletAda();
+  if (deployWalletFunds < requiredAda) {
     console.log(
-      `Not enough funds ${deployWalletFunds}, ${deployWalletAddress}`,
+      `Not enough funds. Found ${deployWalletFunds}, but need at least ${requiredAda} at: ${deployWalletAddress}`,
     );
-    await loggerDD(`Not enough funds ${deployWalletFunds}`);
     return;
   }
 
   const splitTx = lucid.newTx();
-  if (!emulator && fragmentWalletTx) {
-    const { continueFragmentation } = await inquirer.prompt([
-      {
-        name: "This wallet has already built a fragmentation transaction that can be submitted. Overwrite?",
-        type: "confirm",
-        value: "continueFragmentation",
-        default: false,
-      },
-    ]);
-
-    if (!continueFragmentation) {
-      console.log("Aborted.");
-      return;
-    }
-  }
-
   const refScriptAmountsByIndex = await getRefScriptAmountsByIndex();
 
   [...new Array(10).keys()].forEach((index) => {

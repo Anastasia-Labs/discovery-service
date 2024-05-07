@@ -9,7 +9,10 @@ import { match } from "ts-pattern";
 import "./env.js";
 
 export const lovelaceAtAddress = async (lucid: Lucid, address?: string) => {
-  address ? lucid.selectWalletFrom({ address: address }) : null;
+  if (address) {
+    lucid.selectWalletFrom({ address: address });
+  }
+
   return (await lucid.wallet.getUtxos()).reduce((result, current) => {
     return (result = result + current.assets["lovelace"]);
   }, 0n);

@@ -2,6 +2,8 @@ import "./env.js";
 
 import { Assets, Lucid, TxSigned } from "price-discovery-offchain";
 
+import inquirer from "inquirer";
+import { PUBLISH_SCRIPT_WALLET_INDEX } from "../constants/network.js";
 import { MAX_WALLET_GROUP_COUNT } from "../constants/utils.js";
 import { isDryRun } from "./args.js";
 import { getTTConfig, getWallets } from "./files.js";
@@ -16,6 +18,25 @@ export const refundWalletsAction = async (lucid: Lucid) => {
   const signedTxs: { tx: TxSigned; index: number }[] = [];
 
   for (const [index, wallet] of walletEntries) {
+    if (
+      index === PUBLISH_SCRIPT_WALLET_INDEX &&
+      project.addresses.publishScripts === wallet.address
+    ) {
+      const { cleanScripts } = await inquirer.prompt([
+        {
+          message:
+            "You are trying to refund the wallet that also contains the published scripts. This will effectively DELETE the scripts! Continue?",
+          type: "confirm",
+          name: "cleanScripts",
+          default: false,
+        },
+      ]);
+
+      if (!cleanScripts) {
+        continue;
+      }
+    }
+
     await selectLucidWallet(lucid, index);
     const utxos = await lucid.provider.getUtxos(wallet.address);
     const totalLovelace = await lovelaceAtAddress(lucid);

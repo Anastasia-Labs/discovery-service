@@ -1,10 +1,15 @@
 import { Emulator } from "price-discovery-offchain";
 import { ITTConfigJSON, ITasteTestVariablesJSON } from "../../@types/json.js";
-import { EMULATOR_TT_END_DELAY } from "../../constants/utils.js";
+import {
+  EMULATOR_TT_END_DELAY,
+  MAINNET_PUBLISH_SCRIPT_ADDRESS,
+} from "../../constants/utils.js";
+import { getNetwork } from "../../utils/args.js";
 import "../../utils/env.js";
 import { getWallets, saveConfig, saveTTVariables } from "../../utils/files.js";
 
 export const createTasteTestAction = async (emulator?: Emulator) => {
+  const network = getNetwork();
   const wallets = await getWallets();
 
   const deadline = emulator
@@ -16,7 +21,10 @@ export const createTasteTestAction = async (emulator?: Emulator) => {
     endDate: deadline,
     project: {
       addresses: {
-        cleanupRefund: emulator ? wallets[0].address : "",
+        cleanupRefund:
+          emulator || network === "preview"
+            ? wallets[0].address
+            : MAINNET_PUBLISH_SCRIPT_ADDRESS,
         liquidityDestination: wallets[0].address,
         tokenHolder: wallets[1].address,
         withdrawPenalty: wallets[0].address,
